@@ -43,3 +43,28 @@
 - [ ] Redis
 - [ ] Caching
 - [ ] Message Queues
+
+
+# Topic Name
+
+## Definition
+
+## Why Needed?
+
+## Internal Working
+
+## Real World Example
+
+## Advantages
+
+## Disadvantages
+
+## Interview Questions
+
+## Coding Example
+
+## Spring Boot Usage
+
+## Quick Revision
+
+## FAQs
