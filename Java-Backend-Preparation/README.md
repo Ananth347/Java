@@ -3,7 +3,7 @@
 ## Core Java
 
 - [x] OOPS
-- [ ] Collections Framework
+- [x] Collections Framework
 - [ ] Multithreading
 - [ ] Exception Handling
 - [ ] Java 8 Features
