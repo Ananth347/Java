@@ -1,3 +1,25 @@
+Parameters: Parameters are the variables declared in the method definition.
+
+Arguments: Arguments are the actual values passed to the method when calling it.
+
+```java
+public class Main {
+
+    public static void greet(String name) { // Parameter
+        System.out.println("Hello " + name);
+    }
+
+    public static void main(String[] args) {
+        greet("Ananth"); // Argument
+    }
+}
+```
+Explicitly: Manually have to write
+Implicitly: Automatically
+
+
+
+
 # OOPS (Object-Oriented Programming System)
 
 ## Definition
