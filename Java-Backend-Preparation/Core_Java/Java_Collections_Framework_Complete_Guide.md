@@ -116,7 +116,11 @@ This is a key thing to understand. When you try to add an element and the intern
 3. Adds the new element.
 
 This copying is an O(n) operation — but it happens rarely (only when full), so on average, across many `add()` calls, the cost works out to O(1) "amortized" (a fancy word meaning "averaged out over many operations").
-
+- **Capacity** is the number of elements an `ArrayList` can hold before it needs to resize.
+- When you create `new ArrayList<>()`, the initial capacity is **0** (empty internal array).
+- After adding the **first element**, Java creates an internal array with a **capacity of 10**.
+- When the array becomes full, Java creates a new larger array (about **1.5×** bigger) and copies all elements into it.
+- **Size** = current number of elements, **Capacity** = total space available before resizing.
 ```java
 List<Integer> numbers = new ArrayList<>();
 for (int i = 0; i < 1000; i++) {
