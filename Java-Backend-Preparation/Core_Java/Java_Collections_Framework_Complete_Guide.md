@@ -21,22 +21,15 @@ By the end, you'll understand not just *how* to use `ArrayList` or `HashMap`, bu
 ## 1.1 What is the Collections Framework, really?
 
 Before the Java Collections Framework was introduced, developers had to manage collections in different ways.
-
 If they needed a list, stack, or dictionary-like data structure, they either:
-
 - Created their own implementation, or
 - Used existing classes like `Vector`, `Hashtable`, or normal arrays.
-
 The problem was that these classes did not follow the same design. Each class had its own methods and way of working.
-
 Because of this, you could not write one method that worked with every type of collection. Your code often had to be changed depending on which class you were using.
 
 The **Java Collections Framework (JCF)** solves this problem.
-
 It provides a **standard and common way** to store and work with **groups of objects**.
-
 The most important word here is **standard**.
-
 All collection classes follow the same set of interfaces. Because of this, code written for the `List` interface works the same whether the actual object is an `ArrayList` or a `LinkedList`.
 
 This common design makes Java programs easier to write, understand, and maintain.
