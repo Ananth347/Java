@@ -1,6 +1,237 @@
 # Java Streams — Coding Interview Questions & Answers
 
 > Pure coding questions on Java Streams — the kind commonly asked in interviews. Each question has a ready-to-run code solution.
+>
+> # Java Stream API Cheat Sheet
+
+---
+
+# 1. Collectors
+
+`Collectors` provides collector methods that are used inside `collect()`.
+
+```java
+stream.collect(Collectors.xxx());
+```
+
+| Method | Description |
+|---------|-------------|
+| `toList()` | Collect elements into a List. |
+| `toSet()` | Collect elements into a Set (removes duplicates). |
+| `toMap()` | Collect elements into a Map (key-value pairs). |
+| `groupingBy()` | Group elements based on a property. |
+| `partitioningBy()` | Split elements into two groups (true/false). |
+| `counting()` | Count the number of elements. |
+| `joining()` | Join strings into one String. |
+| `mapping()` | Transform values before collecting. |
+| `filtering()` *(Java 9+)* | Filter elements while collecting. |
+| `flatMapping()` *(Java 9+)* | Flatten nested collections while collecting. |
+| `maxBy()` | Return the maximum element while collecting. |
+| `minBy()` | Return the minimum element while collecting. |
+| `summingInt()` | Sum integer values. |
+| `summingLong()` | Sum long values. |
+| `summingDouble()` | Sum double values. |
+| `averagingInt()` | Calculate average of int values. |
+| `averagingLong()` | Calculate average of long values. |
+| `averagingDouble()` | Calculate average of double values. |
+| `summarizingInt()` | Get count, sum, min, max and average for int values. |
+| `summarizingLong()` | Statistics for long values. |
+| `summarizingDouble()` | Statistics for double values. |
+| `reducing()` | Reduce elements into a single result. |
+| `collectingAndThen()` | Apply another operation after collecting. |
+| `teeing()` *(Java 12+)* | Perform two collectors simultaneously and merge results. |
+
+---
+
+## Most Frequently Used Collectors
+
+- `toList()`
+- `toSet()`
+- `toMap()`
+- `groupingBy()`
+- `partitioningBy()`
+- `joining()`
+- `counting()`
+- `maxBy()`
+- `minBy()`
+- `summingInt()`
+- `averagingDouble()`
+- `summarizingDouble()`
+- `mapping()`
+- `collectingAndThen()`
+
+---
+
+# 2. Comparator
+
+`Comparator` is mainly used for sorting.
+
+```java
+.sorted(Comparator.xxx())
+```
+
+| Method | Description |
+|---------|-------------|
+| `comparing()` | Compare using an object field. |
+| `comparingInt()` | Compare using an int value (avoids boxing). |
+| `comparingLong()` | Compare using a long value. |
+| `comparingDouble()` | Compare using a double value. |
+| `naturalOrder()` | Sort in ascending order. |
+| `reverseOrder()` | Sort in descending order. |
+| `reversed()` | Reverse an existing comparator. |
+| `thenComparing()` | Secondary sorting. |
+| `thenComparingInt()` | Secondary int sorting. |
+| `thenComparingLong()` | Secondary long sorting. |
+| `thenComparingDouble()` | Secondary double sorting. |
+| `nullsFirst()` | Place null values first. |
+| `nullsLast()` | Place null values last. |
+
+---
+
+## Most Frequently Used Comparator Methods
+
+- `comparing()`
+- `comparingInt()`
+- `comparingDouble()`
+- `naturalOrder()`
+- `reverseOrder()`
+- `reversed()`
+- `thenComparing()`
+- `nullsFirst()`
+- `nullsLast()`
+
+---
+
+# 3. Stream Intermediate Operations (Lazy)
+
+Intermediate operations do **not execute immediately**. They build the stream pipeline.
+
+| Method | Description |
+|---------|-------------|
+| `filter()` | Keep elements matching a condition. |
+| `map()` | Transform each element into another value. |
+| `flatMap()` | Flatten nested collections into one stream. |
+| `sorted()` | Sort elements. |
+| `distinct()` | Remove duplicate elements. |
+| `peek()` | Inspect/debug elements without modifying them. |
+| `limit()` | Keep only the first N elements. |
+| `skip()` | Skip the first N elements. |
+
+---
+
+# 4. Stream Terminal Operations
+
+Terminal operations **execute the stream pipeline** and produce the final result.
+
+| Method | Description |
+|---------|-------------|
+| `collect()` | Collect elements into a collection or another result. |
+| `forEach()` | Perform an action for every element. |
+| `count()` | Count the number of elements. |
+| `reduce()` | Combine elements into a single value. |
+| `findFirst()` | Return the first element. |
+| `findAny()` | Return any element (useful in parallel streams). |
+| `max()` | Return the maximum element. |
+| `min()` | Return the minimum element. |
+| `anyMatch()` | Returns true if any element matches. |
+| `allMatch()` | Returns true if all elements match. |
+| `noneMatch()` | Returns true if no elements match. |
+| `toArray()` | Convert stream into an array. |
+
+---
+
+# Top Stream Methods for Interviews
+
+## Intermediate Operations
+
+- `filter()`
+- `map()`
+- `flatMap()`
+- `sorted()`
+- `distinct()`
+- `limit()`
+- `skip()`
+
+## Terminal Operations
+
+- `collect()`
+- `forEach()`
+- `count()`
+- `reduce()`
+- `findFirst()`
+- `findAny()`
+- `max()`
+- `min()`
+- `anyMatch()`
+- `allMatch()`
+- `noneMatch()`
+
+---
+
+# Top Collectors for Interviews
+
+- `Collectors.toList()`
+- `Collectors.toSet()`
+- `Collectors.toMap()`
+- `Collectors.groupingBy()`
+- `Collectors.partitioningBy()`
+- `Collectors.maxBy()`
+- `Collectors.minBy()`
+- `Collectors.joining()`
+- `Collectors.counting()`
+- `Collectors.summingInt()`
+- `Collectors.averagingDouble()`
+- `Collectors.summarizingDouble()`
+- `Collectors.mapping()`
+- `Collectors.collectingAndThen()`
+
+---
+
+# Top Comparator Methods for Interviews
+
+- `Comparator.comparing()`
+- `Comparator.comparingInt()`
+- `Comparator.comparingLong()`
+- `Comparator.comparingDouble()`
+- `Comparator.naturalOrder()`
+- `Comparator.reverseOrder()`
+- `Comparator.reversed()`
+- `Comparator.thenComparing()`
+- `Comparator.thenComparingInt()`
+- `Comparator.thenComparingLong()`
+- `Comparator.thenComparingDouble()`
+- `Comparator.nullsFirst()`
+- `Comparator.nullsLast()`
+
+---
+
+# Interview Tip
+
+### Intermediate Operations (Lazy)
+
+- `filter()`
+- `map()`
+- `flatMap()`
+- `sorted()`
+- `distinct()`
+- `peek()`
+- `limit()`
+- `skip()`
+
+### Terminal Operations (Execute the Stream)
+
+- `collect()`
+- `forEach()`
+- `count()`
+- `reduce()`
+- `findFirst()`
+- `findAny()`
+- `max()`
+- `min()`
+- `anyMatch()`
+- `allMatch()`
+- `noneMatch()`
+- `toArray()`
 
 ---
 
