@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Note — GitHub Saved</title>
+<style>
+  :root {
+    --bg: #101318;
+    --panel: #191e26;
+    --border: #303743;
+    --text: #e8edf3;
+    --muted: #9aa5b1;
+    --accent: #e0a339;
+    --success: #55c49b;
+    --danger: #e26d7a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+    line-height: 1.6;
+  }
+  .page {
+    max-width: 1000px;
+    margin: auto;
+    padding: 32px 20px 80px;
+  }
+  h1 { margin-bottom: 6px; }
+  .muted { color: var(--muted); }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+  textarea {
+    width: 100%;
+    min-height: 180px;
+    resize: vertical;
+    background: #0c0f13;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    font: inherit;
+  }
+  button {
+    margin-top: 12px;
+    padding: 9px 15px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: var(--accent);
+    color: #111;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  button.secondary {
+    background: var(--panel);
+    color: var(--text);
+  }
+  button:disabled { opacity: .55; cursor: not-allowed; }
+  input {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0 12px;
+    background: #0c0f13;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+  }
+  .status { margin-top: 10px; min-height: 24px; }
+  .success { color: var(--success); }
+  .error { color: var(--danger); }
+  .warning {
+    border-left: 3px solid var(--accent);
+    padding-left: 12px;
+  }
+  .saved-note {
+    white-space: pre-wrap;
+    padding: 14px;
+    background: #0c0f13;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    min-height: 60px;
+  }
+</style>
+</head>
+
+<body>
+<div class="page">
+
+  <h1>Programming Concepts</h1>
+  <p class="muted">
+    Your normal study material goes here. The personal note below is stored
+    back into this same HTML file through the GitHub Contents API.
+  </p>
+
+  <!-- YOUR NORMAL STUDY CONTENT START -->
+  <div class="card">
+    <h2>Example study content</h2>
+    <p>
+      start() creates a new thread. Calling run() directly does not create
+      a new thread.
+    </p>
+  </div>
+  <!-- YOUR NORMAL STUDY CONTENT END -->
+
+
+  <!-- GITHUB NOTE AREA START -->
+  <section class="card">
+    <h2>📌 My Important Notes</h2>
+
+    <div id="savedNote" class="saved-note">No personal note saved yet.</div>
+
+    <textarea id="noteInput"
+      placeholder="Type your important point, shortcut, doubt, or exam trap here..."></textarea>
+
+    <button id="saveBtn" onclick="saveNote()">Save to GitHub</button>
+    <button class="secondary" onclick="loadFromGitHub()">Reload from GitHub</button>
+
+    <div id="status" class="status"></div>
+  </section>
+  <!-- GITHUB NOTE AREA END -->
+
+
+  <section class="card">
+    <h2>GitHub Authentication</h2>
+
+    <p class="muted">
+      Enter a GitHub Personal Access Token only when you want to save.
+      This demo keeps the token only in this browser tab and does not put it
+      into the HTML file.
+    </p>
+
+    <label for="token">GitHub token</label>
+    <input id="token" type="password" autocomplete="off"
+      placeholder="github_pat_...">
+
+    <p class="warning muted">
+      Create a fine-grained token with access only to this repository and
+      Contents: Read and write. Never put a token directly into your HTML
+      source code.
+    </p>
+  </section>
+
+</div>
+
+<script>
+/*
+  ============================================================
+  CONFIGURATION
+  ============================================================
+
+  Change these three values for your repository/file.
+
+  Your example:
+    owner  = Ananth347
+    repo   = Java
+    branch = main
+
+  The file path is the path INSIDE the repository.
+*/
+const GITHUB_OWNER = "Ananth347";
+const GITHUB_REPO  = "Java";
+const GITHUB_BRANCH = "main";
+
+const FILE_PATH =
+  "Java-Backend-Preparation/SEBI/Programming Concepts/github_api_same_file_notes.html";
+
+/*
+  The HTML file contains these markers:
+
+    <!-- GITHUB_NOTE_DATA_START -->
+    ...
+    <!-- GITHUB_NOTE_DATA_END -->
+
+  Only the content between those markers is replaced.
+  Everything else in the HTML file remains unchanged.
+*/
+const NOTE_START = "<!-- GITHUB_NOTE_DATA_START -->";
+const NOTE_END   = "<!-- GITHUB_NOTE_DATA_END -->";
+
+
+function getApiUrl() {
+  const encodedPath = GITHUB_OWNER + "/" + GITHUB_REPO + "/contents/" +
+    FILE_PATH.split("/").map(encodeURIComponent).join("/");
+
+  return "https://api.github.com/repos/" + encodedPath;
+}
+
+
+function getToken() {
+  return document.getElementById("token").value.trim();
+}
+
+
+function setStatus(message, type = "") {
+  const el = document.getElementById("status");
+  el.textContent = message;
+  el.className = "status " + type;
+}
+
+
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+
+/*
+  Converts the note into HTML that can safely live inside
+  this HTML document.
+
+  Newlines are preserved as <br>.
+*/
+function noteToHtml(note) {
+  return escapeHtml(note).replace(/\r?\n/g, "<br>");
+}
+
+
+/*
+  Extracts the note that was previously saved into the HTML file.
+*/
+function extractSavedNote(html) {
+  const start = html.indexOf(NOTE_START);
+  const end = html.indexOf(NOTE_END);
+
+  if (start === -1 || end === -1 || end < start) {
+    return "";
+  }
+
+  const raw = html.substring(
+    start + NOTE_START.length,
+    end
+  );
+
+  /*
+    The saved representation is:
+      <div id="githubSavedNote">...</div>
+  */
+  const match = raw.match(
+    /<div id="githubSavedNote">([\s\S]*?)<\/div>/
+  );
+
+  if (!match) return "";
+
+  const temp = document.createElement("div");
+  temp.innerHTML = match[1];
+
+  return temp.textContent || "";
+}
+
+
+function showSavedNote(note) {
+  const el = document.getElementById("savedNote");
+  el.textContent = note || "No personal note saved yet.";
+}
+
+
+/*
+  Reads the CURRENT HTML file from GitHub.
+
+  This is important because GitHub requires the file's current SHA
+  when we update it.
+*/
+async function getCurrentFile(token) {
+  const response = await fetch(getApiUrl() + "?ref=" +
+    encodeURIComponent(GITHUB_BRANCH), {
+      headers: {
+        "Accept": "application/vnd.github+json",
+        "Authorization": "Bearer " + token,
+        "X-GitHub-Api-Version": "2022-11-28"
+      }
+    });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error("GitHub GET failed (" + response.status + "): " + text);
+  }
+
+  return response.json();
+}
+
+
+/*
+  GitHub returns the file content as Base64.
+*/
+function decodeBase64Unicode(base64) {
+  const binary = atob(base64.replace(/\n/g, ""));
+  const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+  return new TextDecoder("utf-8").decode(bytes);
+}
+
+
+function encodeBase64Unicode(text) {
+  const bytes = new TextEncoder().encode(text);
+  let binary = "";
+  const chunkSize = 0x8000;
+
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+  }
+
+  return btoa(binary);
+}
+
+
+/*
+  Replace ONLY the personal-note section.
+*/
+function replaceNoteSection(html, note) {
+  const start = html.indexOf(NOTE_START);
+  const end = html.indexOf(NOTE_END);
+
+  if (start === -1 || end === -1 || end < start) {
+    throw new Error(
+      "The note markers were not found in the GitHub file."
+    );
+  }
+
+  const noteHtml = noteToHtml(note);
+
+  const replacement =
+    NOTE_START +
+    "\n<div id=\"githubSavedNote\">" +
+    noteHtml +
+    "</div>\n" +
+    NOTE_END;
+
+  return (
+    html.substring(0, start) +
+    replacement +
+    html.substring(end + NOTE_END.length)
+  );
+}
+
+
+/*
+  SAVE:
+    1. Read current GitHub file.
+    2. Get its SHA.
+    3. Replace only the note area.
+    4. PUT the complete updated HTML back to the SAME file.
+*/
+async function saveNote() {
+  const token = getToken();
+  const note = document.getElementById("noteInput").value;
+
+  if (!token) {
+    setStatus("Enter your GitHub token first.", "error");
+    return;
+  }
+
+  const button = document.getElementById("saveBtn");
+  button.disabled = true;
+  setStatus("Reading current file from GitHub...");
+
+  try {
+    const file = await getCurrentFile(token);
+
+    const currentHtml = decodeBase64Unicode(file.content);
+
+    const updatedHtml = replaceNoteSection(currentHtml, note);
+
+    setStatus("Saving the same HTML file to GitHub...");
+
+    const response = await fetch(getApiUrl(), {
+      method: "PUT",
+      headers: {
+        "Accept": "application/vnd.github+json",
+        "Authorization": "Bearer " + token,
+        "X-GitHub-Api-Version": "2022-11-28",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: "Update personal study note",
+        content: encodeBase64Unicode(updatedHtml),
+        sha: file.sha,
+        branch: GITHUB_BRANCH
+      })
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(
+        "GitHub PUT failed (" + response.status + "): " + text
+      );
+    }
+
+    showSavedNote(note);
+
+    setStatus(
+      "✓ Saved to the SAME HTML file. GitHub Pages may take a short time to update.",
+      "success"
+    );
+
+  } catch (error) {
+    console.error(error);
+    setStatus(error.message, "error");
+  } finally {
+    button.disabled = false;
+  }
+}
+
+
+/*
+  LOAD:
+  Read the latest HTML from GitHub and display the saved note.
+*/
+async function loadFromGitHub() {
+  const token = getToken();
+
+  if (!token) {
+    setStatus("Enter your GitHub token first.", "error");
+    return;
+  }
+
+  setStatus("Loading latest note from GitHub...");
+
+  try {
+    const file = await getCurrentFile(token);
+    const currentHtml = decodeBase64Unicode(file.content);
+    const note = extractSavedNote(currentHtml);
+
+    showSavedNote(note);
+    document.getElementById("noteInput").value = note;
+
+    setStatus("✓ Loaded from GitHub.", "success");
+  } catch (error) {
+    console.error(error);
+    setStatus(error.message, "error");
+  }
+}
+
+
+/*
+  When the page is opened, the note already embedded in the current
+  HTML file can be displayed immediately without an API call.
+*/
+(function initialise() {
+  const currentHtml = document.documentElement.outerHTML;
+  const note = extractSavedNote(currentHtml);
+
+  showSavedNote(note);
+  document.getElementById("noteInput").value = note;
+})();
+</script>
+
+
+<!-- ============================================================
+     PERSONAL NOTE DATA
+
+     DO NOT DELETE THESE MARKERS.
+
+     The Save button replaces only the content between them.
+     ============================================================ -->
+<!-- GITHUB_NOTE_DATA_START -->
+<div id="githubSavedNote"></div>
+<!-- GITHUB_NOTE_DATA_END -->
+
+</body>
+</html>
