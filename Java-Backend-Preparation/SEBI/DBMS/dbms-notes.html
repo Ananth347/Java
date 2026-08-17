@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The DBMS Field Guide — Exam-Depth Concepts, Plainly Explained</title>
+<style>
+  :root{
+    --paper:#f3ede0;
+    --paper-2:#ece3d0;
+    --line:#d3c6a6;
+    --line-soft:#e2d6ba;
+    --ink:#2b2418;
+    --ink-soft:#5b4f3c;
+    --muted:#8a8170;
+    --cabinet:#1f3329;
+    --cabinet-2:#16241d;
+    --brass:#b4864a;
+    --brass-light:#d9ab6d;
+    --correct:#3f7d58;
+    --correct-bg:#e2edda;
+    --wrong:#a1432f;
+    --wrong-bg:#f3ded6;
+    --blue:#2f5f8a;
+    --blue-bg:#e2ecf3;
+    font-size:16px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cabinet-2);
+    color:var(--ink);
+    font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'URW Palladio L', serif;
+    min-height:100vh;
+  }
+  .ui{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  .mono{ font-family: 'Courier New', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  a{ color: var(--blue); }
+
+  header.cabinet{
+    background: linear-gradient(180deg, var(--cabinet), var(--cabinet-2));
+    color:#eee7d6;
+    padding: 18px clamp(14px,4vw,40px) 16px;
+    position: sticky; top:0; z-index: 60;
+    box-shadow: 0 4px 18px rgba(0,0,0,.35);
+    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  }
+  .brand h1{ margin:0; font-size: clamp(20px,3vw,28px); font-weight:400; }
+  .brand h1 em{ font-style:italic; color:var(--brass-light); }
+  .brand p{ margin:2px 0 0; font-size:12.5px; color:#c9bfa4; font-family:-apple-system,sans-serif; }
+  .cabinet-actions{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .btn{
+    font-family:-apple-system,sans-serif; font-size:13px; font-weight:600; cursor:pointer; border:none;
+    padding:9px 14px; border-radius:3px; letter-spacing:.02em; display:inline-flex; align-items:center; gap:7px;
+    transition: transform .12s ease, background .15s ease;
+  }
+  .btn:active{ transform: translateY(1px); }
+  .btn-brass{ background: var(--brass); color:#241c0f; }
+  .btn-brass:hover{ background: var(--brass-light); }
+  .btn-ghost{ background: transparent; color:#eee7d6; border:1px solid rgba(238,231,214,.35); }
+  .btn-ghost:hover{ background: rgba(238,231,214,.1); }
+  .btn:focus-visible{ outline:2px solid var(--brass-light); }
+  .header-meta{ font-family:'Courier New',monospace; font-size:11.5px; color:#c9bfa4; }
+
+  .layout{ display:flex; align-items:flex-start; max-width:1180px; margin:0 auto; }
+  nav.toc{
+    width: 230px; flex-shrink:0; position: sticky; top: 84px;
+    padding: 26px 10px 40px 20px; height: calc(100vh - 84px); overflow-y:auto;
+  }
+  nav.toc a{
+    display:block; text-decoration:none; color:#cfc4a6; font-family:'Courier New',monospace;
+    font-size:12.5px; padding:6px 10px; border-left:2px solid transparent; line-height:1.5;
+  }
+  nav.toc a:hover{ color:#f3ede0; }
+  nav.toc a.active{ color:var(--brass-light); border-left-color:var(--brass-light); background:rgba(238,231,214,.05); }
+  nav.toc .toc-title{ font-family:-apple-system,sans-serif; font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:#8a8170; margin: 0 0 8px 10px; }
+
+  main{ flex:1; min-width:0; background: var(--paper);
+    background-image: linear-gradient(var(--line-soft) 1px, transparent 1px);
+    background-size: 100% 34px;
+    padding: clamp(20px,4vw,50px) clamp(18px,5vw,60px) 80px;
+  }
+
+  .intro{
+    background: var(--paper-2); border:1px solid var(--line); border-radius:6px;
+    padding: 20px 24px; margin-bottom: 34px; font-size:15.5px; line-height:1.7;
+  }
+  .intro p{ margin: 0 0 10px; }
+  .intro p:last-child{ margin-bottom:0; }
+
+  section.chapter{ margin-bottom: 60px; scroll-margin-top: 90px; }
+  .chapter-head{ display:flex; align-items:baseline; gap:14px; margin-bottom:6px; flex-wrap:wrap; }
+  .chapter-num{
+    font-family:'Courier New',monospace; background:var(--brass); color:#241c0f; font-weight:700;
+    font-size:13px; padding:4px 10px; border-radius:3px;
+  }
+  h2{ font-size: clamp(22px,3vw,28px); font-weight:400; margin:0; }
+  h2 em{ font-style:italic; color:var(--brass); }
+  .kicker{ font-family:'Courier New',monospace; font-size:11.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin: 4px 0 18px; }
+
+  h3{ font-size:17.5px; font-weight:700; margin: 30px 0 8px; color:var(--ink); }
+  h3.sub{ font-size:15px; color:var(--brass); text-transform:uppercase; letter-spacing:.06em; font-family:'Courier New',monospace; margin-top:26px; }
+
+  p{ line-height:1.75; font-size:15.5px; margin: 0 0 14px; }
+  .lead{ font-size:16.5px; }
+  .analogy{
+    background: var(--blue-bg); border-left:4px solid var(--blue); padding: 12px 16px;
+    border-radius: 0 4px 4px 0; margin: 14px 0 18px; font-size:14.5px; font-style:italic; color:#2b3f50;
+  }
+  .analogy b{ font-style:normal; }
+
+  ul.keylist{ margin: 0 0 18px; padding-left: 20px; }
+  ul.keylist li{ margin-bottom:9px; line-height:1.65; font-size:15px; }
+  ul.keylist b{ color:var(--ink); }
+  ul.keylist ul{ margin-top:6px; padding-left:20px; }
+  ol.steplist{ margin: 0 0 18px; padding-left:22px; }
+  ol.steplist li{ margin-bottom:8px; line-height:1.65; font-size:15px; }
+
+  .example{
+    background: #fbf8f0; border:1px solid var(--line); border-radius:6px; padding: 16px 18px; margin: 16px 0 20px;
+  }
+  .example .example-label{
+    font-family:'Courier New',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em;
+    color:var(--brass); margin-bottom:10px; display:block;
+  }
+
+  table.data-table{ border-collapse:collapse; width:100%; margin: 6px 0 12px; font-size:13.5px; font-family:-apple-system,sans-serif; }
+  table.data-table caption{ caption-side:top; text-align:left; font-family:'Courier New',monospace; font-size:12px; color:var(--muted); margin-bottom:6px; }
+  table.data-table th, table.data-table td{ border:1px solid var(--line); padding:7px 10px; text-align:left; vertical-align:top; }
+  table.data-table th{ background: var(--cabinet); color:#eee7d6; font-weight:600; }
+  table.data-table td.key{ font-weight:700; text-decoration:underline; }
+  table.data-table td.hl{ background: var(--correct-bg); }
+  table.data-table td.hl2{ background: var(--blue-bg); }
+  table.data-table td.hlw{ background: var(--wrong-bg); }
+
+  .tables-row{ display:flex; gap:18px; flex-wrap:wrap; align-items:flex-start; margin: 10px 0; }
+  .tables-row .tbl-block{ flex:1; min-width:180px; }
+  .op-arrow{ font-family:'Courier New',monospace; font-size:22px; color:var(--brass); align-self:center; padding-top:20px; }
+
+  .diagram-wrap{ margin: 18px 0 22px; text-align:center; }
+  .diagram-wrap svg{ max-width:100%; height:auto; }
+  .diagram-caption{ font-family:'Courier New',monospace; font-size:11.5px; color:var(--muted); margin-top:8px; }
+
+  .callout{
+    border:1px dashed var(--brass); border-radius:6px; padding:14px 18px; margin:18px 0; background: rgba(180,134,74,.06);
+    font-size:14.5px;
+  }
+  .callout b{ color: var(--brass); }
+
+  .trap{
+    border:1px dashed var(--wrong); border-radius:6px; padding:14px 18px; margin:18px 0; background: rgba(161,67,47,.07);
+    font-size:14.5px;
+  }
+  .trap b{ color: var(--wrong); }
+  .trap .trap-tag{ font-family:'Courier New',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--wrong); display:block; margin-bottom:6px; }
+
+  code{ font-family:'Courier New',monospace; background: var(--paper-2); padding:1px 6px; border-radius:3px; font-size:.92em; }
+  .formula{ font-family:'Courier New',monospace; background:var(--ink); color:#f3ede0; padding:10px 14px; border-radius:4px; display:inline-block; margin: 6px 0 14px; font-size:14px; }
+
+  .notebox{ margin-top: 28px; border-top: 2px dashed var(--line); padding-top: 16px; }
+  .notebox-label{
+    font-family:-apple-system,sans-serif; font-size:13px; font-weight:700; color:var(--ink-soft);
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;
+  }
+  .notebox-label .save-status{ font-size:12px; color:var(--correct); opacity:0; transition:opacity .3s ease; font-weight:600; }
+  .notebox-label .save-status.show{ opacity:1; }
+  textarea.note-input{
+    width:100%; min-height:70px; resize:vertical; font-family:inherit; font-size:14px;
+    background: repeating-linear-gradient(var(--paper-2), var(--paper-2) 27px, var(--line-soft) 28px);
+    border:1px solid var(--line); border-radius:4px; padding:8px 10px; color:var(--ink); line-height:28px;
+  }
+  textarea.note-input:focus-visible{ outline:2px solid var(--brass); }
+  .notebox-row{ display:flex; justify-content:flex-end; gap:8px; margin-top:6px; }
+  .note-save-btn{
+    font-family:-apple-system,sans-serif; font-size:12.5px; font-weight:600; padding:7px 14px; border-radius:4px;
+    border:1px solid var(--brass); background:var(--brass); color:#241c0f; cursor:pointer;
+  }
+  .note-save-btn:hover{ background:var(--brass-light); }
+
+  #toast{
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(20px);
+    background: var(--ink); color:var(--paper); font-family:-apple-system,sans-serif; font-size:13px;
+    padding:10px 18px; border-radius:20px; box-shadow: 0 10px 30px rgba(20,15,5,.3); opacity:0; pointer-events:none;
+    transition: opacity .25s ease, transform .25s ease; z-index:100;
+  }
+  #toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  footer.page-footer{ text-align:center; padding: 18px; font-size:11.5px; color:#7a7261; background:var(--paper); font-family:-apple-system,sans-serif; }
+
+  @media (max-width: 900px){
+    nav.toc{ display:none; }
+    .layout{ display:block; }
+  }
+  @media (prefers-reduced-motion: reduce){ *{ transition-duration:.001ms !important; } }
+</style>
+</head>
+<body>
+
+<header class="cabinet">
+  <div class="brand">
+    <h1>The <em>DBMS</em> Field Guide</h1>
+    <p>Exam-depth notes — ER model to concurrency control, with the traps examiners love</p>
+  </div>
+  <div class="cabinet-actions">
+    <span class="header-meta" id="notesCounter">0 notes saved</span>
+    <button class="btn btn-brass ui" id="saveFileBtn">⤓ Save to file</button>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="toc ui" id="tocNav">
+    <p class="toc-title">Chapters</p>
+    <a href="#er-model" data-target="er-model">01 · ER Model</a>
+    <a href="#relational-model" data-target="relational-model">02 · Relational Model</a>
+    <a href="#relational-algebra" data-target="relational-algebra">03 · Relational Algebra</a>
+    <a href="#tuple-calculus" data-target="tuple-calculus">04 · Relational Calculus</a>
+    <a href="#integrity" data-target="integrity">05 · Integrity Constraints</a>
+    <a href="#normal-forms" data-target="normal-forms">06 · Normal Forms</a>
+    <a href="#file-organization" data-target="file-organization">07 · File Organization</a>
+    <a href="#indexing" data-target="indexing">08 · Indexing (B / B+ Trees)</a>
+    <a href="#transactions" data-target="transactions">09 · Transactions &amp; ACID</a>
+    <a href="#concurrency" data-target="concurrency">10 · Concurrency Control</a>
+  </nav>
+
+  <main>
+    <div class="intro ui">
+      <p><b>How to use this guide:</b> each chapter goes deep enough for competitive-exam MCQs — formal definitions, worked derivations, and <b style="color:var(--wrong);">"exam trap"</b> boxes flagging the exact distinctions papers love to test. Read straight through or jump from the list on the left.</p>
+      <p><b>About your notes:</b> every chapter ends with a lined notebox — type anything, click <b>Save note</b>. Click <b>Save to file</b> up top and every note gets written directly into this HTML file, so closing it, reopening it later, or moving it to another computer keeps everything intact. No internet connection is used anywhere on this page.</p>
+    </div>
+
+    <div class="notebox" data-note-id="general">
+      <div class="notebox-label"><span>✎ General notes (anything, anywhere)</span><span class="save-status ui">Saved ✓</span></div>
+      <textarea class="note-input" placeholder="Free space for anything — a summary, a question for your professor, a mnemonic…"></textarea>
+      <div class="notebox-row"><button class="note-save-btn ui">Save note</button></div>
+    </div>
+
+    <section class="chapter" id="er-model">
+      <div class="chapter-head">
+        <span class="chapter-num mono">01</span>
+        <h2>The <em>ER Model</em></h2>
+      </div>
+      <p class="kicker">Entity–Relationship Model &amp; Enhanced ER (EER)</p>
+
+      <p class="lead">Before a single table exists, you sketch a plan of what real-world "things" the system must remember and how they connect. That plan is the <b>Entity-Relationship (ER) diagram</b>. Exams test this chapter heavily because it's mostly definitions — precise, memorizable, and easy to trip up on.</p>
+
+      <div class="analogy">Planning a school notice board: decide who/what you're tracking (Students, Teachers, Classes), what you want to know about each (a Student's name, roll number), and how they link (a Student attends a Class) — before you build anything.</div>
+
+      <h3>The building blocks — formal definitions</h3>
+      <ul class="keylist">
+        <li><b>Entity</b> — a real-world object or concept with independent existence, distinguishable from every other object. An <b>entity set</b> is a collection of entities of the same type sharing the same attributes.</li>
+        <li><b>Attribute</b> — a property describing an entity. Types you must be able to name on sight:
+          <ul>
+            <li><b>Simple / atomic</b> — indivisible, e.g. <code>RollNumber</code>.</li>
+            <li><b>Composite</b> — splits into smaller sub-parts, e.g. <code>Address</code> → Street, City, Pincode.</li>
+            <li><b>Derived</b> — computed from another stored attribute, e.g. <code>Age</code> from <code>DateOfBirth</code>. Drawn as a <i>dashed</i> ellipse; not stored directly.</li>
+            <li><b>Multivalued</b> — can hold more than one value for one entity, e.g. <code>PhoneNumbers</code>. Drawn as a <i>double</i> ellipse.</li>
+            <li><b>Key attribute</b> — uniquely identifies each entity. Drawn <i>underlined</i>.</li>
+            <li><b>Complex attribute</b> — a composite attribute that also contains derived and/or multivalued parts nested inside it.</li>
+          </ul>
+        </li>
+        <li><b>Relationship</b> / <b>relationship set</b> — an association among entity sets. Drawn as a diamond. The <b>degree</b> of a relationship is how many entity sets participate: <b>unary/recursive</b> (1, e.g. <i>Employee supervises Employee</i>), <b>binary</b> (2, the most common), <b>ternary</b> (3), and so on (<i>n-ary</i>).</li>
+      </ul>
+
+      <div class="trap">
+        <span class="trap-tag">Exam trap</span>
+        A <b>recursive (unary) relationship</b> needs <b>role names</b> because the same entity set plays two different parts in one relationship — e.g. in <i>Employee supervises Employee</i>, one occurrence is "Supervisor" and the other is "Subordinate". Without role names the diagram is ambiguous about which side is which.
+      </div>
+
+      <h3 class="sub">Weak entities</h3>
+      <p>A <b>weak entity</b> has no candidate key of its own strong enough to uniquely identify it — it depends on a <b>strong (owner) entity</b> for identity. It's identified by its <b>partial key</b> (also called a <b>discriminator</b>) combined with the owner's primary key.</p>
+      <ul class="keylist">
+        <li>Example: a <code>Dependent</code> (spouse/child on an insurance form) only makes sense tied to a specific <code>Employee</code> — two different employees could each have a dependent named "Sam". <code>Dependent</code>'s real key becomes <code>(EmployeeID, DependentName)</code>.</li>
+        <li>Notation: weak entity = <b>double rectangle</b>; its identifying relationship (linking it to the owner) = <b>double diamond</b>; its partial key = <i>dashed underline</i>.</li>
+        <li>When mapped to a relational table, the weak entity's table's primary key = <b>discriminator + owner's primary key</b> together.</li>
+      </ul>
+
+      <h3 class="sub">Cardinality — "how many can link to how many"</h3>
+      <ul class="keylist">
+        <li><b>1:1</b> — one Person has one Passport.</li>
+        <li><b>1:N</b> — one Department has many Employees; each Employee belongs to exactly one Department. <b>The foreign key always goes on the "many" side</b> (Employee gets a DeptID column).</li>
+        <li><b>M:N</b> — a Student can enroll in many Courses, a Course can have many Students. This <b>always</b> needs its own junction/bridge table when mapped to relations — you cannot just place a foreign key on either side.</li>
+      </ul>
+      <p><b>Participation:</b> <b>total participation</b> means every entity in the set must appear in at least one relationship instance (drawn as a <b>double line</b>); <b>partial participation</b> means it's optional (a <b>single line</b>). A <b>(min, max)</b> notation can express both cardinality and participation together in one pair of numbers per entity.</p>
+
+      <h3 class="sub">Enhanced ER (EER) — Generalization, Specialization, Aggregation</h3>
+      <ul class="keylist">
+        <li><b>Specialization</b> — <i>top-down</i>: start with one entity set and split it into subclasses based on distinguishing features (e.g. <code>Employee</code> → <code>Manager</code>, <code>Engineer</code>).</li>
+        <li><b>Generalization</b> — <i>bottom-up</i>: start with several entity sets that share common features and combine them into one higher-level superclass (e.g. <code>Car</code> and <code>Truck</code> → <code>Vehicle</code>).</li>
+        <li><b>ISA (is-a) relationship</b> — the superclass/subclass link itself; a subclass inherits every attribute and relationship of its superclass, plus can add its own.</li>
+        <li><b>Disjoint vs. overlapping constraint</b> — <i>disjoint</i> means an entity can belong to at most one subclass; <i>overlapping</i> means it can belong to more than one at once (e.g. a person can be both a Student and an Employee).</li>
+        <li><b>Total vs. partial specialization</b> — <i>total</i> means every superclass entity must belong to some subclass; <i>partial</i> means it doesn't have to.</li>
+        <li><b>Aggregation</b> — treats an entire relationship set (with its participating entities) as if it were itself a higher-level entity, so it can take part in further relationships. Used when a relationship needs to relate to another relationship.</li>
+        <li><b>Union / category</b> — a subclass that is a subset of the <i>union</i> of several distinct superclasses (a rare multiple-inheritance-style construct), e.g. <code>Owner</code> = Person ∪ Bank ∪ Company for a vehicle-registration system.</li>
+      </ul>
+
+      <div class="trap">
+        <span class="trap-tag">Exam trap</span>
+        Don't confuse <b>generalization</b> (bottom-up, combining) with <b>specialization</b> (top-down, splitting) — papers frequently swap these in distractor options. Also: <b>aggregation ≠ generalization</b> — aggregation is about treating a <i>relationship</i> as an entity, not about superclass/subclass hierarchies.
+      </div>
+
+      <h3 class="sub">Worked example</h3>
+      <div class="example">
+        <span class="example-label ui">A library keeping track of borrowing</span>
+        <p style="margin-bottom:6px;">A <code>Member</code> <i>borrows</i> a <code>Book</code>. Each borrow-event also records a due date — an attribute of the relationship itself, not of either entity alone. Classic M:N relationship with a relationship attribute.</p>
+      </div>
+
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ER diagram of Member borrows Book">
+          <rect x="30" y="95" width="150" height="60" rx="4" fill="none" stroke="var(--ink)" stroke-width="2"/>
+          <text x="105" y="130" text-anchor="middle" font-family="Georgia,serif" font-size="16" fill="var(--ink)">MEMBER</text>
+
+          <rect x="540" y="95" width="150" height="60" rx="4" fill="none" stroke="var(--ink)" stroke-width="2"/>
+          <text x="615" y="130" text-anchor="middle" font-family="Georgia,serif" font-size="16" fill="var(--ink)">BOOK</text>
+
+          <polygon points="360,75 425,125 360,175 295,125" fill="var(--paper)" stroke="var(--brass)" stroke-width="2.5"/>
+          <text x="360" y="130" text-anchor="middle" font-family="Georgia,serif" font-size="14.5" fill="var(--brass)">BORROWS</text>
+
+          <line x1="180" y1="125" x2="295" y2="125" stroke="var(--ink)" stroke-width="2"/>
+          <line x1="425" y1="125" x2="540" y2="125" stroke="var(--ink)" stroke-width="2"/>
+          <text x="215" y="115" font-family="Courier New,monospace" font-size="13" fill="var(--ink-soft)">M</text>
+          <text x="470" y="115" font-family="Courier New,monospace" font-size="13" fill="var(--ink-soft)">N</text>
+
+          <ellipse cx="105" cy="35" rx="46" ry="20" fill="none" stroke="var(--ink)" stroke-width="1.6"/>
+          <line x1="80" y1="35" x2="130" y2="35" stroke="var(--ink)" stroke-width="1.6"/>
+          <text x="105" y="39" text-anchor="middle" font-family="Georgia,serif" font-size="12.5" fill="var(--ink)">MemberID</text>
+          <line x1="105" y1="55" x2="105" y2="95" stroke="var(--ink)" stroke-width="1.4"/>
+
+          <ellipse cx="615" cy="35" rx="42" ry="20" fill="none" stroke="var(--ink)" stroke-width="1.6"/>
+          <line x1="592" y1="35" x2="638" y2="35" stroke="var(--ink)" stroke-width="1.6"/>
+          <text x="615" y="39" text-anchor="middle" font-family="Georgia,serif" font-size="12.5" fill="var(--ink)">ISBN</text>
+          <line x1="615" y1="55" x2="615" y2="95" stroke="var(--ink)" stroke-width="1.4"/>
+
+          <ellipse cx="360" cy="215" rx="52" ry="20" fill="none" stroke="var(--brass)" stroke-width="1.6" stroke-dasharray="4 3"/>
+          <text x="360" y="219" text-anchor="middle" font-family="Georgia,serif" font-size="12.5" fill="var(--brass)">DueDate</text>
+          <line x1="360" y1="175" x2="360" y2="195" stroke="var(--brass)" stroke-width="1.4"/>
+        </svg>
+        <div class="diagram-caption ui">MEMBER and BOOK are entities (rectangles); BORROWS is the relationship (diamond); underlined ovals are key attributes; the dashed oval is an attribute of the relationship itself.</div>
+      </div>
+
+      <h3 class="sub">ER-to-Relational mapping rules (a favourite MCQ topic)</h3>
+      <table class="data-table">
+        <caption>How each ER construct becomes a table</caption>
+        <tr><th>ER construct</th><th>Becomes…</th></tr>
+        <tr><td>Strong entity</td><td>Its own table; key attribute → primary key.</td></tr>
+        <tr><td>Weak entity</td><td>Its own table; primary key = discriminator + owner's primary key (as a foreign key).</td></tr>
+        <tr><td>1:1 relationship</td><td>FK placed in either table (commonly the side with total participation), or the two tables are merged.</td></tr>
+        <tr><td>1:N relationship</td><td>FK placed on the "many" side, referencing the "one" side's primary key.</td></tr>
+        <tr><td>M:N relationship</td><td>A brand-new junction table holding the FKs of both entities (+ any relationship attributes) as its primary key.</td></tr>
+        <tr><td>Multivalued attribute</td><td>Its own table, with (owner's key + the value) as primary key.</td></tr>
+        <tr><td>Specialization/generalization</td><td>Several strategies exist: one table per subclass with FK to superclass table, or a single table with a "type" discriminator column, or fully merge everything into one table.</td></tr>
+      </table>
+
+      <div class="notebox" data-note-id="er-model">
+        <div class="notebox-label"><span>✎ Notes on the ER Model</span><span class="save-status ui">Saved ✓</span></div>
+        <textarea class="note-input" placeholder="Your notes on entities, attributes, cardinality, weak entities, EER…"></textarea>
+        <div class="notebox-row"><button class="note-save-btn ui">Save note</button></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="relational-model">
+      <div class="chapter-head">
+        <span class="chapter-num mono">02</span>
+        <h2>The <em>Relational Model</em></h2>
+      </div>
+      <p class="kicker">Relations, Tuples, Domains, Keys</p>
+
+      <p class="lead">This is the "table" way of storing data that almost every SQL database is built on. Formally, a <b>relation</b> is a subset of the Cartesian product of a set of domains — in plain terms, a table is a set of rows, each row picking one legal value from each column's allowed range.</p>
+
+      <ul class="keylist">
+        <li><b>Relation</b> — formal name for a table (a <i>set</i> of tuples — no duplicate rows, and, strictly, no guaranteed row order).</li>
+        <li><b>Tuple</b> — formal name for a row.</li>
+        <li><b>Attribute</b> — formal name for a column.</li>
+        <li><b>Domain</b> — the set of legal, atomic values a column may hold (e.g. <code>Age</code> must be a positive integer).</li>
+        <li><b>Degree</b> of a relation — the number of attributes (columns).</li>
+        <li><b>Cardinality</b> of a relation — the number of tuples (rows) it currently holds. (Careful: this is a different meaning of "cardinality" from the 1:1/1:N/M:N cardinality in Chapter 1!)</li>
+      </ul>
+
+      <div class="trap">
+        <span class="trap-tag">Exam trap</span>
+        "Cardinality" means two different things depending on chapter: in the <b>ER model</b> it's about relationship ratios (1:1, 1:N, M:N); in the <b>relational model</b> it's the number of rows in a table. Exams deliberately use both in the same paper.
+      </div>
+
+      <h3>Keys — how we tell rows apart</h3>
+      <ul class="keylist">
+        <li><b>Super key</b> — any set of columns that, together, uniquely identifies a row. May contain extra, unnecessary columns.</li>
+        <li><b>Candidate key</b> — a <i>minimal</i> super key: no proper subset of it is also a super key. A relation can have several candidate keys.</li>
+        <li><b>Primary key</b> — the one candidate key chosen as the official row identifier. Can never be NULL (entity integrity — see Chapter 5).</li>
+        <li><b>Alternate key</b> — any candidate key that was <i>not</i> chosen as primary key.</li>
+        <li><b>Composite key</b> — a candidate/primary key made of two or more attributes together (neither attribute alone is unique).</li>
+        <li><b>Foreign key</b> — an attribute (or set) in one table referencing the primary/candidate key of another (or the same) table — this is what physically implements the relationships from your ER diagram.</li>
+      </ul>
+
+      <div class="callout ui"><b>Remember the hierarchy:</b> every <i>primary key</i> is a <i>candidate key</i>; every <i>candidate key</i> is a <i>super key</i> — but not the other way around. Super key ⊇ Candidate key ⊇ Primary key (in terms of "how many attributes are allowed", moving from loosest to strictest).</div>
+
+      <div class="example">
+        <span class="example-label ui">Example — Student and Department</span>
+        <div class="tables-row">
+          <div class="tbl-block">
+            <table class="data-table">
+              <caption>Department</caption>
+              <tr><th>DeptID</th><th>DeptName</th></tr>
+              <tr><td class="key">D01</td><td>Computer Science</td></tr>
+              <tr><td class="key">D02</td><td>Mechanical</td></tr>
+            </table>
+          </div>
+          <div class="tbl-block">
+            <table class="data-table">
+              <caption>Student</caption>
+              <tr><th>StudentID</th><th>Name</th><th>DeptID</th></tr>
+              <tr><td class="key">S101</td><td>Anika</td><td class="hl2">D01</td></tr>
+              <tr><td class="key">S102</td><td>Rahul</td><td class="hl2">D02</td></tr>
+            </table>
+          </div>
+        </div>
+        <p style="margin-top:6px;"><code>StudentID</code> is Student's primary key. <code>DeptID</code> inside Student is a <b>foreign key</b> pointing at Department's primary key — this link is what lets you ask "which department is Rahul in?" without repeating "Mechanical" inside every student's row.</p>
+      </div>
+
+      <h3 class="sub">Relation schema vs. relation instance</h3>
+      <p>A <b>relation schema</b> is the structure/blueprint — the table name plus its attribute names and types, e.g. <code>Student(StudentID, Name, DeptID)</code>. A <b>relation instance</b> is the actual data sitting in the table at a given moment. Schemas rarely change; instances change with every insert/update/delete.</p>
+
+      <div class="notebox" data-note-id="relational-model">
+        <div class="notebox-label"><span>✎ Notes on the Relational Model</span><span class="save-status ui">Saved ✓</span></div>
+        <textarea class="note-input" placeholder="Your notes on relations, tuples, keys…"></textarea>
+        <div class="notebox-row"><button class="note-save-btn ui">Save note</button></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="relational-algebra">
+      <div class="chapter-head">
+        <span class="chapter-num mono">03</span>
+        <h2>Relational <em>Algebra</em></h2>
+      </div>
+      <p class="kicker">The procedural query toolkit — tells the database "how"</p>
+
+      <p class="lead">Relational algebra is a small set of operations, each taking one or two tables and producing a new table. It is <b>procedural</b> — you chain operations in a specific order describing exactly how to compute the answer. SQL engines translate declarative queries into an algebra-like internal plan before optimizing and running them.</p>
+
+      <h3>The fundamental (basic) operators</h3>
+      <table class="data-table">
+        <caption>These six are the true primitives — everything else is built from them</caption>
+        <tr><th>Symbol</th><th>Name</th><th>What it does</th></tr>
+        <tr><td>σ</td><td>Selection</td><td>Filters <i>rows</i> matching a condition.</td></tr>
+        <tr><td>π</td><td>Projection</td><td>Picks specific <i>columns</i>; automatically removes duplicate resulting rows.</td></tr>
+        <tr><td>∪</td><td>Union</td><td>Rows in either relation (duplicates removed). Requires union-compatibility.</td></tr>
+        <tr><td>−</td><td>Set difference</td><td>Rows in the first relation but not the second.</td></tr>
+        <tr><td>×</td><td>Cartesian product</td><td>Pairs every row of one relation with every row of another.</td></tr>
+        <tr><td>ρ</td><td>Rename</td><td>Relabels a relation and/or its attributes.</td></tr>
+      </table>
+
+      <div class="trap">
+        <span class="trap-tag">Exam trap</span>
+        <b>Join (⋈) is NOT a fundamental operator</b> — it's <i>derived</i> from Cartesian product + selection (+ projection, for natural join). So is <b>intersection (∩)</b>, which can be written as <code>R ∩ S = R − (R − S)</code>. A very common MCQ: "which of the following is NOT a basic operator?" → the answer is usually Join or Intersection.
+      </div>
+
+      <h3 class="sub">Union / Set-difference compatibility</h3>
+      <p>For <code>R ∪ S</code> and <code>R − S</code> to be legal, R and S must be <b>union-compatible</b>: same degree (number of attributes), with each corresponding pair of attributes drawn from the same domain.</p>
+
+      <h3 class="sub">σ — Selection (filter rows)</h3>
+      <div class="example">
+        <span class="example-label ui">σ<sub>DeptID = 'D01'</sub> (Student)</span>
+        <p style="margin-bottom:6px;">"Give me only the rows where DeptID is D01" — every column is kept, non-matching rows are dropped.</p>
+      </div>
+
+      <h3 class="sub">π — Projection (pick columns)</h3>
+      <div class="example">
+        <span class="example-label ui">π<sub>Name, DeptID</sub> (Student)</span>
+        <p style="margin-bottom:6px;">"Just show Name and DeptID" — every other column disappears, and if two rows become identical after dropping columns, only one copy survives (projection always de-duplicates).</p>
+      </div>
+
+      <h3 class="sub">Cartesian product (×) and Joins (⋈) — the family in full</h3>
+      <table class="data-table">
+        <caption>Every kind of join, compared</caption>
+        <tr><th>Operation</th><th>Condition</th><th>Duplicate column?</th></tr>
+        <tr><td><b>Cartesian product</b> (R × S)</td><td>None — every row pairs with every row.</td><td>N/A</td></tr>
+        <tr><td><b>Theta join</b> (⋈<sub>θ</sub>)</td><td>Any general condition θ (not necessarily equality) — really "Cartesian product, then σ<sub>θ</sub>".</td><td>Keeps both columns.</td></tr>
+        <tr><td><b>Equijoin</b></td><td>A theta join where θ uses only "=".</td><td class="hlw">Keeps both columns — does <i>not</i> auto-remove duplicates.</td></tr>
+        <tr><td><b>Natural join</b> (⋈)</td><td>Equality on <i>all</i> identically-named common attributes, implicit.</td><td class="hl">Automatically drops the duplicate common column(s).</td></tr>
+        <tr><td><b>Left outer join</b></td><td>Keeps all of the left relation's rows, padding unmatched ones with NULLs.</td><td>—</td></tr>
+        <tr><td><b>Right outer join</b></td><td>Keeps all of the right relation's rows, padding unmatched ones with NULLs.</td><td>—</td></tr>
+        <tr><td><b>Full outer join</b></td><td>Keeps unmatched rows from <i>both</i> sides, padded with NULLs.</td><td>—</td></tr>
+      </table>
+
+      <div class="example">
+        <span class="example-label ui">Student ⋈ Department — worked example</span>
+        <div class="tables-row">
+          <div class="tbl-block">
+            <table class="data-table">
+              <caption>Student</caption>
+              <tr><th>StudentID</th><th>Name</th><th>DeptID</th></tr>
+              <tr><td class="key">S101</td><td>Anika</td><td class="hl2">D01</td></tr>
+              <tr><td class="key">S102</td><td>Rahul</td><td class="hl2">D02</td></tr>
+            </table>
+          </div>
+          <div class="op-arrow">⋈</div>
+          <div class="tbl-block">
+            <table class="data-table">
+              <caption>Department</caption>
+              <tr><td class="hl2 key">D01</td><td>Computer Science</td></tr>
+              <tr><td class="hl2 key">D02</td><td>Mechanical</td></tr>
+            </table>
+          </div>
+          <div class="op-arrow">=</div>
+          <div class="tbl-block">
+            <table class="data-table">
+              <caption>Result — one DeptID column, not two</caption>
+              <tr><th>StudentID</th><th>Name</th><th>DeptID</th><th>DeptName</th></tr>
+              <tr><td class="key">S101</td><td>Anika</td><td class="hl2">D01</td><td>Computer Science</td></tr>
+              <tr><td class="key">S102</td><td>Rahul</td><td class="hl2">D02</td><td>Mechanical</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="sub">Division (÷) — the "for ALL" operator</h3>
+      <p>Used for queries shaped like <i>"find X related to EVERY Y"</i> — e.g. "students who have taken every course in the CS department" or "customers who have an account at every branch". If R has attributes (A,B) and S has attribute (B), then <code>R ÷ S</code> returns every A value such that (A, b) exists in R <i>for every</i> b in S.</p>
+      <div class="formula">Customers-at-all-branches = π<sub>cust,branch</sub>(Depositor ⋈ Account) ÷ π<sub>branch</sub>(Branch)</div>
+
+      <h3 class="sub">Extended (non-basic) algebra you'll also see</h3>
+      <ul class="keylist">
+        <li><b>Semi-join (⋉)</b> — rows of R that have at least one match in S, projected on R's own attributes only.</li>
+        <li><b>Anti-join (▷)</b> — rows of R that have <i>no</i> match in S.</li>
+        <li><b>Generalized projection / aggregation (𝔊 or ℱ)</b> — grouping + aggregate functions, e.g. "count of employees per department", the algebra equivalent of SQL's <code>GROUP BY</code>.</li>
+        <li><b>Assignment (←)</b> — stores an intermediate result in a temporary relation variable, useful for breaking a big query into readable steps.</li>
+      </ul>
+
+      <h3 class="sub">Putting it together — "names of CS students"</h3>
+      <div class="formula">π<sub>Name</sub> ( σ<sub>DeptName='Computer Science'</sub> ( Student ⋈ Department ) )</div>
+      <p>Read inside-out: join first, filter to Computer Science, then keep just the Name column — precisely what a SQL engine does internally for a query with a <code>JOIN</code> and a <code>WHERE</code> clause.</p>
+
+      <h3 class="sub">Useful algebraic identities (query optimization rules)</h3>
+      <ul class="keylist">
+        <li><b>Cascade of selections:</b> σ<sub>p1</sub>(σ<sub>p2</sub>(R)) = σ<sub>p1∧p2</sub>(R) — selections commute and can be combined.</li>
+        <li><b>Cascade of projections:</b> π<sub>A</sub>(π<sub>A,B</sub>(R)) = π<sub>A</sub>(R) directly — inner projections beyond the outermost are redundant.</li>
+        <li><b>Pushing selection through projection:</b> π<sub>A</sub>(σ<sub>p</sub>(R)) = σ<sub>p</sub>(π<sub>A</sub>(R)) <i>only when</i> p involves attributes already in A. Optimizers push selections as early as possible to shrink intermediate results.</li>
+        <li><b>Cartesian product</b> is commutative and associative (up to attribute reordering); relational algebra as a whole has the <b>closure property</b> — every operation's output is again a relation, so operations can be freely nested.</li>
+      </ul>
+
+      <div class="notebox" data-note-id="relational-algebra">
+        <div class="notebox-label"><span>✎ Notes on Relational Algebra</span><span class="save-status ui">Saved ✓</span></div>
+        <textarea class="note-input" placeholder="Your notes on σ, π, joins, division, optimization rules…"></textarea>
+        <div class="notebox-row"><button class="note-save-btn ui">Save note</button></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="tuple-calculus">
+      <div class="chapter-head">
+        <span class="chapter-num mono">04</span>
+        <h2>Relational <em>Calculus</em></h2>
+      </div>
+      <p class="kicker">Tuple Relational Calculus (TRC) &amp; Domain Relational Calculus (DRC) — the declarative side</p>
+
+      <p class="lead">Where algebra makes you spell out the exact sequence of steps, relational calculus lets you describe <i>what you want</i> and leaves it to the system to figure out how. This is much closer to how SQL actually reads, and both flavours below are proven to be exactly as powerful as relational algebra — a property called <b>relational completeness</b>.</p>
+
+      <div class="analogy">Algebra is a recipe: "chop the onions, then fry them, then add tomatoes." Calculus is ordering at a restaurant: "I'd like something with onions and tomatoes" — you describe the result, not the steps.</div>
+
+      <h3>Tuple Relational Calculus (TRC)</h3>
+      <p>A TRC query has the shape <code>{ t | P(t) }</code> — "the set of all tuples t such that predicate P(t) is true." Here <code>t</code> is a <b>tuple variable</b> ranging over entire rows, and <code>t[A]</code> means "the value of attribute A in tuple t". The <b>range</b> of a tuple variable is the relation it's drawn from, typically written as a membership condition like <code>t ∈ Student</code>.</p>
+
+      <h3>Domain Relational Calculus (DRC)</h3>
+      <p>DRC is TRC's sibling, but its variables range over individual <b>domain values</b> (single attribute values) instead of whole tuples. A DRC query looks like <code>{ ⟨x1, x2, …, xn⟩ | P(x1, x2, …, xn) }</code>, where each <code>xi</code> stands for one attribute's value, not a whole row.</p>
+
+      <div class="trap">
+        <span class="trap-tag">Exam trap</span>
+        The <b>only</b> structural difference between TRC and DRC is what the variables range over — <b>tuples</b> (TRC) vs. <b>individual domain values</b> (DRC). Both are declarative, both are relationally complete, and both use the same quantifiers.
+      </div>
+
+      <h3 class="sub">Quantifiers</h3>
+      <ul class="keylist">
+        <li><b>∃ (existential)</b> — "there exists at least one". Example: <code>∃ t ∈ Student ( t[DeptID] = 'D01' )</code> = "at least one student belongs to D01".</li>
+        <li><b>∀ (universal)</b> — "for every one". Example: <code>∀ t ∈ Student ( t[Age] &gt; 17 )</code> = "every student is over 17".</li>
+        <li><b>De Morgan's conversion:</b> <code>∀x (P(x))</code> is logically equivalent to <code>¬∃x (¬P(x))</code> — a standard trick for converting between the two quantifiers, and a common "which is equivalent to…" MCQ.</li>
+      </ul>
+
+      <h3 class="sub">Safety</h3>
+      <p>A calculus formula must be <b>safe</b> — guaranteed to return a finite result, typically by restricting values to those actually appearing in the referenced relations/domains. An <i>unsafe</i> expression (e.g. using negation without any domain restriction, like "all tuples NOT in R") could in principle describe an infinite relation, which a real database obviously can't return.</p>
+
+      <div class="example">
+        <span class="example-label ui">Same question, three ways</span>
+        <p><b>Plain English:</b> "Names of students in the Computer Science department."</p>
+        <p><b>Relational algebra:</b> <code>π<sub>Name</sub> (σ<sub>DeptName='Computer Science'</sub> (Student ⋈ Department))</code></p>
+        <p style="margin-bottom:0;"><b>Tuple calculus:</b> <code>{ t.Name | ∃ s ∈ Student, ∃ d ∈ Department ( s[DeptID]=d[DeptID] ∧ d[DeptName]='Computer Science' ∧ t.Name = s[Name] ) }</code></p>
+      </div>
+
+      <p>In practice, database engines translate declarative SQL into an internal relational-algebra-like execution plan, because algebra's explicit step-by-step nature is what's actually optimizable — reordering joins, pushing filters earlier, choosing indexes, and so on.</p>
+
+      <div class="notebox" data-note-id="tuple-calculus">
+        <div class="notebox-label"><span>✎ Notes on Relational Calculus</span><span class="save-status ui">Saved ✓</span></div>
+        <textarea class="note-input" placeholder="Your notes on TRC, DRC, quantifiers, safety, algebra vs calculus…"></textarea>
+        <div class="notebox-row"><button class="note-save-btn ui">Save note</button></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="integrity">
+      <div class="chapter-head">
+        <span class="chapter-num mono">05</span>
+        <h2>Integrity <em>Constraints</em></h2>
+      </div>
+      <p class="kicker">The rules that keep your data trustworthy</p>
+
+      <p class="lead">Constraints are rules the database enforces automatically, so bad data never gets a chance to sneak in.</p>
+
+      <ul class="keylist">
+        <li><b>Domain constraint</b> — every value must come from its column's declared type/range. An <code>Age</code> column can't hold "banana".</li>
+        <li><b>Entity integrity</b> — no part of a primary key can ever be NULL, and every table must have a primary key.</li>
+        <li><b>Referential integrity</b> — a foreign key value must either match an existing primary/candidate key value in the referenced table, or be NULL (if allowed). This is what stops an <code>Order</code> from pointing to a <code>CustomerID</code> that was never created.</li>
+        <li><b>Key constraint</b> — candidate keys must be unique across all rows.</li>
+        <li><b>NOT NULL</b> — forces a value to always be present.</li>
+        <li><b>UNIQUE</b> — forbids duplicate values, but — unlike a primary key — typically still allows multiple NULLs (since NULL isn't considered equal to another NULL).</li>
+        <li><b>CHECK</b> — enforces a custom predicate on every row, e.g. <code>Salary &gt; 0</code>.</li>
+        <li><b>Assertion</b> — a general-purpose constraint that can span <i>multiple</i> tables and is checked automatically, unlike a CHECK constraint which is tied to one table.</li>
+        <li><b>Trigger</b> — a procedural block of code that runs automatically in response to INSERT/UPDATE/DELETE events, used for business logic too complex for a declarative constraint.</li>
+      </ul>
+
+      <div class="trap">
+        <span class="trap-tag">Exam trap</span>
+        <b>Constraint vs. trigger:</b> a constraint is <i>declarative</i> (you state the rule, the system enforces it) while a trigger is <i>procedural</i> (you write code that runs on an event). Also: <b>UNIQUE ≠ PRIMARY KEY</b> — UNIQUE columns can usually hold several NULLs; PRIMARY KEY columns can hold none.
+      </div>
+
+      <h3 class="sub">Referential actions — what happens when you delete the "parent" row?</h3>
+      <table class="data-table">
+        <caption>If a Department row is deleted while Employees still reference it</caption>
+        <tr><th>Action</th><th>Effect on the dependent Employee rows</th></tr>
+        <tr><td><b>ON DELETE CASCADE</b></td><td>They get deleted too, automatically.</td></tr>
+        <tr><td><b>ON DELETE SET NULL</b></td><td>Their DeptID is set to NULL — they become "unassigned".</td></tr>
+        <tr><td><b>ON DELETE RESTRICT / NO ACTION</b></td><td>The delete is refused outright while employees still reference it.</td></tr>
+      </table>
+
+      <h3 class="sub">Three-valued logic and NULL</h3>
+      <p>Because NULL means "unknown", comparisons involving NULL don't return TRUE or FALSE — they return <b>UNKNOWN</b>. Even <code>NULL = NULL</code> evaluates to UNKNOWN, not TRUE. This is why filtering (<code>WHERE</code>) silently drops rows with NULL in the compared column — "unknown" doesn't satisfy a condition that needs to evaluate to TRUE.</p>
+
+      <div class="notebox" data-note-id="integrity">
+        <div class="notebox-label"><span>✎ Notes on Integrity Constraints</span><span class="save-status ui">Saved ✓</span></div>
+        <textarea class="note-input" placeholder="Your notes on referential integrity, CASCADE/SET NULL/RESTRICT, three-valued logic…"></textarea>
+        <div class="notebox-row"><button class="note-save-btn ui">Save note</button></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="normal-forms">
+      <div class="chapter-head">
+        <span class="chapter-num mono">06</span>
+        <h2>Normal <em>Forms</em></h2>
+      </div>
+      <p class="kicker">Normalization — organizing tables so data isn't repeated and doesn't rot</p>
+
+      <p class="lead">Normalization restructures tables to remove redundancy and avoid anomalies, guided entirely by <b>functional dependencies (FDs)</b>. This is the single most exam-heavy chapter in all of DBMS — expect several MCQs testing FD closure, candidate-key finding, and the exact difference between 3NF and BCNF.</p>
+
+      <h3>The problem, before we fix it</h3>
+      <div class="example">
+        <span class="example-label ui">One big table trying to do everything</span>
+        <table class="data-table">
+          <caption>Orders (unnormalized)</caption>
+          <tr><th>OrderID</th><th>CustomerName</th><th>CustomerCity</th><th>ProductID</th><th>ProductName</th><th>Qty</th></tr>
+          <tr><td>1001</td><td>Anika</td><td>Pune</td><td>P1</td><td>Notebook</td><td>3</td></tr>
+          <tr><td>1002</td><td>Anika</td><td>Pune</td><td>P2</td><td>Pen</td><td>10</td></tr>
+          <tr><td>1003</td><td>Rahul</td><td>Nashik</td><td>P1</td><td>Notebook</td><td>1</td></tr>
+        </table>
+        <ul class="keylist" style="margin-top:10px; margin-bottom:0;">
+          <li><b>Insertion anomaly</b> — can't add a new product to the catalogue until someone actually orders it (ProductName only exists inside an Order row).</li>
+          <li><b>Deletion anomaly</b> — delete Rahul's only order (1003), and the fact "Nashik is Rahul's city" is silently lost.</li>
+          <li><b>Update anomaly</b> — if Anika moves to Mumbai, every row she appears in must be updated; miss one and the data contradicts itself.</li>
+        </ul>
+      </div>
+
+      <h3 class="sub">Functional dependency — the core definition</h3>
+      <p><code>X → Y</code> ("X functionally determines Y") holds if: for any two tuples that agree on their X value, they must also agree on their Y value. A <b>trivial</b> FD is one where Y ⊆ X (it always holds and carries no real information).</p>
+
+      <h3 class="sub">Armstrong's Axioms — the three inference rules everything else derives from</h3>
+      <table class="data-table">
+        <caption>Sound and complete rules for deriving new FDs from known ones</caption>
+        <tr><th>Rule</th><th>Statement</th></tr>
+        <tr><td><b>Reflexivity</b></td><td>If Y ⊆ X, then X → Y (trivial FDs always hold).</td></tr>
+        <tr><td><b>Augmentation</b></td><td>If X → Y, then XZ → YZ for any Z.</td></tr>
+        <tr><td><b>Transitivity</b></td><td>If X → Y and Y → Z, then X → Z.</td></tr>
+      </table>
+      <p>Three more rules are commonly used and can be <i>derived</i> from the three above: <b>Union</b> (X→Y and X→Z implies X→YZ), <b>Decomposition</b> (X→YZ implies X→Y and X→Z), and <b>Pseudotransitivity</b> (X→Y and WY→Z implies WX→Z).</p>
+
+      <h3 class="sub">Attribute closure (X⁺) — the single most useful exam technique</h3>
+      <p>The <b>closure</b> of a set of attributes X, written X⁺, is the set of <i>all</i> attributes functionally determined by X given the FD set F. It answers two things at once: (1) whether a given FD is implied by F, and (2) whether X is a super key — <b>X is a super key of R if and only if X⁺ = all attributes of R.</b></p>
+
+      <div class="example">
+        <span class="example-label ui">Worked example — finding candidate keys</span>
+        <p>Given R(A,B,C,D) with FD set F = { A→B, B→C }:</p>
+        <ol class="steplist">
+          <li>Compute A⁺: start with {A}. Apply A→B: add B → {A,B}. Apply B→C: add C → {A,B,C}. D never appears on any RHS reachable from A, so A⁺ = {A,B,C} — not all of R, so A alone is <i>not</i> a super key.</li>
+          <li>D appears on neither side of any FD, so D must be part of <i>every</i> candidate key (nothing else can ever produce it).</li>
+          <li>Try AD: (AD)⁺ = {A,D} ∪ A⁺ = {A,B,C,D} = all of R. So <b>AD is a candidate key.</b></li>
+          <li><b>Prime attributes</b> (attributes that are part of <i>some</i> candidate key) are therefore A and D; B and C are <b>non-prime</b>.</li>
+        </ol>
+      </div>
+
+      <div class="trap">
+        <span class="trap-tag">Exam trap</span>
+        Quick shortcuts examiners expect you to know instantly: an attribute appearing <b>only on the LHS</b> of every FD (never on any RHS) <i>must</i> be part of every candidate key. An attribute appearing <b>only on the RHS</b> (never on LHS) <i>cannot</i> be part of any candidate key (unless it's not covered by any FD at all, in which case it must be in every key).
+      </div>
+
+      <h3 class="sub">The normal-form ladder</h3>
+
+      <h4 style="margin:18px 0 6px; font-size:15.5px;">1NF — First Normal Form</h4>
+      <p><b>Rule:</b> every column holds a single, atomic value — no lists, no repeating groups crammed into one cell, no nested/composite structures inside a cell.</p>
+      <div class="analogy">A "PhoneNumbers" cell containing "9876543210, 9123456780" is not 1NF. Split it into separate rows or a separate table — one phone number per cell.</div>
+
+      <h4 style="margin:18px 0 6px; font-size:15.5px;">2NF — Second Normal Form</h4>
+      <p><b>Rule:</b> already in 1NF, AND every non-prime attribute is <i>fully</i> functionally dependent on <b>every</b> candidate key — no <b>partial dependency</b> (a non-prime attribute depending on only <i>part</i> of a composite key). This rule only matters when a candidate key is composite (more than one attribute).</p>
+      <div class="example">
+        <span class="example-label ui">Partial dependency example</span>
+        <p>Let <code>(OrderID, ProductID)</code> be the composite primary key of OrderDetails, but <code>ProductName</code> really only depends on <code>ProductID</code> alone — not on OrderID too. That's a partial dependency, violating 2NF. Fix: move ProductName into its own Products table keyed by ProductID.</p>
+      </div>
+
+      <h4 style="margin:18px 0 6px; font-size:15.5px;">3NF — Third Normal Form</h4>
+      <p><b>Rule:</b> already in 2NF, AND for every non-trivial FD X → A, at least one of these holds: <b>(a)</b> X is a super key, OR <b>(b)</b> A is a prime attribute. Condition (b) is the "escape hatch" that makes 3NF slightly looser than BCNF.</p>
+      <p>A chain like <code>StudentID → DeptID → DeptName</code> means DeptName transitively depends on StudentID through the non-key attribute DeptID — a <b>transitive dependency</b>, violating 3NF. Fix: split into <code>Student(StudentID, DeptID)</code> and <code>Department(DeptID, DeptName)</code>.</p>
+
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Decomposition of Orders table into three normalized tables">
+          <rect x="210" y="15" width="220" height="60" rx="4" fill="var(--wrong-bg)" stroke="var(--wrong)" stroke-width="2"/>
+          <text x="320" y="40" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="var(--ink)">Orders (unnormalized)</text>
+          <text x="320" y="58" text-anchor="middle" font-family="Courier New,monospace" font-size="10.5" fill="var(--ink-soft)">OrderID, CustName, City, ProdName, Qty</text>
+
+          <line x1="320" y1="75" x2="120" y2="130" stroke="var(--brass)" stroke-width="2" marker-end="url(#arrow)"/>
+          <line x1="320" y1="75" x2="320" y2="130" stroke="var(--brass)" stroke-width="2" marker-end="url(#arrow)"/>
+          <line x1="320" y1="75" x2="520" y2="130" stroke="var(--brass)" stroke-width="2" marker-end="url(#arrow)"/>
+
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="var(--brass)"/>
+            </marker>
+          </defs>
+
+          <rect x="30" y="135" width="180" height="60" rx="4" fill="var(--correct-bg)" stroke="var(--correct)" stroke-width="2"/>
+          <text x="120" y="160" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="var(--ink)">Customers</text>
+          <text x="120" y="178" text-anchor="middle" font-family="Courier New,monospace" font-size="10.5" fill="var(--ink-soft)">CustID, Name, City</text>
+
+          <rect x="230" y="135" width="180" height="60" rx="4" fill="var(--correct-bg)" stroke="var(--correct)" stroke-width="2"/>
+          <text x="320" y="160" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="var(--ink)">Orders</text>
+          <text x="320" y="178" text-anchor="middle" font-family="Courier New,monospace" font-size="10.5" fill="var(--ink-soft)">OrderID, CustID, ProdID, Qty</text>
+
+          <rect x="430" y="135" width="180" height="60" rx="4" fill="var(--correct-bg)" stroke="var(--correct)" stroke-width="2"/>
+          <text x="520" y="160" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="var(--ink)">Products</text>
+          <text x="520" y="178" text-anchor="middle" font-family="Courier New,monospace" font-size="10.5" fill="var(--ink-soft)">ProdID, ProdName</text>
+
+          <text x="320" y="225" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="13" fill="var(--ink-soft)">Each fact now lives in exactly one place —</text>
+          <text x="320" y="245" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="13" fill="var(--ink-soft)">rename Anika's city once, in Customers, and every order stays correct.</text>
+        </svg>
+        <div class="diagram-caption ui">Decomposing one redundant table into three normalized ones (1NF → 3NF applied together)</div>
+      </div>
+
+      <h4 style="margin:18px 0 6px; font-size:15.5px;">BCNF — Boyce-Codd Normal Form</h4>
+      <p><b>Rule:</b> for every non-trivial FD X → Y, X <i>must</i> be a super key — full stop, no "prime attribute" exception. BCNF is strictly stronger than 3NF.</p>
+      <div class="example">
+        <span class="example-label ui">The classic 3NF-but-not-BCNF example</span>
+        <p>R(Student, Course, Instructor) where: each Instructor teaches only one Course, but a Course can have several Instructors; a Student can take a Course from any of its Instructors. FDs: <code>Instructor → Course</code> and <code>(Student, Course) → Instructor</code>. Candidate keys turn out to be <code>(Student, Course)</code> and <code>(Student, Instructor)</code>. Check <code>Instructor → Course</code>: is Instructor a super key? No — so this violates BCNF. But it's still in 3NF, because Course <i>is</i> a prime attribute (part of a candidate key), satisfying 3NF's escape clause.</p>
+      </div>
+
+      <table class="data-table">
+        <caption>Decomposition trade-offs — a favourite comparison MCQ</caption>
+        <tr><th></th><th>Lossless join guaranteed?</th><th>Dependency preservation guaranteed?</th></tr>
+        <tr><td><b>3NF decomposition</b> (via minimal-cover synthesis algorithm)</td><td class="hl">Yes</td><td class="hl">Yes</td></tr>
+        <tr><td><b>BCNF decomposition</b></td><td class="hl">Yes</td><td class="hlw">Not always</td></tr>
+      </table>
+      <p>This is exactly why 3NF is often chosen as the practical target in real designs — BCNF removes slightly more redundancy but can force you to lose the ability to check some original FDs without rejoining tables.</p>
+
+      <div class="trap">
+        <span class="trap-tag">Exam trap</span>
+        A useful shortcut: <b>if a relation has only ONE candidate key and is already in 3NF, it is automatically also in BCNF</b> — the "prime attribute" loophole in 3NF only ever matters when there are multiple, overlapping candidate keys.
+      </div>
+
+      <h4 style="margin:18px 0 6px; font-size:15.5px;">4NF — Fourth Normal Form</h4>
+      <p><b>Rule:</b> for every non-trivial <b>multivalued dependency (MVD)</b> X →→ Y, X must be a super key. An MVD X →→ Y means: for each value of X, the set of associated Y values is completely independent of the other attributes in the row.</p>
+      <div class="example">
+        <span class="example-label ui">MVD example</span>
+        <p>A Teacher table listing every Subject a teacher teaches <i>and</i> every Book they've authored, with no relationship between the two lists, forces every Subject to be paired with every Book for that teacher — pure redundancy with no real information. Fix: split into Teacher-Subject and Teacher-Book tables.</p>
+      </div>
+
+      <h4 style="margin:18px 0 6px; font-size:15.5px;">5NF — Project-Join Normal Form (PJNF)</h4>
+      <p>Deals with <b>join dependencies</b> — cases where a relation must be split into three or more (not just two) smaller relations to eliminate all redundancy, and rejoining all of them via natural join reconstructs the original exactly, with the decomposition unable to be simplified any further.</p>
+
+      <h3 class="sub">Lossless-join decomposition — the correctness check</h3>
+      <p>Decomposing R into R1 and R2 is <b>lossless</b> if and only if the common attributes (R1 ∩ R2) functionally determine <i>either</i> R1 or R2 — i.e. <code>(R1∩R2) → R1</code> or <code>(R1∩R2) → R2</code>. A <b>lossy</b> decomposition, when rejoined, produces extra <b>spurious tuples</b> that weren't in the original data — a serious correctness bug, not just an inefficiency.</p>
+
+      <div class="callout ui"><b>Denormalization:</b> sometimes engineers deliberately reintroduce redundancy (merge tables back) to speed up reads for analytics/reporting workloads — a conscious performance trade-off, not a design mistake.</div>
+
+      <div class="notebox" data-note-id="normal-forms">
+        <div class="notebox-label"><span>✎ Notes on Normal Forms</span><span class="save-status ui">Saved ✓</span></div>
+        <textarea class="note-input" placeholder="Your notes on FDs, Armstrong's axioms, attribute closure, 1NF–5NF…"></textarea>
+        <div class="notebox-row"><button class="note-save-btn ui">Save note</button></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="file-organization">
+      <div class="chapter-head">
+        <span class="chapter-num mono">07</span>
+        <h2>File <em>Organization</em></h2>
+      </div>
+      <p class="kicker">How records actually sit on disk</p>
+
+      <p class="lead">A table's rows physically live somewhere on disk, broken into fixed-size chunks called <b>blocks</b> (or pages). How records are arranged inside blocks massively affects speed — disk I/O is thousands of times slower than memory access, so minimizing the <i>number of block accesses</i> is the entire game. This is why every cost is measured in "block accesses", not seconds.</p>
+
+      <table class="data-table">
+        <caption>The four organizations, compared</caption>
+        <tr><th>Organization</th><th>Insert cost</th><th>Search cost (equality)</th><th>Best for</th></tr>
+        <tr><td><b>Heap (unordered)</b></td><td>O(1) — append at end</td><td>O(n) — linear scan</td><td>Write-heavy, rarely searched tables</td></tr>
+        <tr><td><b>Sequential (sorted)</b></td><td>O(n) — must shift to keep order</td><td>O(log n) — binary search</td><td>Range queries on the sort key</td></tr>
+        <tr><td><b>Hashing</b></td><td>O(1) average</td><td>O(1) average</td><td>Exact-match / equality lookups</td></tr>
+        <tr><td><b>Clustering</b></td><td>Depends on structure</td><td>Fast for the clustered group</td><td>Queries that fetch a whole related group at once</td></tr>
+      </table>
+
+      <ul class="keylist">
+        <li><b>Heap file</b> — new records go wherever there's space, usually appended at the end. <i>Analogy: tossing receipts into a shoebox.</i></li>
+        <li><b>Sequential file</b> — records kept sorted by a search key. <i>Analogy: a phone book sorted by surname.</i> Inserting in the middle is expensive (everything after must shift); <b>overflow blocks</b> soften this cost in practice.</li>
+        <li><b>Hashing</b> — a hash function maps a key directly to a block address. <i>Analogy: a coat-check ticket number tells the attendant exactly which hook to check.</i> Terrible for range queries, since matching values aren't stored near each other.</li>
+        <li><b>Clustering</b> — physically groups records likely to be read together, often on a non-key column (e.g. all orders for the same customer stored near each other).</li>
+      </ul>
+
+      <h3 class="sub">Static vs. Dynamic Hashing</h3>
+      <p><b>Static hashing</b> uses a fixed number of buckets. As the file grows, buckets overflow (needing chained overflow blocks); as it shrinks, space is wasted. <b>Dynamic hashing</b> fixes this by letting the structure grow/shrink automatically.</p>
+
+      <table class="data-table">
+        <caption>Extendible Hashing — the terms exams like to test</caption>
+        <tr><th>Term</th><th>Meaning</th></tr>
+        <tr><td><b>Global depth</b></td><td>Number of bits of the hash value the <i>directory</i> uses to decide which bucket a key belongs to.</td></tr>
+        <tr><td><b>Local depth</b></td><td>Number of bits actually used by one specific bucket — always ≤ global depth.</td></tr>
+        <tr><td><b>Bucket split</b></td><td>When a bucket overflows and its local depth equals the global depth, the <i>whole directory doubles</i> (global depth +1) and that bucket splits in two. If local depth &lt; global depth, only that bucket splits — no directory doubling needed.</td></tr>
+      </table>
+
+      <p><b>Linear hashing</b> is a different dynamic-hashing approach: it needs no directory at all — buckets are split in a predetermined, round-robin order as the file grows, regardless of which bucket actually overflowed, using temporary overflow chaining in the meantime.</p>
+
+      <h3 class="sub">Records on disk — a few more exam terms</h3>
+      <ul class="keylist">
+        <li><b>Fixed-length records</b> — the address of the i-th record is computed directly: <code>base + i × record_size</code>, enabling instant direct access.</li>
+        <li><b>Variable-length records</b> — need extra structure, like length indicators or a <b>slot/offset directory</b> inside each block, to locate each record.</li>
+        <li><b>Tombstoning</b> — marking a record as deleted without immediately reclaiming its space, deferring the actual cleanup/reorganization.</li>
+      </ul>
+
+      <div class="notebox" data-note-id="file-organization">
+        <div class="notebox-label"><span>✎ Notes on File Organization</span><span class="save-status ui">Saved ✓</span></div>
+        <textarea class="note-input" placeholder="Your notes on heap, sequential, static/extendible/linear hashing, clustering…"></textarea>
+        <div class="notebox-row"><button class="note-save-btn ui">Save note</button></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="indexing">
+      <div class="chapter-head">
+        <span class="chapter-num mono">08</span>
+        <h2><em>Indexing</em> — B-Trees and B+ Trees</h2>
+      </div>
+      <p class="kicker">A shortcut structure so you don't have to scan the whole table</p>
+
+      <p class="lead">An index works exactly like the index at the back of a textbook — instead of flipping through every page to find "mitochondria", you check the index, which tells you the exact page. It's a small, separate structure mapping key values to record locations.</p>
+
+      <h3 class="sub">Dense vs. sparse</h3>
+      <table class="data-table">
+        <tr><th></th><th>Dense index</th><th>Sparse index</th></tr>
+        <tr><td>Entries</td><td>One per <i>record</i></td><td>One per <i>block</i> (needs a sorted file)</td></tr>
+        <tr><td>Size</td><td>Larger</td><td>Smaller</td></tr>
+        <tr><td>Works on unsorted files?</td><td>Yes</td><td>No — file must be sorted on that key</td></tr>
+        <tr><td>Existence check without touching data file?</td><td>Yes</td><td>No</td></tr>
+      </table>
+
+      <h3 class="sub">Primary, clustering, and secondary indexes</h3>
+      <ul class="keylist">
+        <li><b>Primary index</b> — built on the key the file is physically sorted by. Only one per table; can be sparse, since the file is already ordered.</li>
+        <li><b>Clustering index</b> — like a primary index but on a <i>non-key</i> ordering field (multiple records can share a value). Also only one per table — data can only be physically sorted one way.</li>
+        <li><b>Secondary index</b> — on a field that does <i>not</i> determine physical order. Because matching rows are scattered anywhere, this must be <b>dense</b> — sparse simply doesn't work here. A table can have many secondary indexes.</li>
+      </ul>
+
+      <div class="trap">
+        <span class="trap-tag">Exam trap</span>
+        A table can have <b>only one primary/clustering index</b> (physical order is singular) but <b>many secondary indexes</b>. And secondary indexes must always be dense — this is a frequently tested distinction.
+      </div>
+
+      <h3 class="sub">Multilevel indexing</h3>
+      <p>When even the first-level index doesn't fit in memory, treat the index itself as a data file and build a second-level index on top of <i>it</i>, and so on, until the top level fits in a single block. Search cost drops to <b>O(t)</b> block accesses (one per level, t = number of levels) — far better than <code>O(log₂(index blocks))</code> for a single flat index.</p>
+
+      <h3 class="sub">Why B+ Trees specifically</h3>
+      <p>A binary search tree is disk-unfriendly: each node has only 2 children, so the tree gets tall, and every level down means another slow disk read. The fix is a tree with very high <b>fan-out</b> (many children per node, sized to fill one disk block), keeping the tree shallow.</p>
+
+      <table class="data-table">
+        <caption>B-Tree vs. B+ Tree — the single most tested distinction in this chapter</caption>
+        <tr><th></th><th>B-Tree</th><th>B+ Tree</th></tr>
+        <tr><td>Data pointers stored at…</td><td>Every node (internal and leaf)</td><td>Leaf nodes <i>only</i></td></tr>
+        <tr><td>Internal nodes hold</td><td>Keys + data pointers</td><td>Keys only (pure navigation)</td></tr>
+        <tr><td>Fan-out for given node size</td><td>Lower (space used by data pointers)</td><td>Higher (all space goes to keys)</td></tr>
+        <tr><td>Leaf-level linking</td><td>No</td><td class="hl">Yes — sibling-linked list</td></tr>
+        <tr><td>Best for range queries</td><td>Weaker</td><td class="hl">Excellent — walk the leaf chain</td></tr>
+        <tr><td>Used in most commercial DBMSs?</td><td>Rare</td><td class="hl">Yes, dominant</td></tr>
+      </table>
+
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="B+ tree diagram with root, internal nodes, and linked leaves">
+          <rect x="290" y="15" width="120" height="42" rx="4" fill="var(--paper-2)" stroke="var(--ink)" stroke-width="2"/>
+          <text x="350" y="41" text-anchor="middle" font-family="Courier New,monospace" font-size="14" fill="var(--ink)">30 | 60</text>
+          <text x="350" y="8" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10.5" fill="var(--muted)">ROOT</text>
+
+          <rect x="70" y="105" width="130" height="42" rx="4" fill="var(--paper-2)" stroke="var(--brass)" stroke-width="2"/>
+          <text x="135" y="131" text-anchor="middle" font-family="Courier New,monospace" font-size="13" fill="var(--ink)">10 | 20</text>
+
+          <rect x="290" y="105" width="130" height="42" rx="4" fill="var(--paper-2)" stroke="var(--brass)" stroke-width="2"/>
+          <text x="355" y="131" text-anchor="middle" font-family="Courier New,monospace" font-size="13" fill="var(--ink)">40 | 50</text>
+
+          <rect x="500" y="105" width="130" height="42" rx="4" fill="var(--paper-2)" stroke="var(--brass)" stroke-width="2"/>
+          <text x="565" y="131" text-anchor="middle" font-family="Courier New,monospace" font-size="13" fill="var(--ink)">70 | 80</text>
+
+          <line x1="330" y1="57" x2="150" y2="105" stroke="var(--ink-soft)" stroke-width="1.6"/>
+          <line x1="350" y1="57" x2="350" y2="105" stroke="var(--ink-soft)" stroke-width="1.6"/>
+          <line x1="370" y1="57" x2="560" y2="105" stroke="var(--ink-soft)" stroke-width="1.6"/>
+
+          <g font-family="Courier New,monospace" font-size="11.5" fill="var(--ink)">
+            <rect x="20" y="200" width="80" height="38" rx="3" fill="var(--correct-bg)" stroke="var(--correct)" stroke-width="1.6"/>
+            <text x="60" y="223" text-anchor="middle">5,8</text>
+            <rect x="120" y="200" width="80" height="38" rx="3" fill="var(--correct-bg)" stroke="var(--correct)" stroke-width="1.6"/>
+            <text x="160" y="223" text-anchor="middle">10,15</text>
+            <rect x="220" y="200" width="80" height="38" rx="3" fill="var(--correct-bg)" stroke="var(--correct)" stroke-width="1.6"/>
+            <text x="260" y="223" text-anchor="middle">20,25</text>
+            <rect x="320" y="200" width="80" height="38" rx="3" fill="var(--correct-bg)" stroke="var(--correct)" stroke-width="1.6"/>
+            <text x="360" y="223" text-anchor="middle">40,45</text>
+            <rect x="420" y="200" width="80" height="38" rx="3" fill="var(--correct-bg)" stroke="var(--correct)" stroke-width="1.6"/>
+            <text x="460" y="223" text-anchor="middle">50,55</text>
+            <rect x="520" y="200" width="80" height="38" rx="3" fill="var(--correct-bg)" stroke="var(--correct)" stroke-width="1.6"/>
+            <text x="560" y="223" text-anchor="middle">70,75</text>
+            <rect x="620" y="200" width="60" height="38" rx="3" fill="var(--correct-bg)" stroke="var(--correct)" stroke-width="1.6"/>
+            <text x="650" y="223" text-anchor="middle">80…</text>
+          </g>
+
+          <line x1="135" y1="147" x2="60" y2="200" stroke="var(--ink-soft)" stroke-width="1.4"/>
+          <line x1="135" y1="147" x2="160" y2="200" stroke="var(--ink-soft)" stroke-width="1.4"/>
+          <line x1="355" y1="147" x2="260" y2="200" stroke="var(--ink-soft)" stroke-width="1.4"/>
+          <line x1="355" y1="147" x2="360" y2="200" stroke="var(--ink-soft)" stroke-width="1.4"/>
+          <line x1="565" y1="147" x2="460" y2="200" stroke="var(--ink-soft)" stroke-width="1.4"/>
+          <line x1="565" y1="147" x2="560" y2="200" stroke="var(--ink-soft)" stroke-width="1.4"/>
+
+          <g stroke="var(--brass)" stroke-width="1.6" marker-end="url(#arrow2)">
+            <line x1="100" y1="219" x2="118" y2="219"/>
+            <line x1="200" y1="219" x2="218" y2="219"/>
+            <line x1="300" y1="219" x2="318" y2="219"/>
+            <line x1="400" y1="219" x2="418" y2="219"/>
+            <line x1="500" y1="219" x2="518" y2="219"/>
+            <line x1="600" y1="219" x2="618" y2="219"/>
+          </g>
+          <defs>
+            <marker id="arrow2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="var(--brass)"/>
+            </marker>
+          </defs>
+          <text x="350" y="270" text-anchor="middle" font-family="-apple-system,sans-serif" font-style="italic" font-size="12" fill="var(--ink-soft)">Leaves hold the actual data pointers, and are chained left→right — perfect for range scans.</text>
+        </svg>
+        <div class="diagram-caption ui">A B+ tree: internal nodes (top two rows) exist only to guide the search; the linked green leaves at the bottom hold the real data pointers.</div>
+      </div>
+
+      <h3 class="sub">Node capacity &amp; height — the formulas exams actually ask for</h3>
+      <ul class="keylist">
+        <li>A B+ tree of <b>order p</b> (internal node): at most <code>p</code> tree pointers and <code>p−1</code> search keys; at least <code>⌈p/2⌉</code> pointers (except the root, which just needs at least 2).</li>
+        <li>A B+ tree <b>leaf</b> of order p<sub>leaf</sub>: at most <code>p_leaf − 1</code> search values and record pointers, plus one extra pointer chaining to the next leaf.</li>
+        <li><b>Height</b> of a B+ tree over N records with fan-out p is approximately <code>O(log_p N)</code> — each level cuts the search space by roughly a factor of p, which is why real B+ trees indexing millions of rows are often only 3–4 levels deep.</li>
+        <li>Every non-root node must stay at least <b>half full</b> — this minimum-occupancy rule is what "balanced" actually guarantees, and it's maintained via <b>splits</b> (on overflow) and <b>merges/redistribution</b> (on underflow after deletion).</li>
+      </ul>
+
+      <div class="trap">
+        <span class="trap-tag">Exam trap</span>
+        When a <b>leaf</b> node splits, the middle key is <i>copied</i> up to the parent (it still also stays in the new right leaf). When an <b>internal</b> node splits, the middle key is <i>moved</i> up to the parent (removed from the node being split). This copy-vs-move distinction is a classic trick question.
+      </div>
+
+      <div class="callout ui"><b>Other index types worth knowing:</b> a <b>composite index</b> on (A, B) speeds up filters on A alone, or A and B together (leftmost-prefix rule) — but not B alone. A <b>bitmap index</b> excels on low-cardinality columns (status flags, gender) using fast bitwise AND/OR. A <b>covering index</b> contains every column a query needs, so the engine never touches the actual table row. <b>Hash indexes</b> beat B+ trees for pure equality lookups (near O(1) vs O(log n)), but can't handle range queries at all.</div>
+
+      <div class="notebox" data-note-id="indexing">
+        <div class="notebox-label"><span>✎ Notes on Indexing</span><span class="save-status ui">Saved ✓</span></div>
+        <textarea class="note-input" placeholder="Your notes on dense/sparse, B-tree vs B+ tree, multilevel indexes, node capacity formulas…"></textarea>
+        <div class="notebox-row"><button class="note-save-btn ui">Save note</button></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="transactions">
+      <div class="chapter-head">
+        <span class="chapter-num mono">09</span>
+        <h2><em>Transactions</em> &amp; ACID</h2>
+      </div>
+      <p class="kicker">Grouping operations so they all succeed together, or not at all</p>
+
+      <p class="lead">A <b>transaction</b> is a logical unit of work — one or more read/write operations that must be treated as a single, indivisible whole. The textbook example — and the clearest one — is transferring money between two bank accounts.</p>
+
+      <div class="analogy">Transferring ₹500 from Account A to Account B is really two steps: subtract ₹500 from A, then add ₹500 to B. If the system crashes right after step one, ₹500 has simply vanished. A transaction guarantees either <i>both</i> steps happen, or <i>neither</i> does.</div>
+
+      <h3>The four ACID properties</h3>
+      <ul class="keylist">
+        <li><b>Atomicity</b> — "all or nothing". Either every operation completes, or the whole transaction is rolled back as if it never started.</li>
+        <li><b>Consistency</b> — the transaction takes the database from one valid state to another, respecting every constraint (a transfer can't change the total money in the system).</li>
+        <li><b>Isolation</b> — even with many transactions running concurrently, each behaves as though it were running completely alone.</li>
+        <li><b>Durability</b> — once committed, changes survive even an immediate crash — guaranteed by writing a log to disk before confirming success (write-ahead logging, covered below).</li>
+      </ul>
+
+      <h3 class="sub">The life of a transaction</h3>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 680 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Transaction state diagram">
+          <g font-family="Courier New,monospace" font-size="12.5" fill="var(--ink)">
+            <rect x="10" y="45" width="110" height="42" rx="20" fill="var(--blue-bg)" stroke="var(--blue)" stroke-width="2"/>
+            <text x="65" y="70" text-anchor="middle">Active</text>
+            <rect x="180" y="45" width="150" height="42" rx="20" fill="var(--blue-bg)" stroke="var(--blue)" stroke-width="2"/>
+            <text x="255" y="70" text-anchor="middle">Partially committed</text>
+            <rect x="400" y="10" width="120" height="42" rx="20" fill="var(--correct-bg)" stroke="var(--correct)" stroke-width="2"/>
+            <text x="460" y="35" text-anchor="middle">Committed</text>
+            <rect x="400" y="85" width="120" height="42" rx="20" fill="var(--wrong-bg)" stroke="var(--wrong)" stroke-width="2"/>
+            <text x="460" y="110" text-anchor="middle">Failed</text>
+            <rect x="570" y="85" width="100" height="42" rx="20" fill="var(--wrong-bg)" stroke="var(--wrong)" stroke-width="2"/>
+            <text x="620" y="110" text-anchor="middle">Aborted</text>
+          </g>
+          <g stroke="var(--ink-soft)" stroke-width="1.6" fill="none" marker-end="url(#a3)">
+            <path d="M120,66 L180,66"/>
+            <path d="M330,58 L400,33"/>
+            <path d="M120,74 L400,105"/>
+            <path d="M255,87 L400,105"/>
+            <path d="M520,106 L570,106"/>
+          </g>
+          <defs><marker id="a3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--ink-soft)"/></marker></defs>
+        </svg>
+        <div class="diagram-caption ui">Active → Partially Committed → Committed is the happy path; an error at any point sends it to Failed → Aborted.</div>
+      </div>
+      <ul class="keylist">
+        <li><b>Active</b> — the initial state; most operations happen here.</li>
+        <li><b>Partially committed</b> — the final statement has executed, but the changes aren't yet confirmed permanent (some checks/disk writes still pending).</li>
+        <li><b>Failed</b> — normal execution can't continue (hardware/software error, constraint violation).</li>
+        <li><b>Aborted</b> — rolled back to the pre-transaction state; may be restarted or killed.</li>
+        <li><b>Committed</b> — permanent and durable. You cannot simply "un-commit" — a brand-new <b>compensating transaction</b> would be needed to reverse the effect.</li>
+      </ul>
+
+      <h3 class="sub">Schedules</h3>
+      <ul class="keylist">
+        <li><b>Schedule</b> — the actual chronological order in which operations from one or more transactions get interleaved by the DBMS.</li>
+        <li><b>Serial schedule</b> — transactions run one after another with zero overlap. Always correct, but gives up all concurrency.</li>
+        <li><b>Serializable schedule</b> — operations may be interleaved for speed, but the final outcome matches <i>some</i> serial order — best of both worlds.</li>
+        <li><b>Conflicting operations</b> — two operations from different transactions on the <i>same</i> data item, where at least one is a write. Only conflicting operations matter for reasoning about correctness — non-conflicting operations can be reordered freely.</li>
+      </ul>
+
+      <h3 class="sub">Testing conflict-serializability — the precedence graph</h3>
+      <p>Draw one node per transaction. Draw an edge <code>Ti → Tj</code> whenever Ti has an operation that conflicts with, and comes before, an operation of Tj. <b>The schedule is conflict-serializable if and only if this graph is acyclic</b> — and a topological sort of that acyclic graph gives you an equivalent serial order.</p>
+
+      <table class="data-table">
+        <caption>Conflict-serializable vs. view-serializable</caption>
+        <tr><th>Conflict-serializable</th><th>View-serializable</th></tr>
+        <tr><td>Based purely on conflicting (read/write on same item) operation order.</td><td>Broader — based on matching initial reads, final writes, and "reads-from" relationships.</td></tr>
+        <tr><td>Every conflict-serializable schedule is <i>also</i> view-serializable.</td><td>Some view-serializable schedules are <i>not</i> conflict-serializable — specifically ones involving <b>blind writes</b> (a write with no preceding read of that item by the same transaction).</td></tr>
+      </table>
+
+      <h3 class="sub">Recoverability hierarchy — strongest to weakest</h3>
+      <table class="data-table">
+        <tr><th>Level</th><th>Guarantee</th></tr>
+        <tr><td><b>Recoverable</b> (weakest)</td><td>If Tj reads something written by Ti, Tj can only commit <i>after</i> Ti commits.</td></tr>
+        <tr><td><b>Cascadeless / avoids cascading rollback (ACR)</b></td><td>Every transaction reads only data written by <i>already-committed</i> transactions — no dirty reads at all, so one abort never triggers a chain of rollbacks.</td></tr>
+        <tr><td><b>Strict</b></td><td>A transaction can neither read nor write an item until whoever last wrote it has committed or aborted — makes UNDO trivial (just restore the before-image).</td></tr>
+        <tr><td><b>Serial</b> (strongest)</td><td>No interleaving at all.</td></tr>
+      </table>
+      <p>Each level implies the one above it in the table (Serial ⊂ Strict ⊂ Cascadeless ⊂ Recoverable) — i.e. every strict schedule is cascadeless, every cascadeless schedule is recoverable, but not vice-versa.</p>
+      <p>A <b>dirty read</b> is reading a value written by a transaction that hasn't committed yet (and might later abort, making the read invalid) — exactly what cascadeless schedules forbid.</p>
+
+      <div class="notebox" data-note-id="transactions">
+        <div class="notebox-label"><span>✎ Notes on Transactions &amp; ACID</span><span class="save-status ui">Saved ✓</span></div>
+        <textarea class="note-input" placeholder="Your notes on ACID, transaction states, schedules, precedence graph, recoverability…"></textarea>
+        <div class="notebox-row"><button class="note-save-btn ui">Save note</button></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="concurrency">
+      <div class="chapter-head">
+        <span class="chapter-num mono">10</span>
+        <h2>Concurrency <em>Control</em></h2>
+      </div>
+      <p class="kicker">Keeping many simultaneous transactions from stepping on each other</p>
+
+      <p class="lead">Real databases handle thousands of transactions at once. Concurrency control is the set of protocols that stop them from corrupting each other's work while still running in parallel for speed. This chapter and the previous one together are usually the most heavily-weighted section in a competitive DBMS paper.</p>
+
+      <h3>What goes wrong without it — the lost update problem</h3>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 640 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lost update problem timeline">
+          <text x="10" y="20" font-family="Courier New,monospace" font-size="12" fill="var(--muted)">time →</text>
+          <line x1="10" y1="35" x2="630" y2="35" stroke="var(--line)" stroke-width="1.5"/>
+          <g font-family="Courier New,monospace" font-size="12" fill="var(--ink)">
+            <rect x="30" y="55" width="150" height="34" rx="4" fill="var(--blue-bg)" stroke="var(--blue)" stroke-width="1.6"/>
+            <text x="105" y="76" text-anchor="middle">T1 reads Balance=100</text>
+            <rect x="230" y="55" width="170" height="34" rx="4" fill="var(--blue-bg)" stroke="var(--blue)" stroke-width="1.6"/>
+            <text x="315" y="76" text-anchor="middle">T1 writes Balance=100+50</text>
+            <rect x="130" y="110" width="150" height="34" rx="4" fill="var(--wrong-bg)" stroke="var(--wrong)" stroke-width="1.6"/>
+            <text x="205" y="131" text-anchor="middle">T2 reads Balance=100</text>
+            <rect x="420" y="110" width="190" height="34" rx="4" fill="var(--wrong-bg)" stroke="var(--wrong)" stroke-width="1.6"/>
+            <text x="515" y="131" text-anchor="middle">T2 writes Balance=100+20</text>
+          </g>
+          <text x="320" y="175" text-anchor="middle" font-family="-apple-system,sans-serif" font-style="italic" font-size="12.5" fill="var(--wrong)">Final balance = 120, not 170 — T1's +50 was silently overwritten and lost.</text>
+        </svg>
+        <div class="diagram-caption ui">Two transactions both read the old balance before either had written back — locking prevents exactly this.</div>
+      </div>
+      <p>Other classic anomalies caused by uncontrolled concurrency: <b>dirty read</b> (reading uncommitted data that might later be rolled back), <b>unrepeatable read</b> (reading the same row twice within one transaction and getting different values because another transaction updated it in between), and <b>phantom read</b> (a repeated range query returns a different set of rows because another transaction inserted/deleted matching rows in between).</p>
+
+      <h3 class="sub">Locking — Shared and Exclusive locks</h3>
+      <table class="data-table">
+        <caption>Lock compatibility matrix</caption>
+        <tr><th></th><th>S (Shared)</th><th>X (Exclusive)</th></tr>
+        <tr><td><b>S</b></td><td class="hl">✓ Compatible</td><td class="hlw">✗ Conflict</td></tr>
+        <tr><td><b>X</b></td><td class="hlw">✗ Conflict</td><td class="hlw">✗ Conflict</td></tr>
+      </table>
+      <p>Multiple transactions may hold a <b>Shared (S)</b> lock on the same item at once (all reading). An <b>Exclusive (X)</b> lock is required to write, and while it's held, no other transaction may hold <i>any</i> lock — shared or exclusive — on that item.</p>
+
+      <h3 class="sub">Two-Phase Locking (2PL) and its variants</h3>
+      <p>The core rule: every transaction acquires all the locks it needs first (the <b>growing phase</b>), and the moment it releases even a single lock, it may never acquire another (the <b>shrinking phase</b>). This guarantees the resulting schedule is conflict-serializable.</p>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 500 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two phase locking growing and shrinking phase">
+          <rect x="10" y="20" width="230" height="34" fill="var(--correct-bg)" stroke="var(--correct)" stroke-width="1.6"/>
+          <text x="125" y="41" text-anchor="middle" font-family="Courier New,monospace" font-size="12.5" fill="var(--ink)">GROWING — acquiring locks</text>
+          <rect x="240" y="20" width="250" height="34" fill="var(--wrong-bg)" stroke="var(--wrong)" stroke-width="1.6"/>
+          <text x="365" y="41" text-anchor="middle" font-family="Courier New,monospace" font-size="12.5" fill="var(--ink)">SHRINKING — releasing locks</text>
+          <line x1="240" y1="10" x2="240" y2="64" stroke="var(--brass)" stroke-width="2" stroke-dasharray="3 3"/>
+          <text x="240" y="80" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="11" fill="var(--brass)">lock point</text>
+        </svg>
+        <div class="diagram-caption ui">Once a transaction crosses the lock point and releases one lock, it can only release more — never acquire.</div>
+      </div>
+
+      <table class="data-table">
+        <caption>2PL variants — know exactly what each one additionally guarantees</caption>
+        <tr><th>Variant</th><th>Rule</th><th>Guarantees</th></tr>
+        <tr><td><b>Basic 2PL</b></td><td>Growing phase, then shrinking phase — locks can be released any time after the last acquisition.</td><td>Conflict-serializability <i>only</i> — not freedom from deadlock or cascading rollback.</td></tr>
+        <tr><td><b>Strict 2PL</b></td><td>All <i>exclusive</i> locks held until commit/abort.</td><td>Serializability + avoids cascading rollback (industry standard).</td></tr>
+        <tr><td><b>Rigorous 2PL</b></td><td><i>All</i> locks (shared and exclusive) held until commit/abort.</td><td>Serializable, recoverable, cascadeless — the strongest; transactions effectively appear to execute in commit order.</td></tr>
+        <tr><td><b>Conservative (static) 2PL</b></td><td>Pre-declares and acquires <i>every</i> lock it will ever need before starting.</td><td>Deadlock-free by construction — but needs advance knowledge of every item to be touched.</td></tr>
+      </table>
+
+      <h3 class="sub">Deadlock</h3>
+      <p>Two or more transactions each wait for a lock held by another in the cycle — none can ever proceed.</p>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 260 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Deadlock wait-for graph cycle between T1 and T2">
+          <circle cx="70" cy="40" r="30" fill="var(--wrong-bg)" stroke="var(--wrong)" stroke-width="2"/>
+          <text x="70" y="46" text-anchor="middle" font-family="Courier New,monospace" font-size="14" fill="var(--ink)">T1</text>
+          <circle cx="190" cy="100" r="30" fill="var(--wrong-bg)" stroke="var(--wrong)" stroke-width="2"/>
+          <text x="190" y="106" text-anchor="middle" font-family="Courier New,monospace" font-size="14" fill="var(--ink)">T2</text>
+          <path d="M95,55 A90,90 0 0,1 165,85" fill="none" stroke="var(--wrong)" stroke-width="1.8" marker-end="url(#a4)"/>
+          <path d="M165,90 A90,90 0 0,1 95,50" fill="none" stroke="var(--wrong)" stroke-width="1.8" marker-end="url(#a4)"/>
+          <text x="130" y="20" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10.5" fill="var(--wrong)">waits for</text>
+          <text x="130" y="135" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10.5" fill="var(--wrong)">waits for</text>
+          <defs><marker id="a4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--wrong)"/></marker></defs>
+        </svg>
+        <div class="diagram-caption ui">A cycle in the "wait-for graph" is exactly how a deadlock is detected — one transaction is then chosen as the victim and rolled back.</div>
+      </div>
+
+      <table class="data-table">
+        <caption>Deadlock prevention — Wait-Die vs. Wound-Wait (a favourite MCQ pair)</caption>
+        <tr><th></th><th>If Ti requests a lock held by Tj, and Ti is OLDER</th><th>If Ti is YOUNGER</th></tr>
+        <tr><td><b>Wait-Die</b></td><td>Ti WAITS</td><td>Ti is aborted (DIES) and restarts later with its <i>original</i> timestamp</td></tr>
+        <tr><td><b>Wound-Wait</b></td><td>Ti WOUNDS — forces Tj to abort and restart</td><td>Ti WAITS</td></tr>
+      </table>
+      <p>Both schemes are provably deadlock-free because the age-based rule only ever lets a transaction wait in one consistent direction (relative to age), which can never form a cycle — and restarted transactions keep their original timestamp, preventing <b>starvation</b> (endlessly being aborted).</p>
+      <p><b>Deadlock detection</b> (the alternative to prevention) builds a <b>wait-for graph</b> — a node per transaction, an edge Ti→Tj if Ti is waiting on a lock Tj holds — and periodically checks for cycles. <b>Timeout-based</b> handling is a blunter tool: if a transaction waits longer than a threshold, assume deadlock and roll it back (simple, but risks false positives).</p>
+
+      <h3 class="sub">Alternatives to locking</h3>
+      <ul class="keylist">
+        <li><b>Timestamp Ordering (TO)</b> — every transaction gets a unique timestamp at start. The system tracks, per data item Q: <code>W-timestamp(Q)</code> (largest timestamp of any transaction that wrote Q) and <code>R-timestamp(Q)</code> (largest that read Q). A write by Ti is rejected (Ti rolled back and restarted) if <code>TS(Ti) &lt; R-timestamp(Q)</code> or <code>TS(Ti) &lt; W-timestamp(Q)</code> — meaning a "later" transaction already touched a more current value. A read by Ti is rejected if <code>TS(Ti) &lt; W-timestamp(Q)</code> — Ti would be reading a value already overwritten by a later transaction. Naturally <b>deadlock-free</b>, since transactions never wait — they're either allowed to proceed or immediately restarted.</li>
+        <li><b>Thomas Write Rule</b> — a refinement of basic TO that <i>ignores</i> (rather than rejects) certain obsolete writes — specifically when <code>TS(Ti) &lt; W-timestamp(Q)</code> but <code>TS(Ti) ≥ R-timestamp(Q)</code> — since that write would be immediately overwritten anyway, skipping it causes fewer unnecessary rollbacks.</li>
+        <li><b>Optimistic Concurrency Control (OCC)</b> — bets conflicts are rare. Three phases: <b>Read</b> (execute and buffer writes locally, no locking), <b>Validation</b> (check for conflicts against other transactions validated concurrently), <b>Write</b> (commit the buffered writes only if validation passes). Great under low contention; costly if conflicts turn out to be frequent, since failed transactions are entirely redone.</li>
+        <li><b>Multiversion Concurrency Control (MVCC)</b> — keeps multiple historical versions of each row, so readers can be served an appropriate older, consistent version without ever blocking writers (and vice-versa). This is the mechanism behind <b>Snapshot Isolation</b>: a transaction sees a consistent snapshot of the database as of its start time, unaffected by concurrent updates — though write-write conflicts still need a resolution rule, like "first committer wins".</li>
+      </ul>
+
+      <h3 class="sub">Recovery — how Durability is actually delivered</h3>
+      <ul class="keylist">
+        <li><b>Write-Ahead Logging (WAL)</b> — the log record for a change (with undo/redo info) must reach stable storage <i>before</i> the actual data page does. This is the bedrock rule every recovery scheme relies on.</li>
+        <li><b>UNDO log</b> — holds the "before image" (old value); used to roll back uncommitted transactions.</li>
+        <li><b>REDO log</b> — holds the "after image" (new value); used to reapply committed changes that hadn't yet reached disk when the system crashed.</li>
+        <li><b>Checkpoint</b> — a periodic marker that lets recovery skip everything before it, dramatically shortening how much log must be replayed.</li>
+      </ul>
+
+      <table class="data-table">
+        <caption>Buffer management policies — which need UNDO / REDO during recovery</caption>
+        <tr><th>Policy</th><th>Meaning</th><th>Needs UNDO?</th><th>Needs REDO?</th></tr>
+        <tr><td><b>Force</b></td><td>All modified pages written to disk <i>before</i> commit.</td><td>—</td><td class="hl">No</td></tr>
+        <tr><td><b>No-Force</b></td><td>Pages can be written later, after commit.</td><td>—</td><td class="hlw">Yes</td></tr>
+        <tr><td><b>Steal</b></td><td>Uncommitted pages may be written to disk early (to free buffer space).</td><td class="hlw">Yes</td><td>—</td></tr>
+        <tr><td><b>No-Steal</b></td><td>Uncommitted pages are never written to disk.</td><td class="hl">No</td><td>—</td></tr>
+      </table>
+      <p>Most real systems use <b>Steal + No-Force</b> — best runtime performance, at the cost of needing <i>both</i> UNDO and REDO logic during recovery. The <b>ARIES</b> algorithm (used by most commercial DBMSs) runs recovery in three phases: <b>Analysis</b> (figure out which transactions/pages were active at crash time), <b>Redo</b> ("repeat history" — reapply every logged update to reach the exact pre-crash state), then <b>Undo</b> (roll back whatever never committed).</p>
+
+      <div class="notebox" data-note-id="concurrency">
+        <div class="notebox-label"><span>✎ Notes on Concurrency Control</span><span class="save-status ui">Saved ✓</span></div>
+        <textarea class="note-input" placeholder="Your notes on locking, 2PL variants, deadlocks, timestamp ordering, MVCC, ARIES recovery…"></textarea>
+        <div class="notebox-row"><button class="note-save-btn ui">Save note</button></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="page-footer">Everything on this page lives inside the file itself — no internet connection needed. Use "Save to file" to keep your notes for next time, even on another computer.</footer>
+<div id="toast"></div>
+
+<script type="application/json" id="notes-store">{}</script>
+
+<script>
+(function(){
+  "use strict";
+
+  var storeEl = document.getElementById('notes-store');
+  var notes = {};
+  try { notes = JSON.parse(storeEl.textContent || '{}'); } catch(e){ notes = {}; }
+
+  function lsGet(key){ try{ return localStorage.getItem(key); }catch(e){ return null; } }
+  function lsSet(key, val){ try{ localStorage.setItem(key, val); }catch(e){} }
+
+  if (Object.keys(notes).length === 0){
+    var cached = lsGet('dbms_guide_notes');
+    if (cached) { try{ notes = JSON.parse(cached); }catch(e){} }
+  }
+
+  var counterEl = document.getElementById('notesCounter');
+  var toastEl = document.getElementById('toast');
+  var fileHandle = null;
+
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function(){ toastEl.classList.remove('show'); }, 2400);
+  }
+
+  function persist(){
+    storeEl.textContent = JSON.stringify(notes);
+    lsSet('dbms_guide_notes', JSON.stringify(notes));
+    updateCounter();
+  }
+
+  function updateCounter(){
+    var n = Object.keys(notes).filter(function(k){ return notes[k] && notes[k].trim(); }).length;
+    counterEl.textContent = n + (n === 1 ? ' note saved' : ' notes saved');
+  }
+
+  var boxes = document.querySelectorAll('.notebox');
+  boxes.forEach(function(box){
+    var id = box.dataset.noteId;
+    var textarea = box.querySelector('textarea.note-input');
+    var status = box.querySelector('.save-status');
+    var saveBtn = box.querySelector('.note-save-btn');
+
+    textarea.value = notes[id] || '';
+
+    function doSave(){
+      var val = textarea.value;
+      if (val && val.trim()){ notes[id] = val; } else { delete notes[id]; }
+      persist();
+      status.classList.add('show');
+      setTimeout(function(){ status.classList.remove('show'); }, 1600);
+    }
+
+    saveBtn.addEventListener('click', doSave);
+    textarea.addEventListener('keydown', function(e){
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ doSave(); }
+    });
+  });
+
+  updateCounter();
+
+  var tocLinks = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+  var chapters = tocLinks.map(function(a){ return document.getElementById(a.dataset.target); }).filter(Boolean);
+
+  if ('IntersectionObserver' in window){
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){
+          var id = entry.target.id;
+          tocLinks.forEach(function(a){ a.classList.toggle('active', a.dataset.target === id); });
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+    chapters.forEach(function(ch){ observer.observe(ch); });
+  }
+
+  async function saveToFile(){
+    persist();
+    var htmlOut = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+    if (window.showSaveFilePicker){
+      try{
+        if (!fileHandle){
+          fileHandle = await window.showSaveFilePicker({
+            suggestedName: 'dbms-field-guide.html',
+            types: [{ description: 'HTML file', accept: { 'text/html': ['.html'] } }]
+          });
+        }
+        var writable = await fileHandle.createWritable();
+        await writable.write(htmlOut);
+        await writable.close();
+        toast('Saved — your notes are now inside the file ✓');
+        return;
+      } catch(err){
+        if (err && err.name === 'AbortError'){ return; }
+      }
+    }
+    var blob = new Blob([htmlOut], { type: 'text/html' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'dbms-field-guide.html';
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+    toast('Downloaded a copy with your notes — replace the old file with it');
+  }
+
+  document.getElementById('saveFileBtn').addEventListener('click', function(){ saveToFile(); });
+
+})();
+</script>
+</body>
+</html>
