@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subject–Verb Agreement &amp; Articles — Complete Rule Book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EFEADC;
+    --paper-deep:#E6E0CE;
+    --card:#FAF8F0;
+    --ink:#20241F;
+    --ink-soft:#54554A;
+    --ink-faint:#8A8A78;
+    --line:#D6CFB8;
+
+    --moss:#3F6653;   --moss-bg:#E3EAE0;
+    --olive:#6E7A3A;  --olive-bg:#E7EAD4;
+    --brick:#9C4A3C;  --brick-bg:#EFE1DC;
+    --slate:#3F5A72;  --slate-bg:#E1E7EC;
+    --mustard:#A9822E; --mustard-bg:#EFE6CC;
+
+    --radius:14px;
+    --serif:'Fraunces', serif;
+    --sans:'Source Sans 3', sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.6;
+    font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:radial-gradient(circle at 1px 1px, rgba(32,36,31,0.05) 1px, transparent 0);
+    background-size:22px 22px;
+    pointer-events:none; z-index:0;
+  }
+  a{color:inherit;}
+
+  .shell{
+    display:grid;
+    grid-template-columns:270px 1fr;
+    max-width:1280px;
+    margin:0 auto;
+    position:relative; z-index:1;
+  }
+  @media (max-width:900px){ .shell{grid-template-columns:1fr;} }
+
+  .sidebar{
+    position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto;
+    padding:28px 18px 28px 28px; border-right:1px solid var(--line);
+  }
+  @media (max-width:900px){ .sidebar{position:relative; height:auto; border-right:none; border-bottom:1px solid var(--line); padding:20px;} }
+  .brand{font-family:var(--serif); font-weight:600; font-size:1.1rem;}
+  .brand-sub{font-size:0.72rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--ink-faint); margin-bottom:24px;}
+  .nav-group{margin-bottom:18px;}
+  .nav-group-label{font-family:var(--mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--ink-faint); margin:0 0 6px 10px;}
+  .nav-list{list-style:none; display:flex; flex-direction:column; gap:2px;}
+  .nav-list a{display:flex; align-items:baseline; gap:10px; text-decoration:none; padding:7px 10px; border-radius:8px; font-size:0.85rem; color:var(--ink-soft); transition:background .15s,color .15s;}
+  .nav-list a .n{font-family:var(--mono); font-size:0.7rem; color:var(--ink-faint); min-width:18px;}
+  .nav-list a:hover{background:var(--card); color:var(--ink);}
+  .nav-list a.active{background:var(--ink); color:var(--paper);}
+  .nav-list a.active .n{color:var(--paper);}
+
+  .progress-box{margin-top:10px; padding:14px; background:var(--card); border:1px solid var(--line); border-radius:var(--radius);}
+  .progress-box .label{font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--ink-faint); margin-bottom:8px;}
+  .progress-track{height:6px; background:var(--paper-deep); border-radius:6px; overflow:hidden;}
+  .progress-fill{height:100%; width:0%; background:var(--moss); transition:width .4s ease;}
+  .progress-count{margin-top:8px; font-family:var(--mono); font-size:0.75rem; color:var(--ink-soft);}
+
+  main{padding:0 0 80px;}
+
+  .hero{padding:52px 48px 36px; border-bottom:1px solid var(--line);}
+  @media (max-width:900px){ .hero{padding:34px 22px;} }
+  .hero-eyebrow{font-family:var(--mono); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--moss); margin-bottom:14px;}
+  .hero h1{font-family:var(--serif); font-weight:600; font-size:clamp(1.9rem,3.6vw,2.9rem); line-height:1.1; max-width:20ch; margin-bottom:16px;}
+  .hero h1 em{font-style:italic; font-weight:500; color:var(--moss);}
+  .hero p.lede{max-width:60ch; color:var(--ink-soft); font-size:1.03rem;}
+
+  .topic-banner{
+    display:flex; gap:14px; margin-top:28px; flex-wrap:wrap;
+  }
+  .topic-banner a{
+    flex:1; min-width:220px;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px 20px; text-decoration:none; transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .topic-banner a:hover{transform:translateY(-2px); box-shadow:0 6px 18px rgba(32,36,31,0.08);}
+  .topic-banner .tb-eyebrow{font-family:var(--mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px;}
+  .topic-banner .tb-title{font-family:var(--serif); font-weight:600; font-size:1.2rem; margin-bottom:4px;}
+  .topic-banner .tb-desc{font-size:0.85rem; color:var(--ink-soft);}
+  .tb-sva .tb-eyebrow{color:var(--moss);}
+  .tb-art .tb-eyebrow{color:var(--olive);}
+
+  .part-head{
+    padding:44px 48px 10px;
+  }
+  @media (max-width:900px){ .part-head{padding:30px 22px 6px;} }
+  .part-head .part-kicker{font-family:var(--mono); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.15em; margin-bottom:10px;}
+  .part-head h2{font-family:var(--serif); font-size:2.1rem; font-weight:600; margin-bottom:10px;}
+  .part-head p{color:var(--ink-soft); max-width:64ch;}
+  .part-sva .part-kicker{color:var(--moss);}
+  .part-art .part-kicker{color:var(--olive);}
+
+  .entry{padding:30px 48px; border-bottom:1px solid var(--line); scroll-margin-top:20px;}
+  @media (max-width:900px){ .entry{padding:24px 22px;} }
+
+  .entry-head{display:flex; gap:16px; align-items:flex-start; margin-bottom:14px;}
+  .entry-num{font-family:var(--serif); font-size:2.2rem; font-weight:600; line-height:1; opacity:0.18;}
+  .entry-titles h3{font-family:var(--serif); font-size:1.35rem; font-weight:600; margin-bottom:2px;}
+  .entry-titles .tagline{font-size:0.88rem; color:var(--ink-soft); font-style:italic;}
+
+  .rule-card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:20px 24px;
+  }
+  .rule-card p.explain{margin-bottom:14px; font-size:0.98rem;}
+  .ex-row{
+    display:flex; gap:10px; align-items:baseline; margin-bottom:6px;
+    font-family:var(--mono); font-size:0.88rem; padding:8px 12px; border-radius:8px;
+  }
+  .ex-row.ok{background:var(--moss-bg); color:var(--moss);}
+  .ex-row.no{background:var(--brick-bg); color:var(--brick);}
+  .ex-row .mark{font-weight:700; min-width:16px;}
+  .ex-row span.txt{color:var(--ink);}
+
+  .mini-check{
+    margin-top:14px; padding-top:14px; border-top:1px dashed var(--line);
+  }
+  .mini-check .q-text{font-size:0.92rem; margin-bottom:8px;}
+  .mini-check .q-text .blank{display:inline-block; min-width:60px; border-bottom:1.5px solid var(--ink-faint);}
+
+  .reveal-btn{
+    font-family:var(--mono); font-size:0.74rem; text-transform:uppercase; letter-spacing:0.06em;
+    background:transparent; border:1px solid var(--ink-faint); color:var(--ink-soft);
+    padding:5px 11px; border-radius:999px; cursor:pointer; transition:all .15s ease;
+  }
+  .reveal-btn:hover{border-color:var(--ink); color:var(--ink);}
+  .reveal-btn.done{border-color:var(--moss); color:var(--moss); background:var(--moss-bg);}
+  .answer{margin-top:9px; padding:9px 13px; background:var(--paper-deep); border-radius:8px; font-size:0.87rem; display:none;}
+  .answer.show{display:block;}
+  .answer b{color:var(--moss);}
+
+  .lab{
+    margin:30px 48px 10px; background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:26px 30px;
+  }
+  @media (max-width:900px){ .lab{margin:24px 22px;} }
+  .lab-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:8px;}
+  .lab-head h3{font-family:var(--serif); font-size:1.3rem; font-weight:600;}
+  .lab-hint{font-size:0.78rem; color:var(--ink-faint); font-family:var(--mono);}
+  .lab-desc{color:var(--ink-soft); font-size:0.92rem; margin-bottom:18px;}
+  .q-item{padding:14px 0; border-top:1px dashed var(--line);}
+  .q-item:first-of-type{border-top:none;}
+  .q-text{font-size:0.96rem; margin-bottom:10px;}
+  .q-text .blank{display:inline-block; min-width:70px; border-bottom:1.5px solid var(--ink-faint);}
+
+  .quick-table{width:100%; border-collapse:collapse; margin-top:6px;}
+  .quick-table th, .quick-table td{
+    text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); font-size:0.88rem;
+  }
+  .quick-table th{font-family:var(--mono); text-transform:uppercase; font-size:0.7rem; letter-spacing:0.08em; color:var(--ink-faint);}
+  .quick-table td.example{font-family:var(--mono); font-size:0.85rem;}
+
+  .finale{padding:52px 48px 80px; text-align:center;}
+  @media (max-width:900px){ .finale{padding:36px 22px 60px;} }
+  .finale h2{font-family:var(--serif); font-size:1.7rem; font-weight:600; margin-bottom:12px;}
+  .finale p{color:var(--ink-soft); max-width:52ch; margin:0 auto 10px;}
+
+  ::selection{background:var(--moss); color:var(--paper);}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Rule index">
+    <div class="brand">Rule Book</div>
+    <div class="brand-sub">SV Agreement &amp; Articles</div>
+
+    <div class="nav-group">
+      <div class="nav-group-label" style="color:var(--moss)">Subject–Verb Agreement</div>
+      <ul class="nav-list">
+        <li><a href="#sva1"><span class="n">1</span> Basic rule</a></li>
+        <li><a href="#sva2"><span class="n">2</span> "And" subjects</a></li>
+        <li><a href="#sva3"><span class="n">3</span> "Or / Nor"</a></li>
+        <li><a href="#sva4"><span class="n">4</span> Interrupting phrases</a></li>
+        <li><a href="#sva5"><span class="n">5</span> Indefinite pronouns</a></li>
+        <li><a href="#sva6"><span class="n">6</span> Collective nouns</a></li>
+        <li><a href="#sva7"><span class="n">7</span> There is / are</a></li>
+        <li><a href="#sva8"><span class="n">8</span> Titles &amp; units</a></li>
+        <li><a href="#sva9"><span class="n">9</span> Plural form, singular sense</a></li>
+        <li><a href="#sva10"><span class="n">10</span> Relative clauses</a></li>
+        <li><a href="#sva11"><span class="n">11</span> Each / Every</a></li>
+        <li><a href="#sva12"><span class="n">12</span> Fractions %</a></li>
+        <li><a href="#sva-lab"><span class="n">✓</span> Practice lab</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label" style="color:var(--olive)">Articles</div>
+      <ul class="nav-list">
+        <li><a href="#art1"><span class="n">1</span> a vs an</a></li>
+        <li><a href="#art2"><span class="n">2</span> Using "a/an"</a></li>
+        <li><a href="#art3"><span class="n">3</span> Second mention</a></li>
+        <li><a href="#art4"><span class="n">4</span> Unique things</a></li>
+        <li><a href="#art5"><span class="n">5</span> Superlatives &amp; order</a></li>
+        <li><a href="#art6"><span class="n">6</span> Geography names</a></li>
+        <li><a href="#art7"><span class="n">7</span> Groups &amp; nationalities</a></li>
+        <li><a href="#art8"><span class="n">8</span> Zero article</a></li>
+        <li><a href="#art9"><span class="n">9</span> Proper nouns</a></li>
+        <li><a href="#art10"><span class="n">10</span> Transport &amp; time</a></li>
+        <li><a href="#art-lab"><span class="n">✓</span> Practice lab</a></li>
+      </ul>
+    </div>
+
+    <div class="progress-box">
+      <div class="label">Checks cleared</div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-count" id="progressCount">0 / 0</div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-eyebrow">The complete rule book &middot; 22 rules &middot; 40+ practice items</div>
+      <h1>Two small habits that make English sound <em>right</em>.</h1>
+      <p class="lede">Subject–verb agreement decides whether your verb matches its subject. Articles decide whether a noun is "a," "the," or nothing at all. Get these two right and your sentences instantly read as fluent. Every rule below has plain-English notes, correct-vs-incorrect examples, and a quick check.</p>
+
+      <div class="topic-banner">
+        <a class="tb-sva" href="#sva1">
+          <div class="tb-eyebrow">Part One</div>
+          <div class="tb-title">Subject–Verb Agreement</div>
+          <div class="tb-desc">12 rules — from the basic pattern to tricky fractions and relative clauses.</div>
+        </a>
+        <a class="tb-art" href="#art1">
+          <div class="tb-eyebrow">Part Two</div>
+          <div class="tb-title">Articles — a / an / the / zero</div>
+          <div class="tb-desc">10 rules — sound-based a/an, definite "the," and when to use no article at all.</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ================= PART ONE: SVA ================= -->
+    <div class="part-head part-sva">
+      <div class="part-kicker">Part One &middot; 12 Rules</div>
+      <h2>Subject–Verb Agreement</h2>
+      <p>The core idea never changes: a singular subject takes a singular verb, and a plural subject takes a plural verb. Every rule below is really just this idea applied to a trickier sentence shape.</p>
+    </div>
+
+    <section class="entry" id="sva1">
+      <div class="entry-head"><div class="entry-num" style="color:var(--moss)">1</div>
+        <div class="entry-titles"><h3>The basic rule</h3><div class="tagline">singular ↔ singular, plural ↔ plural</div></div></div>
+      <div class="rule-card">
+        <p class="explain">A singular subject (one person/thing) takes a singular verb (usually ending in <b>-s</b>). A plural subject takes a plural verb (no -s).</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The dog barks at strangers.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The dogs bark at strangers.</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">The dog bark at strangers.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "She <span class="blank"></span> (write/writes) every day."</p>
+          <button class="reveal-btn" data-target="m1">Reveal</button>
+          <div class="answer" id="m1"><b>Answer:</b> writes — "she" is singular.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="sva2">
+      <div class="entry-head"><div class="entry-num" style="color:var(--moss)">2</div>
+        <div class="entry-titles"><h3>Subjects joined by "and"</h3><div class="tagline">usually plural — unless they name one single thing</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Two subjects joined by <b>and</b> normally take a plural verb. Exception: if the two nouns together describe one single person, idea, or dish, use a singular verb.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Tom and Jerry are best friends. (two people → plural)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Bread and butter is my favorite breakfast. (one dish → singular)</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">The CEO and founder are arriving today. (same person)</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "Rice and curry <span class="blank"></span> (is/are) served here." (one dish)</p>
+          <button class="reveal-btn" data-target="m2">Reveal</button>
+          <div class="answer" id="m2"><b>Answer:</b> is — treated as a single dish/idea.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="sva3">
+      <div class="entry-head"><div class="entry-num" style="color:var(--moss)">3</div>
+        <div class="entry-titles"><h3>Subjects joined by "or / nor"</h3><div class="tagline">the verb agrees with the nearer subject</div></div></div>
+      <div class="rule-card">
+        <p class="explain">With <b>or</b>, <b>nor</b>, <b>either...or</b>, or <b>neither...nor</b>, the verb agrees with whichever subject is closest to it — ignore the farther one.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Neither the teacher nor the students are ready.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Neither the students nor the teacher is ready.</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">Either my parents or my brother are coming. (brother is nearer → singular)</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "Either the manager or the interns <span class="blank"></span> (has/have) the file."</p>
+          <button class="reveal-btn" data-target="m3">Reveal</button>
+          <div class="answer" id="m3"><b>Answer:</b> have — "interns" is the nearer subject and is plural.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="sva4">
+      <div class="entry-head"><div class="entry-num" style="color:var(--moss)">4</div>
+        <div class="entry-titles"><h3>Ignore interrupting phrases</h3><div class="tagline">as well as, along with, in addition to, together with</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Phrases inserted between the subject and verb — including ones that sound like "and" (as well as, along with, together with, in addition to) — do not change the verb's number. Match the verb to the real subject only.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The manager, along with his staff, is attending.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The basket of apples is on the table.</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">The manager, along with his staff, are attending.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "The captain, as well as his teammates, <span class="blank"></span> (was/were) praised."</p>
+          <button class="reveal-btn" data-target="m4">Reveal</button>
+          <div class="answer" id="m4"><b>Answer:</b> was — "the captain" (singular) is the true subject; "as well as his teammates" is just an inserted phrase.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="sva5">
+      <div class="entry-head"><div class="entry-num" style="color:var(--moss)">5</div>
+        <div class="entry-titles"><h3>Indefinite pronouns</h3><div class="tagline">some are always singular, some always plural, some depend</div></div></div>
+      <div class="rule-card">
+        <p class="explain"><b>Always singular:</b> each, either, neither, one, everyone, everybody, everything, someone, somebody, anyone, no one, nobody, nothing.<br>
+        <b>Always plural:</b> both, few, many, several, others.<br>
+        <b>Depends on the noun after "of":</b> some, any, none, all, most, half.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Everyone is invited.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Few were chosen for the final round.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Some of the cake is gone. / Some of the cookies are gone.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "Neither of the answers <span class="blank"></span> (is/are) correct."</p>
+          <button class="reveal-btn" data-target="m5">Reveal</button>
+          <div class="answer" id="m5"><b>Answer:</b> is — "neither" is always singular, regardless of what follows "of."</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="sva6">
+      <div class="entry-head"><div class="entry-num" style="color:var(--moss)">6</div>
+        <div class="entry-titles"><h3>Collective nouns</h3><div class="tagline">singular as a unit, plural when members act individually</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Words like team, family, committee, staff, jury, audience, and class are singular when the group acts as one unit — which is the more common case. Use a plural verb only when you're emphasizing the individual members acting separately.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The team is winning the match. (acting as one unit)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The family are arguing among themselves about the plan. (individuals disagreeing)</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "The committee <span class="blank"></span> (meets/meet) every Monday."</p>
+          <button class="reveal-btn" data-target="m6">Reveal</button>
+          <div class="answer" id="m6"><b>Answer:</b> meets — the committee is acting as a single unit.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="sva7">
+      <div class="entry-head"><div class="entry-num" style="color:var(--moss)">7</div>
+        <div class="entry-titles"><h3>"There is / There are"</h3><div class="tagline">the verb agrees with the noun that comes after it</div></div></div>
+      <div class="rule-card">
+        <p class="explain">In "there is / there are" sentences, "there" is not the real subject — the noun after the verb is. Look ahead before choosing is/are.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">There is a book on the table.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">There are three books on the table.</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">There's many reasons to stay. (should be "there are")</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "There <span class="blank"></span> (is/are) a lot of traffic today."</p>
+          <button class="reveal-btn" data-target="m7">Reveal</button>
+          <div class="answer" id="m7"><b>Answer:</b> is — "traffic" is uncountable/singular here, even though "a lot of" sounds like a lot.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="sva8">
+      <div class="entry-head"><div class="entry-num" style="color:var(--moss)">8</div>
+        <div class="entry-titles"><h3>Titles &amp; single units</h3><div class="tagline">plural in form, but treated as one thing</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Titles of books/movies, subject names, and amounts of money, time, or distance are treated as a single unit and take a singular verb — even if they look plural.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">"The Avengers" is a great movie.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Ten dollars is not enough for this.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Mathematics is my favorite subject.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "Fifty kilometers <span class="blank"></span> (is/are) a long way to walk."</p>
+          <button class="reveal-btn" data-target="m8">Reveal</button>
+          <div class="answer" id="m8"><b>Answer:</b> is — the distance is treated as one single amount.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="sva9">
+      <div class="entry-head"><div class="entry-num" style="color:var(--moss)">9</div>
+        <div class="entry-titles"><h3>Plural form, singular meaning</h3><div class="tagline">news, measles, the United States...</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Some nouns end in "-s" but are grammatically singular: news, mathematics, physics, economics, athletics, measles. Country/organization names that look plural (the United States, the United Nations) are also singular — they refer to one entity.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The news is shocking.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The United States has a new trade policy.</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">The news are shocking.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "Economics <span class="blank"></span> (is/are) a tough subject."</p>
+          <button class="reveal-btn" data-target="m9">Reveal</button>
+          <div class="answer" id="m9"><b>Answer:</b> is — despite the "-s" ending, it names one field of study.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="sva10">
+      <div class="entry-head"><div class="entry-num" style="color:var(--moss)">10</div>
+        <div class="entry-titles"><h3>Relative clauses (who / which / that)</h3><div class="tagline">the verb agrees with the antecedent, not the nearest noun</div></div></div>
+      <div class="rule-card">
+        <p class="explain">In a clause starting with who/which/that, the verb must agree with whatever noun that pronoun refers back to (its antecedent) — which is not always the noun right in front of it.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">She is one of the girls who play tennis. ("who" refers to "girls," plural)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">He is the only one of the students who is late. ("who" refers to "one," singular)</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "This is one of the reasons that <span class="blank"></span> (make/makes) the plan risky."</p>
+          <button class="reveal-btn" data-target="m10">Reveal</button>
+          <div class="answer" id="m10"><b>Answer:</b> make — "that" refers back to "reasons" (plural), not "one."</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="sva11">
+      <div class="entry-head"><div class="entry-num" style="color:var(--moss)">11</div>
+        <div class="entry-titles"><h3>"Each" and "Every"</h3><div class="tagline">always singular, even before compound subjects</div></div></div>
+      <div class="rule-card">
+        <p class="explain">When "each" or "every" comes before a subject — even a compound one joined by "and" — the verb stays singular, because each item is being considered one at a time.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Each boy and each girl was given a gift.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Every man, woman, and child was affected.</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">Every student and teacher were present.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "Every room and hallway <span class="blank"></span> (was/were) inspected."</p>
+          <button class="reveal-btn" data-target="m11">Reveal</button>
+          <div class="answer" id="m11"><b>Answer:</b> was — "every" forces a singular verb.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="sva12">
+      <div class="entry-head"><div class="entry-num" style="color:var(--moss)">12</div>
+        <div class="entry-titles"><h3>Fractions &amp; percentages</h3><div class="tagline">the verb agrees with the noun after "of"</div></div></div>
+      <div class="rule-card">
+        <p class="explain">With fractions, percentages, and words like "half" or "the majority," look at the noun that follows "of" — if it's uncountable or singular, use a singular verb; if plural, use a plural verb.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Half of the pizza is gone. (pizza → singular)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Half of the slices are gone. (slices → plural)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Two-thirds of the students are present.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "Seventy percent of the work <span class="blank"></span> (is/are) done."</p>
+          <button class="reveal-btn" data-target="m12">Reveal</button>
+          <div class="answer" id="m12"><b>Answer:</b> is — "work" is uncountable/singular.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="lab" id="sva-lab">
+      <div class="lab-head"><h3>Practice lab — mixed Subject–Verb Agreement</h3><span class="lab-hint">reveal each answer after you try</span></div>
+      <p class="lab-desc">These twelve mix every rule above in random order — the way they'll actually show up in real writing and exams.</p>
+
+      <div class="q-item"><p class="q-text">1. Neither of the boys <span class="blank"></span> (know/knows) the answer.</p>
+        <button class="reveal-btn" data-target="l1">Reveal</button><div class="answer" id="l1"><b>Answer:</b> knows — "neither" is always singular.</div></div>
+
+      <div class="q-item"><p class="q-text">2. The scissors <span class="blank"></span> (is/are) on the shelf.</p>
+        <button class="reveal-btn" data-target="l2">Reveal</button><div class="answer" id="l2"><b>Answer:</b> are — "scissors" is one of a small group of nouns (also: trousers, glasses) that are always plural.</div></div>
+
+      <div class="q-item"><p class="q-text">3. The number of students <span class="blank"></span> (has/have) increased this year.</p>
+        <button class="reveal-btn" data-target="l3">Reveal</button><div class="answer" id="l3"><b>Answer:</b> has — "the number" (singular) is the subject; "a number of students" would take a plural verb instead.</div></div>
+
+      <div class="q-item"><p class="q-text">4. Either the windows or the door <span class="blank"></span> (need/needs) fixing.</p>
+        <button class="reveal-btn" data-target="l4">Reveal</button><div class="answer" id="l4"><b>Answer:</b> needs — agrees with the nearer subject, "the door."</div></div>
+
+      <div class="q-item"><p class="q-text">5. My advisor, together with two colleagues, <span class="blank"></span> (is/are) reviewing my thesis.</p>
+        <button class="reveal-btn" data-target="l5">Reveal</button><div class="answer" id="l5"><b>Answer:</b> is — "together with" doesn't change the real (singular) subject, "my advisor."</div></div>
+
+      <div class="q-item"><p class="q-text">6. All of the water <span class="blank"></span> (has/have) evaporated.</p>
+        <button class="reveal-btn" data-target="l6">Reveal</button><div class="answer" id="l6"><b>Answer:</b> has — "water" is uncountable.</div></div>
+
+      <div class="q-item"><p class="q-text">7. The jury <span class="blank"></span> (has/have) reached separate opinions on the verdict.</p>
+        <button class="reveal-btn" data-target="l7">Reveal</button><div class="answer" id="l7"><b>Answer:</b> have — emphasizes the jurors disagreeing as individuals.</div></div>
+
+      <div class="q-item"><p class="q-text">8. Gymnastics <span class="blank"></span> (require/requires) years of practice.</p>
+        <button class="reveal-btn" data-target="l8">Reveal</button><div class="answer" id="l8"><b>Answer:</b> requires — a plural-looking subject with a singular meaning.</div></div>
+
+      <div class="q-item"><p class="q-text">9. He is one of those people who <span class="blank"></span> (always arrive / always arrives) late.</p>
+        <button class="reveal-btn" data-target="l9">Reveal</button><div class="answer" id="l9"><b>Answer:</b> always arrive — "who" refers to "people" (plural).</div></div>
+
+      <div class="q-item"><p class="q-text">10. Every one of my friends <span class="blank"></span> (was/were) at the party.</p>
+        <button class="reveal-btn" data-target="l10">Reveal</button><div class="answer" id="l10"><b>Answer:</b> was — "every one" is always singular.</div></div>
+
+      <div class="q-item"><p class="q-text">11. There <span class="blank"></span> (is/are) several reasons to reconsider.</p>
+        <button class="reveal-btn" data-target="l11">Reveal</button><div class="answer" id="l11"><b>Answer:</b> are — "reasons" (plural) is the real subject after "there."</div></div>
+
+      <div class="q-item"><p class="q-text">12. Twenty minutes <span class="blank"></span> (is/are) all I need to finish.</p>
+        <button class="reveal-btn" data-target="l12">Reveal</button><div class="answer" id="l12"><b>Answer:</b> is — a period of time counted as one single block.</div></div>
+    </div>
+
+    <!-- ================= PART TWO: ARTICLES ================= -->
+    <div class="part-head part-art">
+      <div class="part-kicker">Part Two &middot; 10 Rules</div>
+      <h2>Articles — a / an / the / (no article)</h2>
+      <p>Articles do one job: they tell the listener how specific a noun is. "A/an" introduces something new or general. "The" points to something already known or unique. No article at all is its own choice — used deliberately for general and proper nouns.</p>
+    </div>
+
+    <section class="entry" id="art1">
+      <div class="entry-head"><div class="entry-num" style="color:var(--olive)">1</div>
+        <div class="entry-titles"><h3>"A" vs "an" — go by sound, not spelling</h3><div class="tagline">the rule is about pronunciation, never the letter</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Use <b>a</b> before a word that starts with a consonant <em>sound</em>, and <b>an</b> before a word that starts with a vowel <em>sound</em> — the actual spelling doesn't matter.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">a university (starts with a "yoo" sound)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">an hour (the "h" is silent → vowel sound)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">a European trip / an heir to the throne</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "She's <span class="blank"></span> (a/an) honest, hard-working colleague."</p>
+          <button class="reveal-btn" data-target="ma1">Reveal</button>
+          <div class="answer" id="ma1"><b>Answer:</b> an — "honest" begins with a silent h, so it sounds like it starts with a vowel.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="art2">
+      <div class="entry-head"><div class="entry-num" style="color:var(--olive)">2</div>
+        <div class="entry-titles"><h3>When to use "a/an"</h3><div class="tagline">one, non-specific, first mention</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Use a/an with a singular countable noun when: (1) it's the first time you mention it, (2) you mean "any one" rather than a specific one, or (3) you're stating someone's job/category, or a rate/quantity.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">I saw a cat on the roof. (first mention)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">She is a doctor. (job/category)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Take this medicine twice a day. (rate)</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "He wants to become <span class="blank"></span> (a/an) engineer."</p>
+          <button class="reveal-btn" data-target="ma2">Reveal</button>
+          <div class="answer" id="ma2"><b>Answer:</b> an — stating a category/profession; "engineer" starts with a vowel sound.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="art3">
+      <div class="entry-head"><div class="entry-num" style="color:var(--olive)">3</div>
+        <div class="entry-titles"><h3>"The" for something already known</h3><div class="tagline">second mention, or made specific by the sentence</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Use "the" once a noun has already been introduced, or when extra words in the sentence (like "of," a clause, or context) narrow it down to one specific thing that both speaker and listener can identify.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">I saw a cat. The cat was orange. (second mention)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The man who called earlier left a message. (narrowed by the clause)</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "I bought a laptop yesterday. <span class="blank"></span> (A/The) laptop is very fast."</p>
+          <button class="reveal-btn" data-target="ma3">Reveal</button>
+          <div class="answer" id="ma3"><b>Answer:</b> The — it's now the specific laptop already mentioned.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="art4">
+      <div class="entry-head"><div class="entry-num" style="color:var(--olive)">4</div>
+        <div class="entry-titles"><h3>"The" for things that are one-of-a-kind</h3><div class="tagline">the sun, the internet, the sky</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Some nouns refer to something there's only one of in the shared world — use "the," never "a/an," with these.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The sun rises in the east.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">We searched the internet for answers.</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">A moon looked beautiful tonight.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "<span class="blank"></span> (A/The) sky turned orange at sunset."</p>
+          <button class="reveal-btn" data-target="ma4">Reveal</button>
+          <div class="answer" id="ma4"><b>Answer:</b> The — there's only one sky.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="art5">
+      <div class="entry-head"><div class="entry-num" style="color:var(--olive)">5</div>
+        <div class="entry-titles"><h3>"The" with superlatives &amp; ordinal numbers</h3><div class="tagline">the best, the first, the only</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Superlatives (best, tallest, most expensive) and ordinal numbers (first, second, next, last) point to one specific item out of a group — so they take "the."</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">She is the tallest student in the class.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">This is the first time I've visited Delhi.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "He finished <span class="blank"></span> (a/the) race in second place."</p>
+          <button class="reveal-btn" data-target="ma5">Reveal</button>
+          <div class="answer" id="ma5"><b>Answer:</b> the — "race" here is a specific, known event.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="art6">
+      <div class="entry-head"><div class="entry-num" style="color:var(--olive)">6</div>
+        <div class="entry-titles"><h3>"The" with geographic names</h3><div class="tagline">rivers, oceans, mountain ranges, plural countries</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Use "the" with rivers, seas, oceans, mountain ranges, deserts, and countries whose name is plural or contains "of."</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">the Ganges, the Pacific Ocean, the Himalayas, the Sahara</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">the Netherlands, the United Kingdom, the United States</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">We rafted down Ganges last summer.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "<span class="blank"></span> (Himalayas/The Himalayas) attract climbers every year."</p>
+          <button class="reveal-btn" data-target="ma6">Reveal</button>
+          <div class="answer" id="ma6"><b>Answer:</b> The Himalayas — mountain ranges always take "the."</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="art7">
+      <div class="entry-head"><div class="entry-num" style="color:var(--olive)">7</div>
+        <div class="entry-titles"><h3>"The" with groups &amp; nationalities</h3><div class="tagline">adjectives standing in for a whole class of people</div></div></div>
+      <div class="rule-card">
+        <p class="explain">"The" turns an adjective into a noun meaning "people of that kind" — and is used before nationality adjectives when referring to the people of that nation as a whole.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The elderly deserve our respect. (elderly people in general)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The French are known for their cuisine.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "The government introduced new housing for <span class="blank"></span> (poor/the poor)."</p>
+          <button class="reveal-btn" data-target="ma7">Reveal</button>
+          <div class="answer" id="ma7"><b>Answer:</b> the poor — "the" + adjective refers to the whole group of poor people.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="art8">
+      <div class="entry-head"><div class="entry-num" style="color:var(--olive)">8</div>
+        <div class="entry-titles"><h3>Zero article — general statements</h3><div class="tagline">plural &amp; uncountable nouns used generally</div></div></div>
+      <div class="rule-card">
+        <p class="explain">When you're speaking about something in general — not one specific example — use no article at all with plural or uncountable nouns.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Dogs are loyal animals. (dogs in general)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Water is essential for life.</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">The dogs are loyal animals. (wrongly implies specific dogs)</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "<span class="blank"></span> (The honesty/Honesty) is the best policy."</p>
+          <button class="reveal-btn" data-target="ma8">Reveal</button>
+          <div class="answer" id="ma8"><b>Answer:</b> Honesty — an abstract idea spoken of in general takes no article.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="art9">
+      <div class="entry-head"><div class="entry-num" style="color:var(--olive)">9</div>
+        <div class="entry-titles"><h3>Zero article — most proper nouns</h3><div class="tagline">names of people, most countries, cities, single mountains</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Most proper nouns take no article: people's names, most country and city names, continents, single lakes and mountains, streets.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">India, Chennai, Africa, Mount Everest, Lake Victoria, MG Road</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">The India has a rich history.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "<span class="blank"></span> (Everest/The Everest) is the tallest mountain on Earth."</p>
+          <button class="reveal-btn" data-target="ma9">Reveal</button>
+          <div class="answer" id="ma9"><b>Answer:</b> Everest — single mountain names take no article (compare: mountain <em>ranges</em> do take "the").</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="art10">
+      <div class="entry-head"><div class="entry-num" style="color:var(--olive)">10</div>
+        <div class="entry-titles"><h3>Zero article — transport, languages, meals, time</h3><div class="tagline">by car, speak Spanish, have breakfast, next week</div></div></div>
+      <div class="rule-card">
+        <p class="explain">No article before: modes of transport after "by," languages, academic subjects, sports, meals in general, and "next/last" + a time period.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">We traveled by train. She speaks Spanish. We play cricket.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Breakfast is at 8. See you next week.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "They go to work <span class="blank"></span> (by the bus/by bus) every day."</p>
+          <button class="reveal-btn" data-target="ma10">Reveal</button>
+          <div class="answer" id="ma10"><b>Answer:</b> by bus — transport methods after "by" take no article.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="lab" id="art-lab">
+      <div class="lab-head"><h3>Practice lab — mixed Articles</h3><span class="lab-hint">reveal each answer after you try</span></div>
+      <p class="lab-desc">Choose a, an, the, or "—" (no article) for each blank.</p>
+
+      <div class="q-item"><p class="q-text">1. I need <span class="blank"></span> umbrella — it looks like rain.</p>
+        <button class="reveal-btn" data-target="n1">Reveal</button><div class="answer" id="n1"><b>Answer:</b> an — "umbrella" starts with a vowel sound; not yet specific.</div></div>
+
+      <div class="q-item"><p class="q-text">2. <span class="blank"></span> moon was full and bright last night.</p>
+        <button class="reveal-btn" data-target="n2">Reveal</button><div class="answer" id="n2"><b>Answer:</b> The — there's only one moon.</div></div>
+
+      <div class="q-item"><p class="q-text">3. My brother plays <span class="blank"></span> guitar every evening.</p>
+        <button class="reveal-btn" data-target="n3">Reveal</button><div class="answer" id="n3"><b>Answer:</b> the — musical instruments take "the" (the guitar, the piano).</div></div>
+
+      <div class="q-item"><p class="q-text">4. <span class="blank"></span> lions are dangerous animals. (general statement)</p>
+        <button class="reveal-btn" data-target="n4">Reveal</button><div class="answer" id="n4"><b>Answer:</b> — (no article) — a general truth about lions as a species.</div></div>
+
+      <div class="q-item"><p class="q-text">5. She was born in <span class="blank"></span> Japan and grew up in <span class="blank"></span> United States.</p>
+        <button class="reveal-btn" data-target="n5">Reveal</button><div class="answer" id="n5"><b>Answer:</b> — Japan (no article, ordinary country) ... the United States (plural-form country name).</div></div>
+
+      <div class="q-item"><p class="q-text">6. This is <span class="blank"></span> most beautiful sunset I've ever seen.</p>
+        <button class="reveal-btn" data-target="n6">Reveal</button><div class="answer" id="n6"><b>Answer:</b> the — superlatives take "the."</div></div>
+
+      <div class="q-item"><p class="q-text">7. Could you pass me <span class="blank"></span> salt, please? (it's right there on the table)</p>
+        <button class="reveal-btn" data-target="n7">Reveal</button><div class="answer" id="n7"><b>Answer:</b> the — a specific, visible item both speakers can identify.</div></div>
+
+      <div class="q-item"><p class="q-text">8. He is <span class="blank"></span> honest man, but not always <span class="blank"></span> tactful one.</p>
+        <button class="reveal-btn" data-target="n8">Reveal</button><div class="answer" id="n8"><b>Answer:</b> an honest man ... a tactful one — "honest" starts with a silent h (vowel sound), "tactful" doesn't.</div></div>
+
+      <div class="q-item"><p class="q-text">9. We usually eat <span class="blank"></span> lunch around one o'clock.</p>
+        <button class="reveal-btn" data-target="n9">Reveal</button><div class="answer" id="n9"><b>Answer:</b> — (no article) — meals in general take no article.</div></div>
+
+      <div class="q-item"><p class="q-text">10. <span class="blank"></span> Taj Mahal is one of <span class="blank"></span> Seven Wonders of the World.</p>
+        <button class="reveal-btn" data-target="n10">Reveal</button><div class="answer" id="n10"><b>Answer:</b> The Taj Mahal (a well-known specific monument) ... the Seven Wonders (a specific, defined group).</div></div>
+
+      <div class="q-item"><p class="q-text">11. My sister wants to be <span class="blank"></span> architect one day.</p>
+        <button class="reveal-btn" data-target="n11">Reveal</button><div class="answer" id="n11"><b>Answer:</b> an — "architect" starts with a vowel sound; a general profession.</div></div>
+
+      <div class="q-item"><p class="q-text">12. I go to <span class="blank"></span> gym three times <span class="blank"></span> week.</p>
+        <button class="reveal-btn" data-target="n12">Reveal</button><div class="answer" id="n12"><b>Answer:</b> the gym (a specific known place you go to) ... a week (rate — "times a week").</div></div>
+    </div>
+
+    <div class="finale">
+      <h2>22 rules down.</h2>
+      <p>Subject–verb agreement and articles cause more small errors than any other part of English grammar — mostly because native speakers get them right by ear, not by rule. Now you have the rules too. Re-run the practice labs in a few days without peeking at the guide above.</p>
+    </div>
+  </main>
+</div>
+
+<script>
+  const allButtons = document.querySelectorAll('.reveal-btn');
+  const progressFill = document.getElementById('progressFill');
+  const progressCount = document.getElementById('progressCount');
+  const total = allButtons.length;
+  let done = 0;
+
+  function updateProgress(){
+    progressFill.style.width = (done/total*100) + '%';
+    progressCount.textContent = done + ' / ' + total;
+  }
+  updateProgress();
+
+  allButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.dataset.target);
+      const wasShown = target.classList.contains('show');
+      target.classList.toggle('show');
+      if(!wasShown){
+        btn.textContent = 'Hide';
+        if(!btn.classList.contains('done')){
+          btn.classList.add('done');
+          done++;
+          updateProgress();
+        }
+      } else {
+        btn.textContent = 'Reveal';
+      }
+    });
+  });
+
+  const sections = document.querySelectorAll('.entry, .lab');
+  const navLinks = document.querySelectorAll('.nav-list a');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        navLinks.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`.nav-list a[href="#${entry.target.id}"]`);
+        if(link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px' });
+  sections.forEach(sec => observer.observe(sec));
+</script>
+
+</body>
+</html>

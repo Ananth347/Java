@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prepositions, Pronouns &amp; Conjunctions — Complete Rule Book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EFEADC;
+    --paper-deep:#E6E0CE;
+    --card:#FAF8F0;
+    --ink:#20241F;
+    --ink-soft:#54554A;
+    --ink-faint:#8A8A78;
+    --line:#D6CFB8;
+
+    --teal:#276E5E;    --teal-bg:#DCE9E3;
+    --slate:#3F5A72;   --slate-bg:#E1E7EC;
+    --indigo:#464A8C;  --indigo-bg:#E1E1EF;
+    --moss:#3F6653;    --moss-bg:#E3EAE0;
+    --brick:#9C4A3C;   --brick-bg:#EFE1DC;
+
+    --radius:14px;
+    --serif:'Fraunces', serif;
+    --sans:'Source Sans 3', sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.6;
+    font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:radial-gradient(circle at 1px 1px, rgba(32,36,31,0.05) 1px, transparent 0);
+    background-size:22px 22px;
+    pointer-events:none; z-index:0;
+  }
+  a{color:inherit;}
+
+  .shell{
+    display:grid;
+    grid-template-columns:270px 1fr;
+    max-width:1280px;
+    margin:0 auto;
+    position:relative; z-index:1;
+  }
+  @media (max-width:900px){ .shell{grid-template-columns:1fr;} }
+
+  .sidebar{
+    position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto;
+    padding:28px 18px 28px 28px; border-right:1px solid var(--line);
+  }
+  @media (max-width:900px){ .sidebar{position:relative; height:auto; border-right:none; border-bottom:1px solid var(--line); padding:20px;} }
+  .brand{font-family:var(--serif); font-weight:600; font-size:1.05rem;}
+  .brand-sub{font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--ink-faint); margin-bottom:22px;}
+  .nav-group{margin-bottom:16px;}
+  .nav-group-label{font-family:var(--mono); font-size:0.66rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--ink-faint); margin:0 0 6px 10px;}
+  .nav-list{list-style:none; display:flex; flex-direction:column; gap:1px;}
+  .nav-list a{display:flex; align-items:baseline; gap:9px; text-decoration:none; padding:6px 10px; border-radius:8px; font-size:0.82rem; color:var(--ink-soft); transition:background .15s,color .15s;}
+  .nav-list a .n{font-family:var(--mono); font-size:0.68rem; color:var(--ink-faint); min-width:16px;}
+  .nav-list a:hover{background:var(--card); color:var(--ink);}
+  .nav-list a.active{background:var(--ink); color:var(--paper);}
+  .nav-list a.active .n{color:var(--paper);}
+
+  .progress-box{margin-top:8px; padding:14px; background:var(--card); border:1px solid var(--line); border-radius:var(--radius);}
+  .progress-box .label{font-size:0.68rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--ink-faint); margin-bottom:8px;}
+  .progress-track{height:6px; background:var(--paper-deep); border-radius:6px; overflow:hidden;}
+  .progress-fill{height:100%; width:0%; background:var(--moss); transition:width .4s ease;}
+  .progress-count{margin-top:8px; font-family:var(--mono); font-size:0.74rem; color:var(--ink-soft);}
+
+  main{padding:0 0 80px;}
+
+  .hero{padding:52px 48px 36px; border-bottom:1px solid var(--line);}
+  @media (max-width:900px){ .hero{padding:34px 22px;} }
+  .hero-eyebrow{font-family:var(--mono); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--slate); margin-bottom:14px;}
+  .hero h1{font-family:var(--serif); font-weight:600; font-size:clamp(1.9rem,3.6vw,2.9rem); line-height:1.1; max-width:22ch; margin-bottom:16px;}
+  .hero h1 em{font-style:italic; font-weight:500; color:var(--slate);}
+  .hero p.lede{max-width:62ch; color:var(--ink-soft); font-size:1.03rem;}
+
+  .topic-banner{display:flex; gap:14px; margin-top:28px; flex-wrap:wrap;}
+  .topic-banner a{
+    flex:1; min-width:210px;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px 20px; text-decoration:none; transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .topic-banner a:hover{transform:translateY(-2px); box-shadow:0 6px 18px rgba(32,36,31,0.08);}
+  .topic-banner .tb-eyebrow{font-family:var(--mono); font-size:0.66rem; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px;}
+  .topic-banner .tb-title{font-family:var(--serif); font-weight:600; font-size:1.12rem; margin-bottom:4px;}
+  .topic-banner .tb-desc{font-size:0.83rem; color:var(--ink-soft);}
+  .tb-prep .tb-eyebrow{color:var(--teal);}
+  .tb-pron .tb-eyebrow{color:var(--slate);}
+  .tb-conj .tb-eyebrow{color:var(--indigo);}
+
+  .part-head{padding:44px 48px 10px;}
+  @media (max-width:900px){ .part-head{padding:30px 22px 6px;} }
+  .part-head .part-kicker{font-family:var(--mono); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.15em; margin-bottom:10px;}
+  .part-head h2{font-family:var(--serif); font-size:2.05rem; font-weight:600; margin-bottom:10px;}
+  .part-head p{color:var(--ink-soft); max-width:66ch;}
+  .part-prep .part-kicker{color:var(--teal);}
+  .part-pron .part-kicker{color:var(--slate);}
+  .part-conj .part-kicker{color:var(--indigo);}
+
+  .entry{padding:28px 48px; border-bottom:1px solid var(--line); scroll-margin-top:20px;}
+  @media (max-width:900px){ .entry{padding:22px 22px;} }
+
+  .entry-head{display:flex; gap:16px; align-items:flex-start; margin-bottom:14px;}
+  .entry-num{font-family:var(--serif); font-size:2.1rem; font-weight:600; line-height:1; opacity:0.18;}
+  .entry-titles h3{font-family:var(--serif); font-size:1.3rem; font-weight:600; margin-bottom:2px;}
+  .entry-titles .tagline{font-size:0.86rem; color:var(--ink-soft); font-style:italic;}
+
+  .rule-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:20px 24px;}
+  .rule-card p.explain{margin-bottom:14px; font-size:0.97rem;}
+  .ex-row{display:flex; gap:10px; align-items:baseline; margin-bottom:6px; font-family:var(--mono); font-size:0.87rem; padding:8px 12px; border-radius:8px;}
+  .ex-row.ok{background:var(--moss-bg); color:var(--moss);}
+  .ex-row.no{background:var(--brick-bg); color:var(--brick);}
+  .ex-row .mark{font-weight:700; min-width:16px;}
+  .ex-row span.txt{color:var(--ink);}
+
+  .word-bank{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px;}
+  .word-bank span{
+    font-family:var(--mono); font-size:0.78rem; padding:4px 10px; border-radius:999px;
+    background:var(--paper-deep); color:var(--ink-soft);
+  }
+
+  .mini-check{margin-top:14px; padding-top:14px; border-top:1px dashed var(--line);}
+  .mini-check .q-text{font-size:0.91rem; margin-bottom:8px;}
+  .mini-check .q-text .blank{display:inline-block; min-width:60px; border-bottom:1.5px solid var(--ink-faint);}
+
+  .reveal-btn{
+    font-family:var(--mono); font-size:0.73rem; text-transform:uppercase; letter-spacing:0.06em;
+    background:transparent; border:1px solid var(--ink-faint); color:var(--ink-soft);
+    padding:5px 11px; border-radius:999px; cursor:pointer; transition:all .15s ease;
+  }
+  .reveal-btn:hover{border-color:var(--ink); color:var(--ink);}
+  .reveal-btn.done{border-color:var(--moss); color:var(--moss); background:var(--moss-bg);}
+  .answer{margin-top:9px; padding:9px 13px; background:var(--paper-deep); border-radius:8px; font-size:0.86rem; display:none;}
+  .answer.show{display:block;}
+  .answer b{color:var(--moss);}
+
+  .lab{margin:30px 48px 10px; background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:26px 30px;}
+  @media (max-width:900px){ .lab{margin:24px 22px;} }
+  .lab-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:8px;}
+  .lab-head h3{font-family:var(--serif); font-size:1.28rem; font-weight:600;}
+  .lab-hint{font-size:0.77rem; color:var(--ink-faint); font-family:var(--mono);}
+  .lab-desc{color:var(--ink-soft); font-size:0.91rem; margin-bottom:18px;}
+  .q-item{padding:14px 0; border-top:1px dashed var(--line);}
+  .q-item:first-of-type{border-top:none;}
+  .q-text{font-size:0.95rem; margin-bottom:10px;}
+  .q-text .blank{display:inline-block; min-width:70px; border-bottom:1.5px solid var(--ink-faint);}
+
+  .finale{padding:52px 48px 80px; text-align:center;}
+  @media (max-width:900px){ .finale{padding:36px 22px 60px;} }
+  .finale h2{font-family:var(--serif); font-size:1.65rem; font-weight:600; margin-bottom:12px;}
+  .finale p{color:var(--ink-soft); max-width:54ch; margin:0 auto 10px;}
+
+  ::selection{background:var(--slate); color:var(--paper);}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Rule index">
+    <div class="brand">Rule Book</div>
+    <div class="brand-sub">Prepositions · Pronouns · Conjunctions</div>
+
+    <div class="nav-group">
+      <div class="nav-group-label" style="color:var(--teal)">Prepositions</div>
+      <ul class="nav-list">
+        <li><a href="#p1"><span class="n">1</span> What they do</a></li>
+        <li><a href="#p2"><span class="n">2</span> Time: at/on/in</a></li>
+        <li><a href="#p3"><span class="n">3</span> Time: since/for/by/until</a></li>
+        <li><a href="#p4"><span class="n">4</span> Place: at/on/in</a></li>
+        <li><a href="#p5"><span class="n">5</span> Place: between/over/behind</a></li>
+        <li><a href="#p6"><span class="n">6</span> Direction &amp; movement</a></li>
+        <li><a href="#p7"><span class="n">7</span> Agent vs instrument</a></li>
+        <li><a href="#p8"><span class="n">8</span> Fixed pairs</a></li>
+        <li><a href="#p9"><span class="n">9</span> Compound prepositions</a></li>
+        <li><a href="#p10"><span class="n">10</span> Common pitfalls</a></li>
+        <li><a href="#prep-lab"><span class="n">✓</span> Practice lab</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label" style="color:var(--slate)">Pronouns</div>
+      <ul class="nav-list">
+        <li><a href="#r1"><span class="n">1</span> Subject vs object</a></li>
+        <li><a href="#r2"><span class="n">2</span> Antecedent agreement</a></li>
+        <li><a href="#r3"><span class="n">3</span> Singular "they"</a></li>
+        <li><a href="#r4"><span class="n">4</span> After prepositions/than</a></li>
+        <li><a href="#r5"><span class="n">5</span> Reflexive vs intensive</a></li>
+        <li><a href="#r6"><span class="n">6</span> mine vs my / its vs it's</a></li>
+        <li><a href="#r7"><span class="n">7</span> Demonstratives</a></li>
+        <li><a href="#r8"><span class="n">8</span> Relative pronouns</a></li>
+        <li><a href="#r9"><span class="n">9</span> Reciprocal pronouns</a></li>
+        <li><a href="#r10"><span class="n">10</span> Ambiguous reference</a></li>
+        <li><a href="#pron-lab"><span class="n">✓</span> Practice lab</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label" style="color:var(--indigo)">Conjunctions</div>
+      <ul class="nav-list">
+        <li><a href="#c1"><span class="n">1</span> Coordinating (FANBOYS)</a></li>
+        <li><a href="#c2"><span class="n">2</span> Subordinating</a></li>
+        <li><a href="#c3"><span class="n">3</span> Correlative</a></li>
+        <li><a href="#c4"><span class="n">4</span> Conjunctive adverbs</a></li>
+        <li><a href="#c5"><span class="n">5</span> Comma splices</a></li>
+        <li><a href="#c6"><span class="n">6</span> because vs because of</a></li>
+        <li><a href="#c7"><span class="n">7</span> Starting with And/But</a></li>
+        <li><a href="#c8"><span class="n">8</span> so vs so that</a></li>
+        <li><a href="#c9"><span class="n">9</span> whether vs if</a></li>
+        <li><a href="#c10"><span class="n">10</span> Parallelism</a></li>
+        <li><a href="#conj-lab"><span class="n">✓</span> Practice lab</a></li>
+      </ul>
+    </div>
+
+    <div class="progress-box">
+      <div class="label">Checks cleared</div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-count" id="progressCount">0 / 0</div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-eyebrow">The complete rule book &middot; 30 rules &middot; 36+ practice items</div>
+      <h1>The three words that <em>connect</em> everything else.</h1>
+      <p class="lede">Prepositions locate things in time and space. Pronouns keep sentences from repeating themselves. Conjunctions link ideas together — and punctuate them correctly. These are the words that hold a sentence's structure up, so small mistakes here are the ones native speakers notice fastest. Each rule below has a plain-English note, correct-vs-incorrect examples, and a quick check.</p>
+
+      <div class="topic-banner">
+        <a class="tb-prep" href="#p1">
+          <div class="tb-eyebrow">Part One</div>
+          <div class="tb-title">Prepositions</div>
+          <div class="tb-desc">10 rules — time, place, direction, fixed pairs, and compound forms.</div>
+        </a>
+        <a class="tb-pron" href="#r1">
+          <div class="tb-eyebrow">Part Two</div>
+          <div class="tb-title">Pronouns</div>
+          <div class="tb-desc">10 rules — case, agreement, reflexives, relatives, and clarity.</div>
+        </a>
+        <a class="tb-conj" href="#c1">
+          <div class="tb-eyebrow">Part Three</div>
+          <div class="tb-title">Conjunctions</div>
+          <div class="tb-desc">10 rules — coordinating, subordinating, correlative, and punctuation.</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ================= PART ONE: PREPOSITIONS ================= -->
+    <div class="part-head part-prep">
+      <div class="part-kicker">Part One &middot; 10 Rules</div>
+      <h2>Prepositions</h2>
+      <p>A preposition sits before a noun or pronoun and shows how it relates to the rest of the sentence — usually in time, place, or direction. English prepositions don't follow tidy logic, so the fastest route to mastery is pattern recognition, not memorized definitions alone.</p>
+    </div>
+
+    <section class="entry" id="p1">
+      <div class="entry-head"><div class="entry-num" style="color:var(--teal)">1</div>
+        <div class="entry-titles"><h3>What a preposition does</h3><div class="tagline">it links a noun/pronoun to the rest of the sentence</div></div></div>
+      <div class="rule-card">
+        <p class="explain">A preposition is always followed by an "object" — a noun, pronoun, or -ing form — never by a plain verb. Together, preposition + object forms a prepositional phrase that acts like an adjective or adverb.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The book on the shelf is mine. (on the shelf → describes "book")</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">She arrived after lunch. (after lunch → tells us when)</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: In "The cat under the table is sleeping," what is the object of "under"?</p>
+          <button class="reveal-btn" data-target="mp1">Reveal</button>
+          <div class="answer" id="mp1"><b>Answer:</b> "the table" — it's the noun that completes the prepositional phrase.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="p2">
+      <div class="entry-head"><div class="entry-num" style="color:var(--teal)">2</div>
+        <div class="entry-titles"><h3>Time: at / on / in</h3><div class="tagline">precise point → day/date → longer period</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Think of it as zooming out: <b>at</b> for an exact point in time, <b>on</b> for a day or date, <b>in</b> for a longer period like a month, year, or season.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">at 6 o'clock, at noon, at midnight, at the moment</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">on Monday, on July 4th, on my birthday</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">in March, in 2024, in summer, in the morning</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "The store closes <span class="blank"></span> (at/on/in) 9 p.m."</p>
+          <button class="reveal-btn" data-target="mp2">Reveal</button>
+          <div class="answer" id="mp2"><b>Answer:</b> at — an exact clock time.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="p3">
+      <div class="entry-head"><div class="entry-num" style="color:var(--teal)">3</div>
+        <div class="entry-titles"><h3>Time: since / for / by / until</h3><div class="tagline">starting point, duration, deadline, or continuation</div></div></div>
+      <div class="rule-card">
+        <p class="explain"><b>Since</b> + a starting point (since 2019). <b>For</b> + a length of time (for two years). <b>By</b> + a deadline — means "no later than" (by Friday). <b>Until/till</b> + the point something continues up to, then stops (open until 9pm).</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">I've lived here since 2019. / I've lived here for five years.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Please finish the report by Friday. (deadline)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The shop is open until 9pm. (continues, then stops)</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "Submit your form <span class="blank"></span> (by/until) 5pm today."</p>
+          <button class="reveal-btn" data-target="mp3">Reveal</button>
+          <div class="answer" id="mp3"><b>Answer:</b> by — a one-time deadline, not a continuing state.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="p4">
+      <div class="entry-head"><div class="entry-num" style="color:var(--teal)">4</div>
+        <div class="entry-titles"><h3>Place: at / on / in</h3><div class="tagline">a point → a surface → an enclosed space</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Same zoom logic as time: <b>at</b> for a specific point (at the door), <b>on</b> for a surface (on the wall), <b>in</b> for something enclosed or contained (in the box, in the city).</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">at the bus stop, at the corner, at 24 Elm Street</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">on the table, on the wall, on page 12</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">in the box, in Chennai, in the car</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "The picture is hanging <span class="blank"></span> (at/on/in) the wall."</p>
+          <button class="reveal-btn" data-target="mp4">Reveal</button>
+          <div class="answer" id="mp4"><b>Answer:</b> on — a surface.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="p5">
+      <div class="entry-head"><div class="entry-num" style="color:var(--teal)">5</div>
+        <div class="entry-titles"><h3>Place: between / among, over / under, in front of / behind</h3><div class="tagline">position words that come in logical pairs</div></div></div>
+      <div class="rule-card">
+        <p class="explain"><b>Between</b> = with exactly two things; <b>among</b> = within a group of three or more. <b>Over/above</b> = higher than; <b>under/below</b> = lower than. <b>In front of</b> and <b>behind</b> describe position along a line of sight.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">She sat between her two brothers.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The prize was shared among the five winners.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The lamp hangs over the table. The cat hid under the bed.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "The negotiations happened <span class="blank"></span> (between/among) the twelve member nations."</p>
+          <button class="reveal-btn" data-target="mp5">Reveal</button>
+          <div class="answer" id="mp5"><b>Answer:</b> among — more than two parties involved.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="p6">
+      <div class="entry-head"><div class="entry-num" style="color:var(--teal)">6</div>
+        <div class="entry-titles"><h3>Direction &amp; movement</h3><div class="tagline">to, into, onto, through, across, towards</div></div></div>
+      <div class="rule-card">
+        <p class="explain">These describe motion rather than a fixed position: <b>to</b> (destination), <b>into</b> (entering an enclosed space), <b>onto</b> (moving to a surface), <b>through</b> (from one side to the other), <b>across</b> (side to side over a surface), <b>towards</b> (in the direction of, not necessarily arriving).</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">She walked into the room and jumped onto the bed.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">We drove through the tunnel and across the bridge.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">He waved and walked towards the exit.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "The kids ran <span class="blank"></span> (into/onto) the swimming pool." (they entered the water)</p>
+          <button class="reveal-btn" data-target="mp6">Reveal</button>
+          <div class="answer" id="mp6"><b>Answer:</b> into — entering an enclosed volume (the water), not just a surface.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="p7">
+      <div class="entry-head"><div class="entry-num" style="color:var(--teal)">7</div>
+        <div class="entry-titles"><h3>Agent vs instrument: "by" vs "with"</h3><div class="tagline">who did it, vs what they used</div></div></div>
+      <div class="rule-card">
+        <p class="explain">In passive sentences, use <b>by</b> for the person/thing that performs the action (the agent), and <b>with</b> for the tool or instrument used to do it.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The letter was written by my grandfather. (agent)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The letter was written with a fountain pen. (instrument)</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">The door was opened with the thief. (should be "by the thief")</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "The cake was decorated <span class="blank"></span> (by/with) a piping bag."</p>
+          <button class="reveal-btn" data-target="mp7">Reveal</button>
+          <div class="answer" id="mp7"><b>Answer:</b> with — the piping bag is the tool, not the person doing it.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="p8">
+      <div class="entry-head"><div class="entry-num" style="color:var(--teal)">8</div>
+        <div class="entry-titles"><h3>Fixed pairs (dependent prepositions)</h3><div class="tagline">certain verbs/adjectives/nouns always pair with one preposition</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Many verbs, adjectives, and nouns are followed by one specific preposition by convention — not logic. These have to be learned individually and memorized as a pair.</p>
+        <div class="word-bank">
+          <span>listen to</span><span>depend on</span><span>believe in</span><span>look for</span><span>afraid of</span>
+          <span>good at</span><span>interested in</span><span>married to</span><span>proud of</span><span>reason for</span>
+        </div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">She is good at painting and interested in history.</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">He is good in painting. / She depends of her sister.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "I'm really looking forward <span class="blank"></span> (to/for) the trip."</p>
+          <button class="reveal-btn" data-target="mp8">Reveal</button>
+          <div class="answer" id="mp8"><b>Answer:</b> to — "look forward to" is a fixed phrasal pair.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="p9">
+      <div class="entry-head"><div class="entry-num" style="color:var(--teal)">9</div>
+        <div class="entry-titles"><h3>Compound prepositions</h3><div class="tagline">multi-word prepositions that act as one unit</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Several prepositions are made of more than one word but function as a single preposition: because of, in spite of, according to, instead of, due to, in addition to, on behalf of.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The match was cancelled because of rain.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">In spite of the traffic, we arrived on time.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">According to the report, sales have improved.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "<span class="blank"></span> (Instead of/Because of) coffee, she ordered tea."</p>
+          <button class="reveal-btn" data-target="mp9">Reveal</button>
+          <div class="answer" id="mp9"><b>Answer:</b> Instead of — shows replacement/substitution, not cause.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="p10">
+      <div class="entry-head"><div class="entry-num" style="color:var(--teal)">10</div>
+        <div class="entry-titles"><h3>Common pitfalls</h3><div class="tagline">home/downtown, arrive at/in, ending a sentence with a preposition</div></div></div>
+      <div class="rule-card">
+        <p class="explain">No preposition before <b>home</b>, <b>downtown</b>, or <b>next/last + time word</b> (go home, not "go to home"). Use <b>arrive at</b> for a building/point, <b>arrive in</b> for a city/country. Ending a sentence with a preposition is grammatically fine and common in speech ("Who did you go with?") — formal writing simply prefers moving it to the front ("With whom did you go?").</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">I'm going home. / We arrived in Tokyo, then arrived at the hotel.</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">I'm going to home. / We arrived to Tokyo.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "She went <span class="blank"></span> (—/to) home after the meeting." (fill only if needed)</p>
+          <button class="reveal-btn" data-target="mp10">Reveal</button>
+          <div class="answer" id="mp10"><b>Answer:</b> no preposition — "home" already functions as an adverb here.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="lab" id="prep-lab">
+      <div class="lab-head"><h3>Practice lab — mixed Prepositions</h3><span class="lab-hint">reveal each answer after you try</span></div>
+      <p class="lab-desc">Fill each blank with the correct preposition.</p>
+
+      <div class="q-item"><p class="q-text">1. The meeting is scheduled <span class="blank"></span> Tuesday <span class="blank"></span> 10 a.m.</p>
+        <button class="reveal-btn" data-target="pl1">Reveal</button><div class="answer" id="pl1"><b>Answer:</b> on Tuesday, at 10 a.m.</div></div>
+
+      <div class="q-item"><p class="q-text">2. She has worked here <span class="blank"></span> five years, <span class="blank"></span> 2019.</p>
+        <button class="reveal-btn" data-target="pl2">Reveal</button><div class="answer" id="pl2"><b>Answer:</b> for five years, since 2019.</div></div>
+
+      <div class="q-item"><p class="q-text">3. The remote is <span class="blank"></span> the sofa cushions.</p>
+        <button class="reveal-btn" data-target="pl3">Reveal</button><div class="answer" id="pl3"><b>Answer:</b> between (if two cushions) or among (if several) — "between" is most natural for a couch's cushions.</div></div>
+
+      <div class="q-item"><p class="q-text">4. He dived <span class="blank"></span> the pool and swam <span class="blank"></span> the far end.</p>
+        <button class="reveal-btn" data-target="pl4">Reveal</button><div class="answer" id="pl4"><b>Answer:</b> into the pool, towards/to the far end.</div></div>
+
+      <div class="q-item"><p class="q-text">5. The novel was written <span class="blank"></span> a famous author, entirely <span class="blank"></span> hand.</p>
+        <button class="reveal-btn" data-target="pl5">Reveal</button><div class="answer" id="pl5"><b>Answer:</b> by a famous author (agent), by hand (idiomatic instrument phrase).</div></div>
+
+      <div class="q-item"><p class="q-text">6. I'm not very good <span class="blank"></span> chess, but I'm interested <span class="blank"></span> learning.</p>
+        <button class="reveal-btn" data-target="pl6">Reveal</button><div class="answer" id="pl6"><b>Answer:</b> good at chess, interested in learning.</div></div>
+
+      <div class="q-item"><p class="q-text">7. <span class="blank"></span> the storm, the flight departed on time.</p>
+        <button class="reveal-btn" data-target="pl7">Reveal</button><div class="answer" id="pl7"><b>Answer:</b> In spite of / Despite — shows an unexpected outcome.</div></div>
+
+      <div class="q-item"><p class="q-text">8. We should be there <span class="blank"></span> 6pm at the latest — don't be late.</p>
+        <button class="reveal-btn" data-target="pl8">Reveal</button><div class="answer" id="pl8"><b>Answer:</b> by — a deadline.</div></div>
+
+      <div class="q-item"><p class="q-text">9. The cat jumped <span class="blank"></span> the fence and vanished <span class="blank"></span> the bushes.</p>
+        <button class="reveal-btn" data-target="pl9">Reveal</button><div class="answer" id="pl9"><b>Answer:</b> over the fence, into the bushes.</div></div>
+
+      <div class="q-item"><p class="q-text">10. They finally arrived <span class="blank"></span> Paris after arriving <span class="blank"></span> the airport three hours earlier.</p>
+        <button class="reveal-btn" data-target="pl10">Reveal</button><div class="answer" id="pl10"><b>Answer:</b> arrived in Paris (city), arrived at the airport (point/building).</div></div>
+    </div>
+
+    <!-- ================= PART TWO: PRONOUNS ================= -->
+    <div class="part-head part-pron">
+      <div class="part-kicker">Part Two &middot; 10 Rules</div>
+      <h2>Pronouns</h2>
+      <p>Pronouns stand in for nouns already mentioned. Most pronoun errors come down to one of two things: picking the wrong <em>case</em> (I vs me, who vs whom) or losing track of what the pronoun is actually pointing back to.</p>
+    </div>
+
+    <section class="entry" id="r1">
+      <div class="entry-head"><div class="entry-num" style="color:var(--slate)">1</div>
+        <div class="entry-titles"><h3>Subject vs object pronouns</h3><div class="tagline">I/he/she/they/we do the action; me/him/her/them/us receive it</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Use a <b>subject pronoun</b> (I, you, he, she, it, we, they) when the pronoun performs the verb's action. Use an <b>object pronoun</b> (me, you, him, her, it, us, them) when it receives the action or follows a preposition.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">He and I went to the market. (both are subjects)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The teacher gave the prize to him and me.</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">Me and him went to the market.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "Between you and <span class="blank"></span> (I/me), I think she's right."</p>
+          <button class="reveal-btn" data-target="mr1">Reveal</button>
+          <div class="answer" id="mr1"><b>Answer:</b> me — it follows the preposition "between," so it must be an object pronoun.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="r2">
+      <div class="entry-head"><div class="entry-num" style="color:var(--slate)">2</div>
+        <div class="entry-titles"><h3>Pronoun–antecedent agreement</h3><div class="tagline">match number and gender to the noun it replaces</div></div></div>
+      <div class="rule-card">
+        <p class="explain">A pronoun must agree with its antecedent (the noun it refers to) in number (singular/plural) and, where relevant, gender.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Each student must bring his or her own laptop.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The players collected their jerseys. (players → plural → their)</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">Every employee must submit their badge to it. ("it" doesn't match "employee")</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "The company announced <span class="blank"></span> (its/their) new policy." (one company)</p>
+          <button class="reveal-btn" data-target="mr2">Reveal</button>
+          <div class="answer" id="mr2"><b>Answer:</b> its — "company" is a singular collective noun here.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="r3">
+      <div class="entry-head"><div class="entry-num" style="color:var(--slate)">3</div>
+        <div class="entry-titles"><h3>The singular "they"</h3><div class="tagline">standard for an unknown or indefinite person</div></div></div>
+      <div class="rule-card">
+        <p class="explain">With indefinite pronouns (everyone, someone, anybody) or when a person's gender is unknown/irrelevant, "they/their/them" is now standard usage — smoother than "he or she" in most modern writing.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Someone left their umbrella at the door.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">If a customer calls, ask them for their order number.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "Everybody should bring <span class="blank"></span> (his/their) own lunch."</p>
+          <button class="reveal-btn" data-target="mr3">Reveal</button>
+          <div class="answer" id="mr3"><b>Answer:</b> their — natural, gender-neutral modern usage.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="r4">
+      <div class="entry-head"><div class="entry-num" style="color:var(--slate)">4</div>
+        <div class="entry-titles"><h3>Pronoun case after prepositions &amp; comparisons</h3><div class="tagline">between you and me; taller than I (am)</div></div></div>
+      <div class="rule-card">
+        <p class="explain">After a preposition, always use the object form. After "than" or "as" in a comparison, mentally complete the missing verb to choose correctly — this often reveals a subject pronoun is needed.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">This is a secret between you and me.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">She is taller than I (am tall). / He trusts her more than me (than he trusts me).</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "My brother is older than <span class="blank"></span> (I/me)." (complete: "...than I am")</p>
+          <button class="reveal-btn" data-target="mr4">Reveal</button>
+          <div class="answer" id="mr4"><b>Answer:</b> I — short for "older than I am," so it needs the subject form.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="r5">
+      <div class="entry-head"><div class="entry-num" style="color:var(--slate)">5</div>
+        <div class="entry-titles"><h3>Reflexive vs intensive pronouns</h3><div class="tagline">myself as an object, vs myself for emphasis</div></div></div>
+      <div class="rule-card">
+        <p class="explain">A reflexive pronoun (myself, himself, themselves) is used when the subject and object are the same person. An intensive pronoun looks identical but is only for emphasis — it can be removed without changing the meaning.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">She hurt herself while gardening. (reflexive — required)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">I fixed it myself. (intensive — adds emphasis, could be dropped)</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">Please send the report to myself. (should be "to me")</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: Is "myself" reflexive or intensive in "The director himself approved the plan"?</p>
+          <button class="reveal-btn" data-target="mr5">Reveal</button>
+          <div class="answer" id="mr5"><b>Answer:</b> Intensive — it just emphasizes "the director," and could be removed.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="r6">
+      <div class="entry-head"><div class="entry-num" style="color:var(--slate)">6</div>
+        <div class="entry-titles"><h3>"mine" vs "my" and "its" vs "it's"</h3><div class="tagline">possessive pronouns never take an apostrophe</div></div></div>
+      <div class="rule-card">
+        <p class="explain">A possessive adjective (my, your, his, her, its, our, their) sits before a noun. A possessive pronoun (mine, yours, his, hers, its, ours, theirs) stands alone. None of these ever take an apostrophe — "it's" is always the contraction of "it is."</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">This is my book. / This book is mine.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The dog wagged its tail. / It's raining outside.</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">The dog wagged it's tail.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "<span class="blank"></span> (Its/It's) been a long day."</p>
+          <button class="reveal-btn" data-target="mr6">Reveal</button>
+          <div class="answer" id="mr6"><b>Answer:</b> It's — short for "it has."</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="r7">
+      <div class="entry-head"><div class="entry-num" style="color:var(--slate)">7</div>
+        <div class="entry-titles"><h3>Demonstrative pronouns vs adjectives</h3><div class="tagline">this/that/these/those, alone or before a noun</div></div></div>
+      <div class="rule-card">
+        <p class="explain">This/that/these/those act as pronouns when they stand alone for a noun, and as adjectives when they sit directly before one. Match singular (this/that) to singular nouns, and plural (these/those) to plural nouns.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">This is my favorite. (pronoun) / This book is my favorite. (adjective)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Those shoes are new. (not "them shoes")</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "<span class="blank"></span> (This/These) news is surprising." (news is singular)</p>
+          <button class="reveal-btn" data-target="mr7">Reveal</button>
+          <div class="answer" id="mr7"><b>Answer:</b> This — "news" is grammatically singular.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="r8">
+      <div class="entry-head"><div class="entry-num" style="color:var(--slate)">8</div>
+        <div class="entry-titles"><h3>Relative pronouns: who / whom / whose / which / that</h3><div class="tagline">and when their clause needs commas</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Use <b>who</b> for a subject, <b>whom</b> for an object, <b>whose</b> for possession, <b>which</b> for things, and <b>that</b> for people or things in essential (restrictive) clauses. A restrictive clause (no commas) is essential to identify the noun; a non-restrictive clause (set off by commas) just adds extra info and uses "which," not "that."</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The man who called is my uncle. (subject)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The man whom I called is my uncle. (object)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">My car, which is ten years old, still runs well. (non-restrictive, extra info)</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "The book <span class="blank"></span> (that/whom) I borrowed is overdue."</p>
+          <button class="reveal-btn" data-target="mr8">Reveal</button>
+          <div class="answer" id="mr8"><b>Answer:</b> that — "whom" is only for people.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="r9">
+      <div class="entry-head"><div class="entry-num" style="color:var(--slate)">9</div>
+        <div class="entry-titles"><h3>Reciprocal pronouns: each other / one another</h3><div class="tagline">mutual action between two or more people</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Traditionally, <b>each other</b> is used for exactly two people/things, and <b>one another</b> for three or more — though in everyday modern usage the two are often used interchangeably.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">The two brothers helped each other move.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">All five roommates looked out for one another.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "The couple gave <span class="blank"></span> (each other/themselves) matching rings."</p>
+          <button class="reveal-btn" data-target="mr9">Reveal</button>
+          <div class="answer" id="mr9"><b>Answer:</b> each other — a mutual action between the two of them, not each acting on themself.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="r10">
+      <div class="entry-head"><div class="entry-num" style="color:var(--slate)">10</div>
+        <div class="entry-titles"><h3>Avoiding ambiguous pronoun reference</h3><div class="tagline">make sure "it," "they," or "this" clearly points to one noun</div></div></div>
+      <div class="rule-card">
+        <p class="explain">If a pronoun could refer to more than one noun in the sentence, the reader has to guess — rewrite to name the noun directly instead.</p>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">Riya told Sara that she had won. (who won — Riya or Sara?)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Riya told Sara, "You won."</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: What's ambiguous in "When I put the laptop on the desk, it broke"?</p>
+          <button class="reveal-btn" data-target="mr10">Reveal</button>
+          <div class="answer" id="mr10"><b>Answer:</b> "It" could refer to the laptop or the desk — rewrite as "the laptop broke" or "the desk broke" to remove the ambiguity.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="lab" id="pron-lab">
+      <div class="lab-head"><h3>Practice lab — mixed Pronouns</h3><span class="lab-hint">reveal each answer after you try</span></div>
+      <p class="lab-desc">Choose the correct pronoun or fix the error in each sentence.</p>
+
+      <div class="q-item"><p class="q-text">1. <span class="blank"></span> (Him and me / He and I) are planning the trip together.</p>
+        <button class="reveal-btn" data-target="rl1">Reveal</button><div class="answer" id="rl1"><b>Answer:</b> He and I — both are subjects of "are planning."</div></div>
+
+      <div class="q-item"><p class="q-text">2. Each of the girls brought <span class="blank"></span> (her/their) own lunch.</p>
+        <button class="reveal-btn" data-target="rl2">Reveal</button><div class="answer" id="rl2"><b>Answer:</b> her — "each" is singular, and gender is known here (girls).</div></div>
+
+      <div class="q-item"><p class="q-text">3. This gift is from <span class="blank"></span> (my sister and I / my sister and me).</p>
+        <button class="reveal-btn" data-target="rl3">Reveal</button><div class="answer" id="rl3"><b>Answer:</b> my sister and me — follows the preposition "from," so object case.</div></div>
+
+      <div class="q-item"><p class="q-text">4. The award went to the team <span class="blank"></span> (who/which) worked the hardest.</p>
+        <button class="reveal-btn" data-target="rl4">Reveal</button><div class="answer" id="rl4"><b>Answer:</b> which (or "that") — "team" is treated as a thing/group here, not a person.</div></div>
+
+      <div class="q-item"><p class="q-text">5. I did all the cooking <span class="blank"></span> (myself/me).</p>
+        <button class="reveal-btn" data-target="rl5">Reveal</button><div class="answer" id="rl5"><b>Answer:</b> myself — intensive pronoun for emphasis.</div></div>
+
+      <div class="q-item"><p class="q-text">6. Whose umbrella is this — is it <span class="blank"></span> (your's/yours)?</p>
+        <button class="reveal-btn" data-target="rl6">Reveal</button><div class="answer" id="rl6"><b>Answer:</b> yours — possessive pronouns never take an apostrophe.</div></div>
+
+      <div class="q-item"><p class="q-text">7. <span class="blank"></span> (These/This) shoes are too tight.</p>
+        <button class="reveal-btn" data-target="rl7">Reveal</button><div class="answer" id="rl7"><b>Answer:</b> These — "shoes" is plural.</div></div>
+
+      <div class="q-item"><p class="q-text">8. She is the one <span class="blank"></span> (who/whom) I trust the most.</p>
+        <button class="reveal-btn" data-target="rl8">Reveal</button><div class="answer" id="rl8"><b>Answer:</b> whom — it's the object of "trust" ("I trust whom").</div></div>
+
+      <div class="q-item"><p class="q-text">9. The three friends have known <span class="blank"></span> (each other/themselves) since childhood.</p>
+        <button class="reveal-btn" data-target="rl9">Reveal</button><div class="answer" id="rl9"><b>Answer:</b> each other (or one another) — a mutual relationship among them.</div></div>
+
+      <div class="q-item"><p class="q-text">10. Fix the ambiguity: "When Priya met Anu, she was nervous." Who was nervous?</p>
+        <button class="reveal-btn" data-target="rl10">Reveal</button><div class="answer" id="rl10"><b>Answer:</b> Unclear — rewrite as "Priya was nervous when she met Anu" (or name Anu directly) to remove the ambiguity.</div></div>
+    </div>
+
+    <!-- ================= PART THREE: CONJUNCTIONS ================= -->
+    <div class="part-head part-conj">
+      <div class="part-kicker">Part Three &middot; 10 Rules</div>
+      <h2>Conjunctions</h2>
+      <p>Conjunctions link words, phrases, and clauses — and the type you choose decides the punctuation around it. Get the comma rules right here and your writing instantly looks more careful.</p>
+    </div>
+
+    <section class="entry" id="c1">
+      <div class="entry-head"><div class="entry-num" style="color:var(--indigo)">1</div>
+        <div class="entry-titles"><h3>Coordinating conjunctions — FANBOYS</h3><div class="tagline">join two equal, independent elements</div></div></div>
+      <div class="rule-card">
+        <p class="explain">For, And, Nor, But, Or, Yet, So join words, phrases, or two independent (complete) clauses of equal weight. When joining two full clauses, put a comma before the conjunction.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">I wanted to go, but it was raining.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">She studies French and Spanish. (no comma — joins two words only)</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">I wanted to go but it was raining. (missing comma between two full clauses)</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: Does this need a comma? "He was tired___ he kept working." (add "so")</p>
+          <button class="reveal-btn" data-target="mc1">Reveal</button>
+          <div class="answer" id="mc1"><b>Answer:</b> Yes — "He was tired, so he kept working." Two independent clauses joined by "so" need a comma before it.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="c2">
+      <div class="entry-head"><div class="entry-num" style="color:var(--indigo)">2</div>
+        <div class="entry-titles"><h3>Subordinating conjunctions</h3><div class="tagline">because, although, since, if, unless, while, when...</div></div></div>
+      <div class="rule-card">
+        <p class="explain">These attach a dependent (incomplete) clause to a main clause, showing cause, contrast, condition, or time. Use a comma when the dependent clause comes first; no comma is needed when it comes second.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">Although he was tired, he finished the race.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">He finished the race although he was tired. (no comma needed)</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: Punctuate correctly: "If it rains we will stay home"</p>
+          <button class="reveal-btn" data-target="mc2">Reveal</button>
+          <div class="answer" id="mc2"><b>Answer:</b> "If it rains, we will stay home." — the "if" clause comes first, so it needs a comma.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="c3">
+      <div class="entry-head"><div class="entry-num" style="color:var(--indigo)">3</div>
+        <div class="entry-titles"><h3>Correlative conjunctions</h3><div class="tagline">either...or, neither...nor, both...and, not only...but also</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Correlative conjunctions work in matched pairs and require parallel grammatical structure on both sides — the same part of speech or clause type after each half.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">She is not only talented but also hardworking. (adjective / adjective)</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">She is not only talented but also works hard. (adjective / verb phrase — mismatched)</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: Fix the parallelism: "He either wants to leave or staying."</p>
+          <button class="reveal-btn" data-target="mc3">Reveal</button>
+          <div class="answer" id="mc3"><b>Answer:</b> "He either wants to leave or wants to stay." (or "...to leave or to stay") — matching infinitive structures.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="c4">
+      <div class="entry-head"><div class="entry-num" style="color:var(--indigo)">4</div>
+        <div class="entry-titles"><h3>Conjunctive adverbs</h3><div class="tagline">however, therefore, moreover, consequently — semicolon before, comma after</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Words like however, therefore, moreover, furthermore, and consequently connect two independent clauses but are punctuated differently from FANBOYS: use a semicolon before and a comma after, or start a new sentence.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">It was raining; however, we still went for a walk.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">It was raining. However, we still went for a walk.</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">It was raining, however, we still went for a walk. (comma splice)</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: Punctuate: "The plan failed___ therefore___ we need a new one"</p>
+          <button class="reveal-btn" data-target="mc4">Reveal</button>
+          <div class="answer" id="mc4"><b>Answer:</b> "The plan failed; therefore, we need a new one." — semicolon before, comma after.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="c5">
+      <div class="entry-head"><div class="entry-num" style="color:var(--indigo)">5</div>
+        <div class="entry-titles"><h3>Avoiding comma splices &amp; run-ons</h3><div class="tagline">two full sentences can't be joined by just a comma</div></div></div>
+      <div class="rule-card">
+        <p class="explain">A comma splice happens when two independent clauses are joined with only a comma and no conjunction. Fix it by adding a coordinating conjunction, using a semicolon, or splitting into two sentences.</p>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">I was hungry, I made a sandwich.</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">I was hungry, so I made a sandwich. / I was hungry; I made a sandwich.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: Fix the splice: "She loves music, she plays the violin daily."</p>
+          <button class="reveal-btn" data-target="mc5">Reveal</button>
+          <div class="answer" id="mc5"><b>Answer:</b> "She loves music, and she plays the violin daily." (or split into two sentences, or use a semicolon).</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="c6">
+      <div class="entry-head"><div class="entry-num" style="color:var(--indigo)">6</div>
+        <div class="entry-titles"><h3>"because" vs "because of" (conjunction vs preposition)</h3><div class="tagline">a full clause vs just a noun</div></div></div>
+      <div class="rule-card">
+        <p class="explain"><b>Because</b> is a conjunction — it's followed by a full clause with a subject and verb. <b>Because of</b> is a preposition — it's followed by just a noun or noun phrase. The same pattern applies to "although" (conjunction) vs "despite/in spite of" (preposition).</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">We stayed home because it was raining. (clause)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">We stayed home because of the rain. (noun phrase)</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">We stayed home because of it was raining.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "<span class="blank"></span> (Although/Despite) he was tired, he kept going."</p>
+          <button class="reveal-btn" data-target="mc6">Reveal</button>
+          <div class="answer" id="mc6"><b>Answer:</b> Although — followed by a full clause ("he was tired").</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="c7">
+      <div class="entry-head"><div class="entry-num" style="color:var(--indigo)">7</div>
+        <div class="entry-titles"><h3>Starting a sentence with "And" or "But"</h3><div class="tagline">grammatically fine — a style choice, not an error</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Despite the old classroom rule, it is grammatically acceptable to begin a sentence with "and," "but," or "or," and professional writers do it often for emphasis. In very formal or academic writing, some style guides still prefer avoiding it — know your audience.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">He knew the risks. But he took the job anyway.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: True or false — starting a sentence with "And" is always a grammar error.</p>
+          <button class="reveal-btn" data-target="mc7">Reveal</button>
+          <div class="answer" id="mc7"><b>Answer:</b> False — it's a style preference, not a rule of grammar.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="c8">
+      <div class="entry-head"><div class="entry-num" style="color:var(--indigo)">8</div>
+        <div class="entry-titles"><h3>"so" vs "so that"</h3><div class="tagline">a result, vs a purpose</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Use <b>so</b> (comma before) to show a result of what just happened. Use <b>so that</b> to show the purpose or goal behind an action — often with "can/could/would."</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">It started raining, so we went inside. (result)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">We went inside so that we wouldn't get wet. (purpose)</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "She saved money <span class="blank"></span> (so/so that) she could travel." (purpose)</p>
+          <button class="reveal-btn" data-target="mc8">Reveal</button>
+          <div class="answer" id="mc8"><b>Answer:</b> so that — expresses the goal behind saving.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="c9">
+      <div class="entry-head"><div class="entry-num" style="color:var(--indigo)">9</div>
+        <div class="entry-titles"><h3>"whether" vs "if"</h3><div class="tagline">a choice between options, vs a condition</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Use <b>whether</b> when presenting a choice between alternatives (often with "or not"), especially in formal writing and after prepositions. Use <b>if</b> for a conditional situation. In casual speech the two often overlap, but "whether" is safer in formal contexts.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">I don't know whether she is coming or not. (choice)</span></div>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">If she comes, let me know. (condition)</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: "Please confirm <span class="blank"></span> (if/whether) you'll attend the meeting."</p>
+          <button class="reveal-btn" data-target="mc9">Reveal</button>
+          <div class="answer" id="mc9"><b>Answer:</b> whether — a formal choice between attending or not, not a condition.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="entry" id="c10">
+      <div class="entry-head"><div class="entry-num" style="color:var(--indigo)">10</div>
+        <div class="entry-titles"><h3>Parallelism with conjunctions</h3><div class="tagline">keep matched grammar on both sides of "and/or/but"</div></div></div>
+      <div class="rule-card">
+        <p class="explain">Whenever a conjunction joins a list or pair, keep the grammatical form consistent on every item — all nouns, all -ing forms, or all infinitives, never a mix.</p>
+        <div class="ex-row ok"><span class="mark">✓</span><span class="txt">She enjoys reading, writing, and painting. (all -ing forms)</span></div>
+        <div class="ex-row no"><span class="mark">✗</span><span class="txt">She enjoys reading, to write, and painting.</span></div>
+        <div class="mini-check">
+          <p class="q-text">Quick check: Fix it: "The plan is cheap, fast, and it works well."</p>
+          <button class="reveal-btn" data-target="mc10">Reveal</button>
+          <div class="answer" id="mc10"><b>Answer:</b> "The plan is cheap, fast, and effective." — keep all three as matching adjectives.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="lab" id="conj-lab">
+      <div class="lab-head"><h3>Practice lab — mixed Conjunctions</h3><span class="lab-hint">reveal each answer after you try</span></div>
+      <p class="lab-desc">Choose the right conjunction or fix the punctuation.</p>
+
+      <div class="q-item"><p class="q-text">1. I wanted pizza, <span class="blank"></span> (but/so) my friend wanted sushi.</p>
+        <button class="reveal-btn" data-target="cl1">Reveal</button><div class="answer" id="cl1"><b>Answer:</b> but — shows contrast between two preferences.</div></div>
+
+      <div class="q-item"><p class="q-text">2. Fix the splice: "The store was closed, we went home."</p>
+        <button class="reveal-btn" data-target="cl2">Reveal</button><div class="answer" id="cl2"><b>Answer:</b> "The store was closed, so we went home." (or use a semicolon, or split into two sentences)</div></div>
+
+      <div class="q-item"><p class="q-text">3. <span class="blank"></span> (Neither/Either) the coach nor the players were satisfied with the result.</p>
+        <button class="reveal-btn" data-target="cl3">Reveal</button><div class="answer" id="cl3"><b>Answer:</b> Neither — pairs correctly with "nor."</div></div>
+
+      <div class="q-item"><p class="q-text">4. Punctuate: "The traffic was heavy however we still made it on time"</p>
+        <button class="reveal-btn" data-target="cl4">Reveal</button><div class="answer" id="cl4"><b>Answer:</b> "The traffic was heavy; however, we still made it on time." — semicolon before, comma after a conjunctive adverb.</div></div>
+
+      <div class="q-item"><p class="q-text">5. <span class="blank"></span> (Because/Because of) the heavy rain, the match was postponed.</p>
+        <button class="reveal-btn" data-target="cl5">Reveal</button><div class="answer" id="cl5"><b>Answer:</b> Because of — followed by a noun phrase, not a clause.</div></div>
+
+      <div class="q-item"><p class="q-text">6. She is both talented <span class="blank"></span> (and/but) disciplined.</p>
+        <button class="reveal-btn" data-target="cl6">Reveal</button><div class="answer" id="cl6"><b>Answer:</b> and — completes the "both...and" correlative pair.</div></div>
+
+      <div class="q-item"><p class="q-text">7. Fix the parallelism: "He likes swimming, to hike, and cycling."</p>
+        <button class="reveal-btn" data-target="cl7">Reveal</button><div class="answer" id="cl7"><b>Answer:</b> "He likes swimming, hiking, and cycling." — all three in -ing form.</div></div>
+
+      <div class="q-item"><p class="q-text">8. We left early <span class="blank"></span> (so/so that) we wouldn't miss the train.</p>
+        <button class="reveal-btn" data-target="cl8">Reveal</button><div class="answer" id="cl8"><b>Answer:</b> so that — expresses purpose.</div></div>
+
+      <div class="q-item"><p class="q-text">9. <span class="blank"></span> (If/Whether) you agree or not, the decision has been made.</p>
+        <button class="reveal-btn" data-target="cl9">Reveal</button><div class="answer" id="cl9"><b>Answer:</b> Whether — pairs with "or not" to show a choice, regardless of outcome.</div></div>
+
+      <div class="q-item"><p class="q-text">10. Add a comma if needed: "Although she was nervous she gave a great speech"</p>
+        <button class="reveal-btn" data-target="cl10">Reveal</button><div class="answer" id="cl10"><b>Answer:</b> "Although she was nervous, she gave a great speech." — comma needed because the dependent clause comes first.</div></div>
+    </div>
+
+    <div class="finale">
+      <h2>30 more rules mastered.</h2>
+      <p>Between this guide, subject–verb agreement, articles, and the nine parts of speech, you now have the full skeleton of English grammar in one place. Re-run all four practice labs from memory in a week — that's when the rules actually become instinct.</p>
+    </div>
+  </main>
+</div>
+
+<script>
+  const allButtons = document.querySelectorAll('.reveal-btn');
+  const progressFill = document.getElementById('progressFill');
+  const progressCount = document.getElementById('progressCount');
+  const total = allButtons.length;
+  let done = 0;
+
+  function updateProgress(){
+    progressFill.style.width = (done/total*100) + '%';
+    progressCount.textContent = done + ' / ' + total;
+  }
+  updateProgress();
+
+  allButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.dataset.target);
+      const wasShown = target.classList.contains('show');
+      target.classList.toggle('show');
+      if(!wasShown){
+        btn.textContent = 'Hide';
+        if(!btn.classList.contains('done')){
+          btn.classList.add('done');
+          done++;
+          updateProgress();
+        }
+      } else {
+        btn.textContent = 'Reveal';
+      }
+    });
+  });
+
+  const sections = document.querySelectorAll('.entry, .lab');
+  const navLinks = document.querySelectorAll('.nav-list a');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        navLinks.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`.nav-list a[href="#${entry.target.id}"]`);
+        if(link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px' });
+  sections.forEach(sec => observer.observe(sec));
+</script>
+
+</body>
+</html>

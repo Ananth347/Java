@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Field Guide to the Parts of Speech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EFEADC;
+    --paper-deep:#E6E0CE;
+    --card:#FAF8F0;
+    --ink:#20241F;
+    --ink-soft:#54554A;
+    --ink-faint:#8A8A78;
+    --line:#D6CFB8;
+
+    --moss:#3F6653;
+    --moss-bg:#E3EAE0;
+    --slate:#3F5A72;
+    --slate-bg:#E1E7EC;
+    --brick:#9C4A3C;
+    --brick-bg:#EFE1DC;
+    --mustard:#A9822E;
+    --mustard-bg:#EFE6CC;
+    --plum:#6B4C6E;
+    --plum-bg:#E7DFE7;
+    --teal:#276E5E;
+    --teal-bg:#DCE9E3;
+    --indigo:#464A8C;
+    --indigo-bg:#E1E1EF;
+    --rust:#B15A3E;
+    --rust-bg:#EFE1D6;
+    --olive:#6E7A3A;
+    --olive-bg:#E7EAD4;
+
+    --radius:14px;
+    --serif:'Fraunces', serif;
+    --sans:'Source Sans 3', sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.6;
+    font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(32,36,31,0.05) 1px, transparent 0);
+    background-size:22px 22px;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  a{color:inherit;}
+  img{max-width:100%;}
+
+  /* ===== Layout shell ===== */
+  .shell{
+    display:grid;
+    grid-template-columns:260px 1fr;
+    max-width:1280px;
+    margin:0 auto;
+    position:relative;
+    z-index:1;
+  }
+  @media (max-width:900px){
+    .shell{grid-template-columns:1fr;}
+  }
+
+  /* ===== Sidebar ===== */
+  .sidebar{
+    position:sticky; top:0;
+    align-self:start;
+    height:100vh;
+    overflow-y:auto;
+    padding:28px 18px 28px 28px;
+    border-right:1px solid var(--line);
+  }
+  @media (max-width:900px){
+    .sidebar{position:relative; height:auto; border-right:none; border-bottom:1px solid var(--line); padding:20px;}
+  }
+  .brand{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:1.15rem;
+    letter-spacing:0.01em;
+    margin-bottom:4px;
+  }
+  .brand-sub{
+    font-size:0.72rem;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    color:var(--ink-faint);
+    margin-bottom:26px;
+  }
+  .nav-list{list-style:none; display:flex; flex-direction:column; gap:2px;}
+  .nav-list a{
+    display:flex; align-items:baseline; gap:10px;
+    text-decoration:none;
+    padding:8px 10px;
+    border-radius:8px;
+    font-size:0.88rem;
+    color:var(--ink-soft);
+    transition:background 0.15s ease, color 0.15s ease;
+  }
+  .nav-list a .n{
+    font-family:var(--mono);
+    font-size:0.72rem;
+    color:var(--ink-faint);
+    min-width:20px;
+  }
+  .nav-list a:hover{background:var(--card); color:var(--ink);}
+  .nav-list a.active{background:var(--ink); color:var(--paper);}
+  .nav-list a.active .n{color:var(--paper);}
+
+  .progress-box{
+    margin-top:24px;
+    padding:14px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+  }
+  .progress-box .label{
+    font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em;
+    color:var(--ink-faint); margin-bottom:8px;
+  }
+  .progress-track{
+    height:6px; background:var(--paper-deep); border-radius:6px; overflow:hidden;
+  }
+  .progress-fill{
+    height:100%; width:0%; background:var(--moss);
+    transition:width 0.4s ease;
+  }
+  .progress-count{
+    margin-top:8px; font-family:var(--mono); font-size:0.75rem; color:var(--ink-soft);
+  }
+
+  /* ===== Main ===== */
+  main{padding:0 0 80px;}
+
+  /* Hero */
+  .hero{
+    padding:56px 48px 40px;
+    border-bottom:1px solid var(--line);
+  }
+  @media (max-width:900px){ .hero{padding:36px 22px;} }
+  .hero-eyebrow{
+    font-family:var(--mono);
+    font-size:0.75rem;
+    text-transform:uppercase;
+    letter-spacing:0.15em;
+    color:var(--moss);
+    margin-bottom:14px;
+  }
+  .hero h1{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:clamp(2rem, 4vw, 3.1rem);
+    line-height:1.08;
+    max-width:14ch;
+    margin-bottom:18px;
+  }
+  .hero h1 em{font-style:italic; font-weight:500; color:var(--moss);}
+  .hero p.lede{
+    max-width:56ch;
+    color:var(--ink-soft);
+    font-size:1.05rem;
+    margin-bottom:34px;
+  }
+
+  /* Signature interactive specimen */
+  .specimen{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:28px 30px;
+  }
+  .specimen-label{
+    font-family:var(--mono);
+    font-size:0.7rem;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    color:var(--ink-faint);
+    margin-bottom:14px;
+  }
+  .specimen-sentence{
+    font-family:var(--serif);
+    font-size:1.4rem;
+    line-height:1.7;
+    margin-bottom:22px;
+  }
+  @media (max-width:600px){ .specimen-sentence{font-size:1.15rem;} }
+  .specimen-sentence .w{
+    padding:1px 3px;
+    border-radius:4px;
+    transition:background 0.25s ease, color 0.25s ease, box-shadow 0.2s ease;
+  }
+  .specimen-sentence .w.lit{
+    box-shadow:0 0 0 1px currentColor inset;
+  }
+  .legend{
+    display:flex; flex-wrap:wrap; gap:8px;
+  }
+  .chip{
+    font-family:var(--mono);
+    font-size:0.72rem;
+    letter-spacing:0.02em;
+    padding:6px 11px;
+    border-radius:999px;
+    border:1px solid transparent;
+    cursor:pointer;
+    background:var(--paper-deep);
+    color:var(--ink-soft);
+    transition:transform 0.12s ease;
+  }
+  .chip:hover{transform:translateY(-1px);}
+  .chip.active{color:var(--card); }
+
+  /* generic pos color helpers */
+  .pos-noun{color:var(--moss);} .bg-noun{background:var(--moss); border-color:var(--moss);} .tagbg-noun{background:var(--moss-bg); color:var(--moss);}
+  .pos-pronoun{color:var(--slate);} .bg-pronoun{background:var(--slate); border-color:var(--slate);} .tagbg-pronoun{background:var(--slate-bg); color:var(--slate);}
+  .pos-verb{color:var(--brick);} .bg-verb{background:var(--brick); border-color:var(--brick);} .tagbg-verb{background:var(--brick-bg); color:var(--brick);}
+  .pos-adjective{color:var(--mustard);} .bg-adjective{background:var(--mustard); border-color:var(--mustard);} .tagbg-adjective{background:var(--mustard-bg); color:var(--mustard);}
+  .pos-adverb{color:var(--plum);} .bg-adverb{background:var(--plum); border-color:var(--plum);} .tagbg-adverb{background:var(--plum-bg); color:var(--plum);}
+  .pos-preposition{color:var(--teal);} .bg-preposition{background:var(--teal); border-color:var(--teal);} .tagbg-preposition{background:var(--teal-bg); color:var(--teal);}
+  .pos-conjunction{color:var(--indigo);} .bg-conjunction{background:var(--indigo); border-color:var(--indigo);} .tagbg-conjunction{background:var(--indigo-bg); color:var(--indigo);}
+  .pos-interjection{color:var(--rust);} .bg-interjection{background:var(--rust); border-color:var(--rust);} .tagbg-interjection{background:var(--rust-bg); color:var(--rust);}
+  .pos-article{color:var(--olive);} .bg-article{background:var(--olive); border-color:var(--olive);} .tagbg-article{background:var(--olive-bg); color:var(--olive);}
+
+  /* ===== Section (specimen entry) ===== */
+  .entry{
+    padding:52px 48px;
+    border-bottom:1px solid var(--line);
+    scroll-margin-top:20px;
+  }
+  @media (max-width:900px){ .entry{padding:36px 22px;} }
+
+  .entry-head{
+    display:flex; gap:20px; align-items:flex-start; margin-bottom:22px;
+  }
+  .entry-num{
+    font-family:var(--serif);
+    font-size:2.6rem;
+    font-weight:600;
+    line-height:1;
+    opacity:0.18;
+  }
+  .entry-titles h2{
+    font-family:var(--serif);
+    font-size:1.9rem;
+    font-weight:600;
+    margin-bottom:4px;
+  }
+  .entry-titles .tagline{
+    font-size:0.95rem;
+    color:var(--ink-soft);
+    font-style:italic;
+  }
+
+  .callout{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-left:4px solid var(--moss);
+    border-radius:0 10px 10px 0;
+    padding:18px 22px;
+    margin:20px 0 28px;
+    font-size:1.02rem;
+  }
+  .callout b{font-weight:600;}
+
+  h3.sub{
+    font-family:var(--serif);
+    font-size:1.1rem;
+    font-weight:600;
+    margin:30px 0 14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  h3.sub::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line);
+  }
+
+  /* types grid */
+  .types-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(230px,1fr));
+    gap:12px;
+  }
+  .type-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px 16px;
+  }
+  .type-card .t-name{
+    font-weight:600;
+    font-size:0.92rem;
+    margin-bottom:4px;
+  }
+  .type-card .t-desc{
+    font-size:0.85rem;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+  }
+  .type-card .t-example{
+    font-family:var(--mono);
+    font-size:0.8rem;
+    color:var(--ink);
+    background:var(--paper-deep);
+    display:inline-block;
+    padding:3px 8px;
+    border-radius:6px;
+  }
+
+  /* examples list */
+  .example-list{list-style:none; display:flex; flex-direction:column; gap:10px;}
+  .example-list li{
+    font-family:var(--mono);
+    font-size:0.92rem;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:11px 14px;
+    line-height:1.55;
+  }
+  .example-list mark{
+    background:none;
+    font-weight:600;
+    padding:1px 4px;
+    border-radius:4px;
+  }
+
+  /* exercise */
+  .exercise-box{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:24px 26px;
+    margin-top:16px;
+  }
+  .exercise-box .ex-head{
+    display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;
+  }
+  .exercise-box .ex-head h4{
+    font-family:var(--serif); font-size:1.05rem; font-weight:600;
+  }
+  .ex-hint{font-size:0.78rem; color:var(--ink-faint);}
+  .q-item{
+    padding:14px 0;
+    border-top:1px dashed var(--line);
+  }
+  .q-item:first-of-type{border-top:none;}
+  .q-text{font-size:0.96rem; margin-bottom:10px;}
+  .q-text .blank{
+    display:inline-block; min-width:70px; border-bottom:1.5px solid var(--ink-faint);
+  }
+  .reveal-btn{
+    font-family:var(--mono);
+    font-size:0.76rem;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    background:transparent;
+    border:1px solid var(--ink-faint);
+    color:var(--ink-soft);
+    padding:6px 12px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:all 0.15s ease;
+  }
+  .reveal-btn:hover{border-color:var(--ink); color:var(--ink);}
+  .reveal-btn.done{border-color:var(--moss); color:var(--moss); background:var(--moss-bg);}
+  .answer{
+    margin-top:10px;
+    padding:10px 14px;
+    background:var(--paper-deep);
+    border-radius:8px;
+    font-size:0.9rem;
+    display:none;
+  }
+  .answer.show{display:block;}
+  .answer b{color:var(--moss);}
+
+  /* footer */
+  .finale{
+    padding:56px 48px 80px;
+    text-align:center;
+  }
+  @media (max-width:900px){ .finale{padding:40px 22px 60px;} }
+  .finale h2{
+    font-family:var(--serif); font-size:1.8rem; font-weight:600; margin-bottom:12px;
+  }
+  .finale p{color:var(--ink-soft); max-width:50ch; margin:0 auto 26px;}
+  .checklist{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:10px; max-width:820px; margin:0 auto;
+  }
+  .checklist div{
+    border:1px solid var(--line); border-radius:10px; padding:12px;
+    font-family:var(--mono); font-size:0.82rem; background:var(--card);
+  }
+
+  ::selection{background:var(--moss); color:var(--paper);}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <!-- SIDEBAR -->
+  <nav class="sidebar" aria-label="Specimen index">
+    <div class="brand">Field Guide</div>
+    <div class="brand-sub">to the Parts of Speech</div>
+    <ul class="nav-list" id="navList">
+      <li><a href="#noun"><span class="n">01</span> Noun</a></li>
+      <li><a href="#pronoun"><span class="n">02</span> Pronoun</a></li>
+      <li><a href="#verb"><span class="n">03</span> Verb</a></li>
+      <li><a href="#adjective"><span class="n">04</span> Adjective</a></li>
+      <li><a href="#adverb"><span class="n">05</span> Adverb</a></li>
+      <li><a href="#preposition"><span class="n">06</span> Preposition</a></li>
+      <li><a href="#conjunction"><span class="n">07</span> Conjunction</a></li>
+      <li><a href="#interjection"><span class="n">08</span> Interjection</a></li>
+      <li><a href="#article"><span class="n">09</span> Article</a></li>
+    </ul>
+    <div class="progress-box">
+      <div class="label">Exercises cleared</div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-count" id="progressCount">0 / 0</div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main>
+    <section class="hero">
+      <div class="hero-eyebrow">A specimen-by-specimen study &middot; 9 entries</div>
+      <h1>Every sentence is a <em>habitat</em>.<br>Learn to spot who lives there.</h1>
+      <p class="lede">Nine kinds of words build every English sentence. Click a tag below to see where that species lives in the wild — then walk through each entry for the full field notes, examples, and practice.</p>
+
+      <div class="specimen">
+        <div class="specimen-label">Live specimen &middot; click a tag to highlight</div>
+        <p class="specimen-sentence" id="heroSentence"></p>
+        <div class="legend" id="heroLegend"></div>
+      </div>
+    </section>
+
+    <!-- ============ 1. NOUN ============ -->
+    <section class="entry" id="noun">
+      <div class="entry-head">
+        <div class="entry-num pos-noun">01</div>
+        <div class="entry-titles">
+          <h2>Noun</h2>
+          <div class="tagline">the naming word — person, place, thing, or idea</div>
+        </div>
+      </div>
+
+      <div class="callout"><b>Definition:</b> A noun names a person, place, thing, animal, or idea. If you can put "the" or "a" in front of it, or make it plural, it's almost certainly a noun.</div>
+
+      <h3 class="sub">Field marks — types of nouns</h3>
+      <div class="types-grid">
+        <div class="type-card"><div class="t-name">Common</div><div class="t-desc">A general, non-specific name.</div><div class="t-example">city, dog, teacher</div></div>
+        <div class="type-card"><div class="t-name">Proper</div><div class="t-desc">A specific name, always capitalized.</div><div class="t-example">Chennai, Priya, Monday</div></div>
+        <div class="type-card"><div class="t-name">Abstract</div><div class="t-desc">Something you can't touch — an idea or quality.</div><div class="t-example">honesty, freedom, joy</div></div>
+        <div class="type-card"><div class="t-name">Concrete</div><div class="t-desc">Something you can perceive with your senses.</div><div class="t-example">table, rain, music</div></div>
+        <div class="type-card"><div class="t-name">Collective</div><div class="t-desc">Names a group as a single unit.</div><div class="t-example">team, flock, family</div></div>
+        <div class="type-card"><div class="t-name">Countable / Uncountable</div><div class="t-desc">Can it be counted (books) or not (water)?</div><div class="t-example">apples <em>vs.</em> rice</div></div>
+      </div>
+
+      <h3 class="sub">In the wild</h3>
+      <ul class="example-list">
+        <li>The <mark class="pos-noun">teacher</mark> praised the <mark class="pos-noun">student's</mark> <mark class="pos-noun">effort</mark>.</li>
+        <li><mark class="pos-noun">Freedom</mark> is something every <mark class="pos-noun">nation</mark> values.</li>
+        <li>The <mark class="pos-noun">committee</mark> announced its <mark class="pos-noun">decision</mark> in <mark class="pos-noun">Chennai</mark>.</li>
+      </ul>
+
+      <div class="exercise-box">
+        <div class="ex-head"><h4>Practice — spot the noun</h4><span class="ex-hint">click "reveal" after you answer</span></div>
+
+        <div class="q-item"><p class="q-text">1. Underline all nouns: <em>"The children played happily in the garden near the old temple."</em></p>
+          <button class="reveal-btn" data-target="a1">Reveal answer</button>
+          <div class="answer" id="a1"><b>Answer:</b> children, garden, temple</div></div>
+
+        <div class="q-item"><p class="q-text">2. Which word is an abstract noun? <em>chair &nbsp;|&nbsp; courage &nbsp;|&nbsp; river &nbsp;|&nbsp; mango</em></p>
+          <button class="reveal-btn" data-target="a2">Reveal answer</button>
+          <div class="answer" id="a2"><b>Answer:</b> courage — it names a quality you can't touch or see.</div></div>
+
+        <div class="q-item"><p class="q-text">3. Fill the blank with a collective noun: A <span class="blank"></span> of wolves hunted at night.</p>
+          <button class="reveal-btn" data-target="a3">Reveal answer</button>
+          <div class="answer" id="a3"><b>Answer:</b> pack (a "pack of wolves")</div></div>
+
+        <div class="q-item"><p class="q-text">4. Identify the proper noun: <em>"My friend Aisha visited Paris last summer."</em></p>
+          <button class="reveal-btn" data-target="a4">Reveal answer</button>
+          <div class="answer" id="a4"><b>Answer:</b> Aisha, Paris — both are specific names, so both are capitalized.</div></div>
+
+        <div class="q-item"><p class="q-text">5. Is "water" countable or uncountable in "I drank two glasses of water"?</p>
+          <button class="reveal-btn" data-target="a5">Reveal answer</button>
+          <div class="answer" id="a5"><b>Answer:</b> Uncountable — you count the "glasses," not the "waters." Water itself has no plural.</div></div>
+      </div>
+    </section>
+
+    <!-- ============ 2. PRONOUN ============ -->
+    <section class="entry" id="pronoun">
+      <div class="entry-head">
+        <div class="entry-num pos-pronoun">02</div>
+        <div class="entry-titles">
+          <h2>Pronoun</h2>
+          <div class="tagline">a stand-in for a noun, so we don't repeat ourselves</div>
+        </div>
+      </div>
+
+      <div class="callout"><b>Definition:</b> A pronoun replaces a noun already mentioned (its "antecedent") so sentences don't sound repetitive. Instead of "Ravi took Ravi's bag," we say "Ravi took his bag."</div>
+
+      <h3 class="sub">Field marks — types of pronouns</h3>
+      <div class="types-grid">
+        <div class="type-card"><div class="t-name">Personal</div><div class="t-desc">Stand in for specific people or things.</div><div class="t-example">I, you, he, she, it, we, they</div></div>
+        <div class="type-card"><div class="t-name">Possessive</div><div class="t-desc">Show ownership.</div><div class="t-example">mine, yours, his, hers, ours, theirs</div></div>
+        <div class="type-card"><div class="t-name">Reflexive</div><div class="t-desc">Action reflects back on the subject.</div><div class="t-example">myself, yourself, themselves</div></div>
+        <div class="type-card"><div class="t-name">Demonstrative</div><div class="t-desc">Point to something specific.</div><div class="t-example">this, that, these, those</div></div>
+        <div class="type-card"><div class="t-name">Interrogative</div><div class="t-desc">Used to ask questions.</div><div class="t-example">who, whom, whose, which, what</div></div>
+        <div class="type-card"><div class="t-name">Relative</div><div class="t-desc">Introduce a clause describing a noun.</div><div class="t-example">who, which, that, whose</div></div>
+        <div class="type-card"><div class="t-name">Indefinite</div><div class="t-desc">Refer to non-specific people/things.</div><div class="t-example">someone, anything, everybody, few</div></div>
+      </div>
+
+      <h3 class="sub">In the wild</h3>
+      <ul class="example-list">
+        <li><mark class="pos-pronoun">She</mark> gave <mark class="pos-pronoun">herself</mark> credit for <mark class="pos-pronoun">this</mark>.</li>
+        <li><mark class="pos-pronoun">Someone</mark> left <mark class="pos-pronoun">their</mark> umbrella, and it isn't <mark class="pos-pronoun">mine</mark>.</li>
+        <li>The man <mark class="pos-pronoun">who</mark> called earlier is waiting for <mark class="pos-pronoun">you</mark>.</li>
+      </ul>
+
+      <div class="exercise-box">
+        <div class="ex-head"><h4>Practice — spot the pronoun</h4><span class="ex-hint">click "reveal" after you answer</span></div>
+
+        <div class="q-item"><p class="q-text">1. Replace the repeated noun with a pronoun: <em>"Meera lost Meera's phone, so Meera borrowed a phone from a friend."</em></p>
+          <button class="reveal-btn" data-target="b1">Reveal answer</button>
+          <div class="answer" id="b1"><b>Answer:</b> "Meera lost <b>her</b> phone, so <b>she</b> borrowed one from a friend."</div></div>
+
+        <div class="q-item"><p class="q-text">2. Which type is "themselves"? <em>possessive | reflexive | relative</em></p>
+          <button class="reveal-btn" data-target="b2">Reveal answer</button>
+          <div class="answer" id="b2"><b>Answer:</b> reflexive — the action bounces back onto the subject.</div></div>
+
+        <div class="q-item"><p class="q-text">3. Choose correctly: "Is this book <span class="blank"></span> (your/yours)?"</p>
+          <button class="reveal-btn" data-target="b3">Reveal answer</button>
+          <div class="answer" id="b3"><b>Answer:</b> yours — a possessive pronoun standing alone (not before a noun).</div></div>
+
+        <div class="q-item"><p class="q-text">4. Find the relative pronoun: <em>"The recipe that my grandmother wrote is still in the drawer."</em></p>
+          <button class="reveal-btn" data-target="b4">Reveal answer</button>
+          <div class="answer" id="b4"><b>Answer:</b> that — it introduces a clause describing "the recipe."</div></div>
+
+        <div class="q-item"><p class="q-text">5. "Everybody enjoyed the show" — what type of pronoun is "everybody"?</p>
+          <button class="reveal-btn" data-target="b5">Reveal answer</button>
+          <div class="answer" id="b5"><b>Answer:</b> indefinite pronoun — it refers to people without naming anyone specific.</div></div>
+      </div>
+    </section>
+
+    <!-- ============ 3. VERB ============ -->
+    <section class="entry" id="verb">
+      <div class="entry-head">
+        <div class="entry-num pos-verb">03</div>
+        <div class="entry-titles">
+          <h2>Verb</h2>
+          <div class="tagline">the action or state — every sentence needs one</div>
+        </div>
+      </div>
+
+      <div class="callout"><b>Definition:</b> A verb shows an action (run, think, build) or a state of being (is, seem, become). Every complete sentence needs at least one verb.</div>
+
+      <h3 class="sub">Field marks — types of verbs</h3>
+      <div class="types-grid">
+        <div class="type-card"><div class="t-name">Action</div><div class="t-desc">Something physical or mental happens.</div><div class="t-example">run, write, imagine</div></div>
+        <div class="type-card"><div class="t-name">Linking</div><div class="t-desc">Connects subject to a description; no action.</div><div class="t-example">is, seem, become, feel</div></div>
+        <div class="type-card"><div class="t-name">Transitive</div><div class="t-desc">Takes a direct object — action passes to something.</div><div class="t-example">She <em>reads</em> a book.</div></div>
+        <div class="type-card"><div class="t-name">Intransitive</div><div class="t-desc">No direct object needed.</div><div class="t-example">The baby <em>slept</em>.</div></div>
+        <div class="type-card"><div class="t-name">Auxiliary (helping)</div><div class="t-desc">Supports the main verb — tense, mood, voice.</div><div class="t-example">is, has, will, can, must</div></div>
+        <div class="type-card"><div class="t-name">Modal</div><div class="t-desc">Expresses ability, permission, possibility.</div><div class="t-example">can, could, may, should</div></div>
+      </div>
+
+      <h3 class="sub">In the wild</h3>
+      <ul class="example-list">
+        <li>She <mark class="pos-verb">writes</mark> a letter every week.</li>
+        <li>He <mark class="pos-verb">seemed</mark> tired after the journey.</li>
+        <li>They <mark class="pos-verb">have been waiting</mark> since morning.</li>
+      </ul>
+
+      <div class="exercise-box">
+        <div class="ex-head"><h4>Practice — spot the verb</h4><span class="ex-hint">click "reveal" after you answer</span></div>
+
+        <div class="q-item"><p class="q-text">1. Identify the verb: <em>"The chef prepared a delicious meal."</em></p>
+          <button class="reveal-btn" data-target="c1">Reveal answer</button>
+          <div class="answer" id="c1"><b>Answer:</b> prepared — an action verb.</div></div>
+
+        <div class="q-item"><p class="q-text">2. Is "is" here linking or action? <em>"The soup is delicious."</em></p>
+          <button class="reveal-btn" data-target="c2">Reveal answer</button>
+          <div class="answer" id="c2"><b>Answer:</b> Linking — it connects "soup" to the description "delicious," with no action happening.</div></div>
+
+        <div class="q-item"><p class="q-text">3. Transitive or intransitive: <em>"The children laughed."</em></p>
+          <button class="reveal-btn" data-target="c3">Reveal answer</button>
+          <div class="answer" id="c3"><b>Answer:</b> Intransitive — "laughed" doesn't act on any object.</div></div>
+
+        <div class="q-item"><p class="q-text">4. Pick the correct modal: "You <span class="blank"></span> (must/mustn't) wear a helmet — it's the law."</p>
+          <button class="reveal-btn" data-target="c4">Reveal answer</button>
+          <div class="answer" id="c4"><b>Answer:</b> must — expresses an obligation.</div></div>
+
+        <div class="q-item"><p class="q-text">5. Find the auxiliary verb: <em>"She has finished her homework."</em></p>
+          <button class="reveal-btn" data-target="c5">Reveal answer</button>
+          <div class="answer" id="c5"><b>Answer:</b> has — it helps form the present perfect tense with "finished."</div></div>
+      </div>
+    </section>
+
+    <!-- ============ 4. ADJECTIVE ============ -->
+    <section class="entry" id="adjective">
+      <div class="entry-head">
+        <div class="entry-num pos-adjective">04</div>
+        <div class="entry-titles">
+          <h2>Adjective</h2>
+          <div class="tagline">describes or qualifies a noun or pronoun</div>
+        </div>
+      </div>
+
+      <div class="callout"><b>Definition:</b> An adjective adds detail to a noun or pronoun — size, color, quantity, quality, or which one. Ask "what kind?", "how many?", or "which one?" — the answer is usually an adjective.</div>
+
+      <h3 class="sub">Field marks — types of adjectives</h3>
+      <div class="types-grid">
+        <div class="type-card"><div class="t-name">Descriptive</div><div class="t-desc">Tells what kind or quality.</div><div class="t-example">tall, blue, ancient</div></div>
+        <div class="type-card"><div class="t-name">Quantitative</div><div class="t-desc">Tells how much or how many.</div><div class="t-example">some, few, three, all</div></div>
+        <div class="type-card"><div class="t-name">Demonstrative</div><div class="t-desc">Points to a specific noun.</div><div class="t-example">this, that, these, those</div></div>
+        <div class="type-card"><div class="t-name">Possessive</div><div class="t-desc">Shows ownership before a noun.</div><div class="t-example">my, your, their</div></div>
+        <div class="type-card"><div class="t-name">Comparative / Superlative</div><div class="t-desc">Compares two, or three or more things.</div><div class="t-example">taller / tallest</div></div>
+        <div class="type-card"><div class="t-name">Proper</div><div class="t-desc">Formed from a proper noun.</div><div class="t-example">Indian, Victorian</div></div>
+      </div>
+
+      <h3 class="sub">In the wild</h3>
+      <ul class="example-list">
+        <li>The <mark class="pos-adjective">ancient</mark>, <mark class="pos-adjective">weathered</mark> temple stood on a <mark class="pos-adjective">quiet</mark> hill.</li>
+        <li>She is <mark class="pos-adjective">taller</mark> than her <mark class="pos-adjective">older</mark> brother.</li>
+        <li><mark class="pos-adjective">Three</mark> students finished the <mark class="pos-adjective">difficult</mark> exam early.</li>
+      </ul>
+
+      <div class="exercise-box">
+        <div class="ex-head"><h4>Practice — spot the adjective</h4><span class="ex-hint">click "reveal" after you answer</span></div>
+
+        <div class="q-item"><p class="q-text">1. List the adjectives: <em>"The small, curious kitten chased a red ball."</em></p>
+          <button class="reveal-btn" data-target="d1">Reveal answer</button>
+          <div class="answer" id="d1"><b>Answer:</b> small, curious, red</div></div>
+
+        <div class="q-item"><p class="q-text">2. Give the comparative form of "good."</p>
+          <button class="reveal-btn" data-target="d2">Reveal answer</button>
+          <div class="answer" id="d2"><b>Answer:</b> better (irregular comparative; superlative is "best").</div></div>
+
+        <div class="q-item"><p class="q-text">3. Correct the error: "This is the <span class="blank"></span> (most best / best) film I've seen."</p>
+          <button class="reveal-btn" data-target="d3">Reveal answer</button>
+          <div class="answer" id="d3"><b>Answer:</b> best — never combine "most" with an already-superlative form.</div></div>
+
+        <div class="q-item"><p class="q-text">4. Which word is a possessive adjective? <em>"I found their keys near your car."</em></p>
+          <button class="reveal-btn" data-target="d4">Reveal answer</button>
+          <div class="answer" id="d4"><b>Answer:</b> their, your — both modify a noun to show ownership.</div></div>
+
+        <div class="q-item"><p class="q-text">5. "Few people knew the answer" — what kind of adjective is "few"?</p>
+          <button class="reveal-btn" data-target="d5">Reveal answer</button>
+          <div class="answer" id="d5"><b>Answer:</b> Quantitative — it tells how many people.</div></div>
+      </div>
+    </section>
+
+    <!-- ============ 5. ADVERB ============ -->
+    <section class="entry" id="adverb">
+      <div class="entry-head">
+        <div class="entry-num pos-adverb">05</div>
+        <div class="entry-titles">
+          <h2>Adverb</h2>
+          <div class="tagline">modifies a verb, adjective, or another adverb</div>
+        </div>
+      </div>
+
+      <div class="callout"><b>Definition:</b> An adverb adds detail to a verb, adjective, or another adverb — usually answering how, when, where, how often, or to what degree. Many (not all) end in <em>-ly</em>.</div>
+
+      <h3 class="sub">Field marks — types of adverbs</h3>
+      <div class="types-grid">
+        <div class="type-card"><div class="t-name">Manner</div><div class="t-desc">How something happens.</div><div class="t-example">quickly, carefully, well</div></div>
+        <div class="type-card"><div class="t-name">Place</div><div class="t-desc">Where something happens.</div><div class="t-example">here, outside, nearby</div></div>
+        <div class="type-card"><div class="t-name">Time</div><div class="t-desc">When something happens.</div><div class="t-example">yesterday, soon, now</div></div>
+        <div class="type-card"><div class="t-name">Frequency</div><div class="t-desc">How often something happens.</div><div class="t-example">always, often, rarely</div></div>
+        <div class="type-card"><div class="t-name">Degree</div><div class="t-desc">How much or to what extent.</div><div class="t-example">very, quite, almost</div></div>
+      </div>
+
+      <h3 class="sub">In the wild</h3>
+      <ul class="example-list">
+        <li>She sang <mark class="pos-adverb">beautifully</mark> and <mark class="pos-adverb">confidently</mark>.</li>
+        <li>He <mark class="pos-adverb">always</mark> arrives <mark class="pos-adverb">early</mark>.</li>
+        <li>The tea was <mark class="pos-adverb">extremely</mark> hot.</li>
+      </ul>
+
+      <div class="exercise-box">
+        <div class="ex-head"><h4>Practice — spot the adverb</h4><span class="ex-hint">click "reveal" after you answer</span></div>
+
+        <div class="q-item"><p class="q-text">1. Identify the adverb: <em>"He solved the puzzle easily."</em></p>
+          <button class="reveal-btn" data-target="e1">Reveal answer</button>
+          <div class="answer" id="e1"><b>Answer:</b> easily — describes how he solved it (manner).</div></div>
+
+        <div class="q-item"><p class="q-text">2. What does "extremely" modify in "The test was extremely hard"?</p>
+          <button class="reveal-btn" data-target="e2">Reveal answer</button>
+          <div class="answer" id="e2"><b>Answer:</b> the adjective "hard" — "extremely" is a degree adverb.</div></div>
+
+        <div class="q-item"><p class="q-text">3. Choose the frequency adverb: <em>quickly | rarely | outside | yesterday</em></p>
+          <button class="reveal-btn" data-target="e3">Reveal answer</button>
+          <div class="answer" id="e3"><b>Answer:</b> rarely</div></div>
+
+        <div class="q-item"><p class="q-text">4. Fix the word order: "She <span class="blank"></span> (well plays / plays well) the piano."</p>
+          <button class="reveal-btn" data-target="e4">Reveal answer</button>
+          <div class="answer" id="e4"><b>Answer:</b> plays well — manner adverbs usually follow the verb (or its object).</div></div>
+
+        <div class="q-item"><p class="q-text">5. Is "fast" an adjective or adverb in "He is a fast runner" vs. "He runs fast"?</p>
+          <button class="reveal-btn" data-target="e5">Reveal answer</button>
+          <div class="answer" id="e5"><b>Answer:</b> In the first, "fast" describes the noun "runner" (adjective). In the second, it describes the verb "runs" (adverb) — same word, different job.</div></div>
+      </div>
+    </section>
+
+    <!-- ============ 6. PREPOSITION ============ -->
+    <section class="entry" id="preposition">
+      <div class="entry-head">
+        <div class="entry-num pos-preposition">06</div>
+        <div class="entry-titles">
+          <h2>Preposition</h2>
+          <div class="tagline">shows the relationship between a noun and something else</div>
+        </div>
+      </div>
+
+      <div class="callout"><b>Definition:</b> A preposition sits before a noun or pronoun to show its relationship to another word — often location, time, or direction. It's always followed by an "object" (a noun/pronoun), never a verb.</div>
+
+      <h3 class="sub">Field marks — types of prepositions</h3>
+      <div class="types-grid">
+        <div class="type-card"><div class="t-name">Time</div><div class="t-desc">Places an event in time.</div><div class="t-example">at, on, in, since, during</div></div>
+        <div class="type-card"><div class="t-name">Place</div><div class="t-desc">Shows physical position.</div><div class="t-example">in, on, at, under, between</div></div>
+        <div class="type-card"><div class="t-name">Direction</div><div class="t-desc">Shows movement toward something.</div><div class="t-example">to, into, toward, across</div></div>
+        <div class="type-card"><div class="t-name">Agent / Instrument</div><div class="t-desc">Shows who or what did something.</div><div class="t-example">by, with</div></div>
+      </div>
+
+      <h3 class="sub">In the wild</h3>
+      <ul class="example-list">
+        <li>The keys are <mark class="pos-preposition">on</mark> the table, <mark class="pos-preposition">under</mark> a notebook.</li>
+        <li>We arrived <mark class="pos-preposition">at</mark> the station <mark class="pos-preposition">before</mark> sunrise.</li>
+        <li>She walked <mark class="pos-preposition">into</mark> the room and sat <mark class="pos-preposition">beside</mark> him.</li>
+      </ul>
+
+      <div class="exercise-box">
+        <div class="ex-head"><h4>Practice — spot the preposition</h4><span class="ex-hint">click "reveal" after you answer</span></div>
+
+        <div class="q-item"><p class="q-text">1. Fill in the correct time preposition: "The meeting is <span class="blank"></span> (in/on/at) 5 o'clock."</p>
+          <button class="reveal-btn" data-target="f1">Reveal answer</button>
+          <div class="answer" id="f1"><b>Answer:</b> at — use "at" for exact clock times ("in" for months/years, "on" for days/dates).</div></div>
+
+        <div class="q-item"><p class="q-text">2. Identify all prepositions: <em>"The cat jumped over the fence and hid under the porch."</em></p>
+          <button class="reveal-btn" data-target="f2">Reveal answer</button>
+          <div class="answer" id="f2"><b>Answer:</b> over, under</div></div>
+
+        <div class="q-item"><p class="q-text">3. Choose correctly: "She has lived here <span class="blank"></span> (since/for) 2015."</p>
+          <button class="reveal-btn" data-target="f3">Reveal answer</button>
+          <div class="answer" id="f3"><b>Answer:</b> since — use "since" with a starting point in time, "for" with a duration (e.g., "for 9 years").</div></div>
+
+        <div class="q-item"><p class="q-text">4. "The letter was written by my grandfather" — what kind of preposition is "by" here?</p>
+          <button class="reveal-btn" data-target="f4">Reveal answer</button>
+          <div class="answer" id="f4"><b>Answer:</b> Agent — it shows who performed the action in a passive sentence.</div></div>
+
+        <div class="q-item"><p class="q-text">5. Spot the error: <em>"I am good in painting."</em> What's the natural preposition?</p>
+          <button class="reveal-btn" data-target="f5">Reveal answer</button>
+          <div class="answer" id="f5"><b>Answer:</b> "good <b>at</b> painting" — certain adjectives pair with fixed prepositions; these must be learned individually.</div></div>
+      </div>
+    </section>
+
+    <!-- ============ 7. CONJUNCTION ============ -->
+    <section class="entry" id="conjunction">
+      <div class="entry-head">
+        <div class="entry-num pos-conjunction">07</div>
+        <div class="entry-titles">
+          <h2>Conjunction</h2>
+          <div class="tagline">joins words, phrases, or clauses together</div>
+        </div>
+      </div>
+
+      <div class="callout"><b>Definition:</b> A conjunction connects words, phrases, or clauses. The seven coordinating conjunctions spell <b>FANBOYS</b>: For, And, Nor, But, Or, Yet, So.</div>
+
+      <h3 class="sub">Field marks — types of conjunctions</h3>
+      <div class="types-grid">
+        <div class="type-card"><div class="t-name">Coordinating</div><div class="t-desc">Joins equal elements (FANBOYS).</div><div class="t-example">and, but, or, so</div></div>
+        <div class="type-card"><div class="t-name">Subordinating</div><div class="t-desc">Joins a dependent clause to a main clause.</div><div class="t-example">because, although, if, since</div></div>
+        <div class="type-card"><div class="t-name">Correlative</div><div class="t-desc">Work in pairs.</div><div class="t-example">either...or, neither...nor, both...and</div></div>
+      </div>
+
+      <h3 class="sub">In the wild</h3>
+      <ul class="example-list">
+        <li>I wanted to go, <mark class="pos-conjunction">but</mark> it was raining.</li>
+        <li><mark class="pos-conjunction">Although</mark> he was tired, he finished the race.</li>
+        <li><mark class="pos-conjunction">Either</mark> you apologize <mark class="pos-conjunction">or</mark> you leave.</li>
+      </ul>
+
+      <div class="exercise-box">
+        <div class="ex-head"><h4>Practice — spot the conjunction</h4><span class="ex-hint">click "reveal" after you answer</span></div>
+
+        <div class="q-item"><p class="q-text">1. Join the sentences with a suitable conjunction: "It was cold. We went for a swim."</p>
+          <button class="reveal-btn" data-target="g1">Reveal answer</button>
+          <div class="answer" id="g1"><b>Answer:</b> "It was cold, <b>but</b> we went for a swim." (contrast → "but")</div></div>
+
+        <div class="q-item"><p class="q-text">2. Name the FANBOYS conjunction that shows a reason: <em>"She left early, for she had a train to catch."</em></p>
+          <button class="reveal-btn" data-target="g2">Reveal answer</button>
+          <div class="answer" id="g2"><b>Answer:</b> for — here it means "because."</div></div>
+
+        <div class="q-item"><p class="q-text">3. Complete the correlative pair: "<span class="blank"></span> Ravi <span class="blank"></span> his sister speaks French." (neither / nor)</p>
+          <button class="reveal-btn" data-target="g3">Reveal answer</button>
+          <div class="answer" id="g3"><b>Answer:</b> Neither Ravi nor his sister speaks French.</div></div>
+
+        <div class="q-item"><p class="q-text">4. Is "because" coordinating or subordinating?</p>
+          <button class="reveal-btn" data-target="g4">Reveal answer</button>
+          <div class="answer" id="g4"><b>Answer:</b> Subordinating — it attaches a dependent (incomplete) clause to a main clause.</div></div>
+
+        <div class="q-item"><p class="q-text">5. Choose the right word: "I was hungry, <span class="blank"></span> (so/yet) I made a sandwich."</p>
+          <button class="reveal-btn" data-target="g5">Reveal answer</button>
+          <div class="answer" id="g5"><b>Answer:</b> so — it shows a result/consequence.</div></div>
+      </div>
+    </section>
+
+    <!-- ============ 8. INTERJECTION ============ -->
+    <section class="entry" id="interjection">
+      <div class="entry-head">
+        <div class="entry-num pos-interjection">08</div>
+        <div class="entry-titles">
+          <h2>Interjection</h2>
+          <div class="tagline">a burst of feeling, standing outside the grammar of the sentence</div>
+        </div>
+      </div>
+
+      <div class="callout"><b>Definition:</b> An interjection expresses sudden emotion — surprise, joy, pain, hesitation. It doesn't connect grammatically to the rest of the sentence and is often followed by an exclamation mark or a comma.</div>
+
+      <h3 class="sub">Field marks — types of interjections</h3>
+      <div class="types-grid">
+        <div class="type-card"><div class="t-name">Strong emotion</div><div class="t-desc">Usually stands alone with "!"</div><div class="t-example">Wow! Ouch! Hooray!</div></div>
+        <div class="type-card"><div class="t-name">Mild emotion</div><div class="t-desc">Blended into the sentence with a comma.</div><div class="t-example">Well, Hmm, Oh</div></div>
+        <div class="type-card"><div class="t-name">Greeting / Parting</div><div class="t-desc">Social exchanges.</div><div class="t-example">Hi! Bye! Cheers!</div></div>
+      </div>
+
+      <h3 class="sub">In the wild</h3>
+      <ul class="example-list">
+        <li><mark class="pos-interjection">Ouch!</mark> That really hurt.</li>
+        <li><mark class="pos-interjection">Well</mark>, I suppose we should get going.</li>
+        <li><mark class="pos-interjection">Wow</mark>, this view is breathtaking!</li>
+      </ul>
+
+      <div class="exercise-box">
+        <div class="ex-head"><h4>Practice — spot the interjection</h4><span class="ex-hint">click "reveal" after you answer</span></div>
+
+        <div class="q-item"><p class="q-text">1. Pick the interjection: <em>"Hurray! We won the match."</em></p>
+          <button class="reveal-btn" data-target="h1">Reveal answer</button>
+          <div class="answer" id="h1"><b>Answer:</b> Hurray — expresses sudden joy, punctuated with "!"</div></div>
+
+        <div class="q-item"><p class="q-text">2. Add a suitable interjection for pain to: "<span class="blank"></span>, I stubbed my toe!"</p>
+          <button class="reveal-btn" data-target="h2">Reveal answer</button>
+          <div class="answer" id="h2"><b>Answer:</b> Ouch (or "Ow")</div></div>
+
+        <div class="q-item"><p class="q-text">3. Is "Hmm, let me think about that" mild or strong emotion?</p>
+          <button class="reveal-btn" data-target="h3">Reveal answer</button>
+          <div class="answer" id="h3"><b>Answer:</b> Mild — it's hesitation, gently set off with a comma rather than an exclamation mark.</div></div>
+      </div>
+    </section>
+
+    <!-- ============ 9. ARTICLE ============ -->
+    <section class="entry" id="article">
+      <div class="entry-head">
+        <div class="entry-num pos-article">09</div>
+        <div class="entry-titles">
+          <h2>Article</h2>
+          <div class="tagline">a, an, the — small words that frame a noun</div>
+        </div>
+      </div>
+
+      <div class="callout"><b>Definition:</b> Articles are a special class of adjective that signal whether a noun is specific (<b>the</b>) or non-specific (<b>a / an</b>). English has only three: a definite article and two forms of the indefinite article.</div>
+
+      <h3 class="sub">Field marks — types of articles</h3>
+      <div class="types-grid">
+        <div class="type-card"><div class="t-name">Definite — "the"</div><div class="t-desc">A specific, already-known noun.</div><div class="t-example">the book on my desk</div></div>
+        <div class="type-card"><div class="t-name">Indefinite — "a"</div><div class="t-desc">Any one, before a consonant <em>sound</em>.</div><div class="t-example">a university, a dog</div></div>
+        <div class="type-card"><div class="t-name">Indefinite — "an"</div><div class="t-desc">Any one, before a vowel <em>sound</em>.</div><div class="t-example">an hour, an apple</div></div>
+      </div>
+
+      <h3 class="sub">In the wild</h3>
+      <ul class="example-list">
+        <li>I saw <mark class="pos-article">a</mark> cat sitting on <mark class="pos-article">the</mark> wall near <mark class="pos-article">an</mark> old gate.</li>
+        <li>She is <mark class="pos-article">the</mark> best player on <mark class="pos-article">the</mark> team.</li>
+        <li>He wants to become <mark class="pos-article">an</mark> engineer some day.</li>
+      </ul>
+
+      <div class="exercise-box">
+        <div class="ex-head"><h4>Practice — a / an / the</h4><span class="ex-hint">click "reveal" after you answer</span></div>
+
+        <div class="q-item"><p class="q-text">1. Fill in: "She is <span class="blank"></span> honest person." (a/an)</p>
+          <button class="reveal-btn" data-target="i1">Reveal answer</button>
+          <div class="answer" id="i1"><b>Answer:</b> an — "honest" starts with a vowel <em>sound</em> (silent h), so it takes "an."</div></div>
+
+        <div class="q-item"><p class="q-text">2. Fill in: "He works as <span class="blank"></span> European ambassador." (a/an)</p>
+          <button class="reveal-btn" data-target="i2">Reveal answer</button>
+          <div class="answer" id="i2"><b>Answer:</b> a — "European" starts with a "y" consonant sound, despite the vowel letter, so it takes "a."</div></div>
+
+        <div class="q-item"><p class="q-text">3. Fill in: "<span class="blank"></span> sun rises in <span class="blank"></span> east." (the / the)</p>
+          <button class="reveal-btn" data-target="i3">Reveal answer</button>
+          <div class="answer" id="i3"><b>Answer:</b> The sun rises in the east — unique things and cardinal directions take "the."</div></div>
+
+        <div class="q-item"><p class="q-text">4. Should you use an article here? "<span class="blank"></span> Mount Everest is the tallest mountain."</p>
+          <button class="reveal-btn" data-target="i4">Reveal answer</button>
+          <div class="answer" id="i4"><b>Answer:</b> No article — most proper nouns (names of single mountains, people, countries) take no article.</div></div>
+
+        <div class="q-item"><p class="q-text">5. Fill in: "I waited for <span class="blank"></span> hour before <span class="blank"></span> bus arrived." (an / the)</p>
+          <button class="reveal-btn" data-target="i5">Reveal answer</button>
+          <div class="answer" id="i5"><b>Answer:</b> an hour ... the bus — "hour" starts with a silent h (vowel sound); "the bus" refers to a specific, known bus.</div></div>
+      </div>
+    </section>
+
+    <div class="finale">
+      <h2>You've walked the whole trail.</h2>
+      <p>Nine species, thirty-plus field marks, and dozens of specimens examined. Come back and re-test yourself in a week — real mastery is what survives forgetting.</p>
+      <div class="checklist">
+        <div class="pos-noun">Noun ✓</div>
+        <div class="pos-pronoun">Pronoun ✓</div>
+        <div class="pos-verb">Verb ✓</div>
+        <div class="pos-adjective">Adjective ✓</div>
+        <div class="pos-adverb">Adverb ✓</div>
+        <div class="pos-preposition">Preposition ✓</div>
+        <div class="pos-conjunction">Conjunction ✓</div>
+        <div class="pos-interjection">Interjection ✓</div>
+        <div class="pos-article">Article ✓</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  // ---------- Hero interactive specimen sentence ----------
+  const heroWords = [
+    {t:"The", pos:"article"},
+    {t:"curious", pos:"adjective"},
+    {t:"little", pos:"adjective"},
+    {t:"fox", pos:"noun"},
+    {t:"quietly", pos:"adverb"},
+    {t:"crossed", pos:"verb"},
+    {t:"the", pos:"article"},
+    {t:"bridge", pos:"noun"},
+    {t:"and", pos:"conjunction"},
+    {t:"vanished", pos:"verb"},
+    {t:"into", pos:"preposition"},
+    {t:"the", pos:"article"},
+    {t:"forest,", pos:"noun"},
+    {t:"but", pos:"conjunction"},
+    {t:"it", pos:"pronoun"},
+    {t:"glanced", pos:"verb"},
+    {t:"back", pos:"adverb"},
+    {t:"once", pos:"adverb"},
+    {t:"—", pos:"none"},
+    {t:"\"Wow!\"", pos:"interjection"},
+    {t:"she", pos:"pronoun"},
+    {t:"whispered.", pos:"verb"}
+  ];
+
+  const posLabels = {
+    noun:"Noun", pronoun:"Pronoun", verb:"Verb", adjective:"Adjective",
+    adverb:"Adverb", preposition:"Preposition", conjunction:"Conjunction",
+    interjection:"Interjection", article:"Article"
+  };
+
+  const sentenceEl = document.getElementById('heroSentence');
+  heroWords.forEach((w, idx) => {
+    const span = document.createElement('span');
+    span.textContent = w.t + " ";
+    span.className = 'w';
+    if(w.pos !== 'none'){
+      span.dataset.pos = w.pos;
+    }
+    sentenceEl.appendChild(span);
+  });
+
+  const legendEl = document.getElementById('heroLegend');
+  Object.keys(posLabels).forEach(pos => {
+    const chip = document.createElement('button');
+    chip.className = 'chip';
+    chip.textContent = posLabels[pos];
+    chip.dataset.pos = pos;
+    chip.addEventListener('click', () => {
+      const isActive = chip.classList.contains('active');
+      document.querySelectorAll('.chip').forEach(c => { c.classList.remove('active'); c.style.background=''; c.style.borderColor='transparent';});
+      document.querySelectorAll('.specimen-sentence .w').forEach(w => { w.classList.remove('lit'); w.style.color=''; w.style.background=''; });
+      if(!isActive){
+        chip.classList.add('active');
+        chip.classList.add('bg-' + pos);
+        document.querySelectorAll(`.specimen-sentence .w[data-pos="${pos}"]`).forEach(w=>{
+          w.classList.add('lit');
+          w.classList.add('tagbg-' + pos);
+        });
+      }
+    });
+    legendEl.appendChild(chip);
+  });
+
+  // ---------- Reveal buttons + progress tracking ----------
+  const allButtons = document.querySelectorAll('.reveal-btn');
+  const progressFill = document.getElementById('progressFill');
+  const progressCount = document.getElementById('progressCount');
+  const total = allButtons.length;
+  let done = 0;
+
+  function updateProgress(){
+    progressFill.style.width = (done/total*100) + '%';
+    progressCount.textContent = done + ' / ' + total;
+  }
+  updateProgress();
+
+  allButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.dataset.target);
+      const wasShown = target.classList.contains('show');
+      target.classList.toggle('show');
+      if(!wasShown){
+        btn.textContent = 'Hide answer';
+        if(!btn.classList.contains('done')){
+          btn.classList.add('done');
+          done++;
+          updateProgress();
+        }
+      } else {
+        btn.textContent = 'Reveal answer';
+      }
+    });
+  });
+
+  // ---------- Sidebar active-link tracking ----------
+  const sections = document.querySelectorAll('.entry');
+  const navLinks = document.querySelectorAll('.nav-list a');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        navLinks.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`.nav-list a[href="#${entry.target.id}"]`);
+        if(link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(sec => observer.observe(sec));
+</script>
+
+</body>
+</html>

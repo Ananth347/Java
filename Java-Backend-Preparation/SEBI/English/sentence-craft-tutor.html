@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentence Craft — Your Personal English Writing Tutor</title>
+<style>
+  :root{
+    --bg:#f6f7fb;
+    --card:#ffffff;
+    --ink:#1f2937;
+    --muted:#64748b;
+    --line:#e4e7ee;
+    --primary:#4338ca;
+    --primary-light:#eef1ff;
+    --primary-dark:#332a99;
+    --teal:#0d9488;
+    --teal-light:#e3f7f5;
+    --gold:#b45309;
+    --gold-light:#fdf1e2;
+    --correct:#16a34a; --correct-bg:#eafbea;
+    --wrong:#dc2626; --wrong-bg:#fdecec;
+    font-size:16px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--bg);
+    color:var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    min-height:100vh;
+  }
+  .serif{ font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', serif; }
+  h1,h2,h3{ font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', serif; font-weight:normal; }
+
+  /* header */
+  header{
+    background: linear-gradient(135deg, var(--primary), #6a5ff0 70%);
+    color:#fff; padding: 20px clamp(14px,4vw,40px) 18px;
+    position: sticky; top:0; z-index: 70;
+    box-shadow: 0 6px 20px rgba(50,40,150,.2);
+  }
+  .header-row{ display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; }
+  header h1{ margin:0; font-size: clamp(20px,3vw,27px); }
+  header p.sub{ margin:3px 0 0; font-size:13px; opacity:.92; font-family:inherit; }
+  .progress-pill{
+    background: rgba(255,255,255,.16); border:1.5px solid rgba(255,255,255,.4); border-radius:22px;
+    padding: 8px 16px; font-size:13.5px; font-weight:600; white-space:nowrap;
+  }
+  .progress-track{ height:6px; background: rgba(255,255,255,.2); border-radius:4px; overflow:hidden; margin-top:12px; }
+  .progress-fill{ height:100%; background:#ffd166; width:0%; transition: width .3s ease; border-radius:4px; }
+
+  /* layout */
+  .layout{ display:flex; align-items:flex-start; max-width:1200px; margin:0 auto; }
+  nav.side{
+    width: 260px; flex-shrink:0; position: sticky; top: 130px;
+    padding: 22px 12px 40px 18px; height: calc(100vh - 130px); overflow-y:auto;
+  }
+  nav.side .side-title{ font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin:0 0 10px 10px; font-weight:700; }
+  .side-btn{
+    display:flex; align-items:center; gap:10px; width:100%; text-align:left; background:none; border:none;
+    padding:10px 10px; border-radius:9px; cursor:pointer; font-size:13.5px; color:var(--ink); font-family:inherit;
+    margin-bottom:2px;
+  }
+  .side-btn:hover{ background: var(--primary-light); }
+  .side-btn.active{ background: var(--primary); color:#fff; font-weight:600; }
+  .side-btn .sb-check{ font-size:12px; width:16px; text-align:center; flex-shrink:0; }
+  .side-btn .sb-label{ flex:1; }
+  .side-btn .sb-count{ font-size:11px; opacity:.75; }
+
+  main{ flex:1; min-width:0; padding: clamp(20px,4vw,40px) clamp(16px,4vw,40px) 90px; }
+  .panel{ display:none; }
+  .panel.active{ display:block; animation: fadeIn .3s ease; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .module-head{ margin-bottom: 18px; }
+  .module-kicker{ font-size:12px; text-transform:uppercase; letter-spacing:.1em; color: var(--teal); font-weight:700; margin-bottom:4px; }
+  .module-head h2{ font-size: clamp(22px,3vw,29px); margin:0 0 6px; color: var(--ink); }
+  .module-head p.lead{ font-size:15.5px; color: var(--muted); line-height:1.65; max-width:680px; margin:0; }
+
+  .card{ background:#fff; border-radius:14px; padding:20px 22px; margin-bottom:16px; box-shadow: 0 3px 12px rgba(30,40,80,.06); border:1px solid var(--line); }
+  .card h3{ font-size:16px; margin:0 0 10px; color:var(--ink); }
+  .card p{ font-size:14.8px; line-height:1.7; margin:0 0 10px; }
+  .card ul{ margin:0 0 6px; padding-left:20px; }
+  .card ul li{ font-size:14.5px; line-height:1.7; margin-bottom:7px; }
+  .card ol{ margin:0 0 6px; padding-left:20px; }
+  .card ol li{ font-size:14.5px; line-height:1.75; margin-bottom:10px; }
+
+  .rule-box{ background: var(--primary-light); border-left:4px solid var(--primary); border-radius:0 8px 8px 0; padding:12px 16px; margin: 10px 0 16px; font-size:14.5px; line-height:1.65; }
+  .rule-box b{ color: var(--primary-dark); }
+
+  table.compare{ width:100%; border-collapse:collapse; margin: 8px 0 14px; font-size:14px; }
+  table.compare th, table.compare td{ border:1px solid var(--line); padding:9px 12px; text-align:left; vertical-align:top; }
+  table.compare th{ background: var(--ink); color:#fff; font-weight:600; font-size:12.5px; text-transform:uppercase; letter-spacing:.04em; }
+  table.compare td.wrong-ex{ background: var(--wrong-bg); color:#7f1d1d; }
+  table.compare td.right-ex{ background: var(--correct-bg); color:#14532d; }
+
+  .chip-row{ display:flex; flex-wrap:wrap; gap:8px; margin: 8px 0 4px; }
+  .chip{ background: var(--teal-light); border:1px solid #b9e6e0; border-radius:16px; padding:5px 12px; font-size:12.5px; font-weight:600; color:#0d6b62; }
+
+  /* exercises */
+  .score-strip{
+    background: linear-gradient(135deg, var(--gold-light), #fbe4c0); border:1px solid #f0d3a0; color: var(--gold);
+    border-radius: 12px; padding: 11px 18px; text-align:center; font-size:14.5px; font-weight:700; margin: 4px 0 16px;
+  }
+  .practice-card{ background:#fff; border-radius:12px; padding:18px 20px; margin-bottom:12px; box-shadow: 0 3px 10px rgba(30,40,80,.06); border:1px solid var(--line); }
+  .q-number{ font-size:11.5px; font-weight:700; color: var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-bottom:5px; }
+  .q-text{ font-size:15.5px; margin: 2px 0 13px; font-weight:600; line-height:1.6; }
+  .q-text .blank{ display:inline-block; min-width:64px; border-bottom:2px solid var(--primary); }
+  .opt-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(130px,1fr)); gap:9px; }
+  .opt-btn{
+    cursor:pointer; border: 1.6px solid var(--line); background:#fbfbfe; border-radius:9px;
+    padding: 10px 12px; font-size:14px; font-weight:600; color: var(--ink); text-align:center;
+    transition: transform .1s ease, background .15s ease, border-color .15s ease;
+  }
+  .opt-btn:hover:not(.locked){ border-color: var(--primary); background: var(--primary-light); }
+  .opt-btn.locked{ cursor:default; }
+  .opt-btn.correct{ background: var(--correct-bg); border-color: var(--correct); color:#14532d; }
+  .opt-btn.wrong{ background: var(--wrong-bg); border-color: var(--wrong); color:#7f1d1d; }
+  .opt-btn.dim{ opacity:.5; }
+  .q-feedback{ margin-top: 11px; padding: 10px 14px; border-radius:9px; font-size:13.8px; line-height:1.6; display:none; }
+  .q-feedback.show{ display:block; }
+  .q-feedback.correct{ background: var(--correct-bg); color:#14532d; }
+  .q-feedback.wrong{ background: var(--wrong-bg); color:#7f1d1d; }
+
+  .shuffle-btn{
+    display:inline-flex; align-items:center; gap:6px; cursor:pointer; border:none; border-radius:20px;
+    padding: 11px 22px; font-weight:700; font-size:14px; background: var(--primary); color:#fff;
+    box-shadow: 0 6px 14px rgba(67,56,202,.3); margin-bottom:16px;
+  }
+  .shuffle-btn:hover{ background: var(--primary-dark); }
+
+  .roadmap-step{ display:flex; gap:14px; margin-bottom:16px; }
+  .roadmap-num{
+    flex-shrink:0; width:34px; height:34px; border-radius:50%; background: var(--primary); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:15px;
+  }
+  .roadmap-text b{ display:block; margin-bottom:2px; font-size:14.5px; }
+  .roadmap-text span{ font-size:13.8px; color: var(--muted); line-height:1.6; }
+
+  footer{ text-align:center; padding: 20px; font-size:12px; color: var(--muted); }
+
+  @media (max-width: 900px){
+    nav.side{ display:none; }
+  }
+  @media (prefers-reduced-motion: reduce){ *{ animation-duration:.001ms !important; transition-duration:.001ms !important; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-row">
+    <div>
+      <h1>✒️ Sentence Craft</h1>
+      <p class="sub">Your personal, step-by-step tutor for perfect English writing</p>
+    </div>
+    <div class="progress-pill" id="progressPill">0 / 0 exercises done · 0% correct</div>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+</header>
+
+<div class="layout">
+  <nav class="side" id="sideNav"></nav>
+  <main id="mainArea">
+
+  <!-- ============ OVERVIEW / ROADMAP ============ -->
+  <section class="panel active" id="panel-overview">
+    <div class="module-head">
+      <div class="module-kicker">Start here</div>
+      <h2>How to actually get good at English writing</h2>
+      <p class="lead">Good writing isn't a talent you're born with — it's a small set of skills, practiced in the right order. This page is built exactly like a course: read the rule, study the examples, then practice immediately while it's fresh. Work through the modules on the left, top to bottom.</p>
+    </div>
+
+    <div class="card">
+      <h3>📐 The five-step method for every module</h3>
+      <div class="roadmap-step">
+        <div class="roadmap-num">1</div>
+        <div class="roadmap-text"><b>Read the rule slowly.</b><span>Each module starts with one clear rule box. Don't skim it — most mistakes happen because a rule was half-read.</span></div>
+      </div>
+      <div class="roadmap-step">
+        <div class="roadmap-num">2</div>
+        <div class="roadmap-text"><b>Study the wrong-vs-right table.</b><span>Seeing a mistake right next to its fix trains your eye to spot that exact mistake in your own writing later.</span></div>
+      </div>
+      <div class="roadmap-step">
+        <div class="roadmap-num">3</div>
+        <div class="roadmap-text"><b>Do every exercise — don't skip the ones that look easy.</b><span>Easy ones build speed and confidence; that's what lets you write fluently under time pressure later, in an essay or exam.</span></div>
+      </div>
+      <div class="roadmap-step">
+        <div class="roadmap-num">4</div>
+        <div class="roadmap-text"><b>When you get one wrong, read the explanation twice.</b><span>The goal isn't the right answer — it's understanding <i>why</i>, so the same mistake doesn't happen in your own sentences.</span></div>
+      </div>
+      <div class="roadmap-step">
+        <div class="roadmap-num">5</div>
+        <div class="roadmap-text"><b>After finishing all 12 modules, take the Full Practice Test.</b><span>It mixes questions from every module at random — a real test of whether the rules have actually stuck.</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🗺️ Why the modules are in this order</h3>
+      <p>Writing is built in layers, so the course follows the same order real fluency develops in:</p>
+      <ol>
+        <li><b>Sentence Basics &amp; Sentence Types</b> — you can't build a house without knowing what a brick is. These two modules are the brick.</li>
+        <li><b>Subject-Verb Agreement, Fragments &amp; Run-ons, Punctuation</b> — the "don't break the rules" layer. This is what separates a correct sentence from an incorrect one.</li>
+        <li><b>Tenses in Writing, Active/Passive Voice, Reported Speech</b> — control over meaning and tone. This is what separates a correct sentence from a <i>precise</i> one.</li>
+        <li><b>Linking Words, Parallelism, Word Choice</b> — the "connect your ideas smoothly" layer. This is what separates a list of correct sentences from writing that actually flows.</li>
+        <li><b>Paragraph Coherence</b> — zooming out from the sentence to the paragraph, which is really what essays and any longer piece of writing are built from.</li>
+      </ol>
+      <div class="rule-box"><b>If you only remember one thing:</b> almost all "weak writing" is really just short sentences joined badly, or one wrong small word (a verb ending, a preposition, a linking word). Fixing those two things fixes 90% of what feels wrong about a piece of writing.</div>
+    </div>
+
+    <div class="card">
+      <h3>📊 What's inside</h3>
+      <p>12 skill modules, over <b>200 practice exercises</b> in total, every one with instant feedback and a plain-English explanation — plus a shuffled Full Practice Test at the end that pulls random questions from everything you've learned.</p>
+    </div>
+  </section>
+
+  <!-- ============ MODULE: SENTENCE BASICS ============ -->
+  <section class="panel" id="panel-sentence-basics">
+    <div class="module-head">
+      <div class="module-kicker">Module 1</div>
+      <h2>Sentence Basics — Subject, Verb, Object</h2>
+      <p class="lead">Every single sentence in English, no matter how long or fancy, is built from the same three jobs. Once you can spot these three in any sentence, you can build — and fix — any sentence.</p>
+    </div>
+
+    <div class="card">
+      <h3>The three jobs in a sentence</h3>
+      <div class="rule-box">
+        <b>Subject</b> — who or what the sentence is about.<br>
+        <b>Verb</b> — the action, or the state of being.<br>
+        <b>Object</b> — who or what receives the action (not every sentence needs one).
+      </div>
+      <p>Example: <b>The manager</b> (subject) <b>reviewed</b> (verb) <b>the report</b> (object).</p>
+      <p>A sentence needs at minimum a <b>subject + a verb</b> to be complete. "She smiled." is a complete sentence all by itself — two words, one job each.</p>
+    </div>
+
+    <div class="card">
+      <h3>The core sentence patterns</h3>
+      <table class="compare">
+        <tr><th>Pattern</th><th>Example</th></tr>
+        <tr><td>Subject + Verb (S+V)</td><td>Birds fly.</td></tr>
+        <tr><td>Subject + Verb + Object (S+V+O)</td><td>She wrote a letter.</td></tr>
+        <tr><td>Subject + Verb + Complement (S+V+C)</td><td>He is a doctor. / The soup tastes good.</td></tr>
+        <tr><td>Subject + Verb + Indirect Object + Direct Object</td><td>She gave <u>him</u> <u>a book</u>.</td></tr>
+      </table>
+      <p>Almost every sentence you'll ever write is one of these four patterns, just dressed up with extra description.</p>
+    </div>
+
+    <div class="score-strip" id="score-sentence-basics">Score: 0 / 0</div>
+    <div id="practice-sentence-basics"></div>
+  </section>
+
+  <!-- ============ MODULE: SENTENCE TYPES ============ -->
+  <section class="panel" id="panel-sentence-types">
+    <div class="module-head">
+      <div class="module-kicker">Module 2</div>
+      <h2>Sentence Types — Simple, Compound, Complex</h2>
+      <p class="lead">Using only short, simple sentences makes writing feel childish. Using only long ones makes it exhausting to read. Good writers mix all four types on purpose.</p>
+    </div>
+
+    <div class="card">
+      <h3>The four types</h3>
+      <table class="compare">
+        <tr><th>Type</th><th>What it is</th><th>Example</th></tr>
+        <tr><td><b>Simple</b></td><td>One independent clause (one complete idea).</td><td>The market crashed.</td></tr>
+        <tr><td><b>Compound</b></td><td>Two independent clauses joined by <i>and, but, or, so, yet, for, nor</i> — or a semicolon.</td><td>The market crashed, <b>and</b> investors panicked.</td></tr>
+        <tr><td><b>Complex</b></td><td>One independent clause + one dependent clause (starts with <i>because, although, when, if, since, while...</i>).</td><td><b>Although</b> the market crashed, the company survived.</td></tr>
+        <tr><td><b>Compound-Complex</b></td><td>At least two independent clauses + at least one dependent clause.</td><td><b>Although</b> the market crashed, the company survived, <b>and</b> it even grew the next year.</td></tr>
+      </table>
+      <div class="rule-box"><b>Independent clause</b> = can stand alone as a full sentence. <b>Dependent clause</b> = starts with a word like <i>because/although/when</i> and cannot stand alone, even though it has a subject and verb.</div>
+    </div>
+
+    <div class="score-strip" id="score-sentence-types">Score: 0 / 0</div>
+    <div id="practice-sentence-types"></div>
+  </section>
+
+  <!-- ============ MODULE: SUBJECT-VERB AGREEMENT ============ -->
+  <section class="panel" id="panel-sva">
+    <div class="module-head">
+      <div class="module-kicker">Module 3</div>
+      <h2>Subject-Verb Agreement</h2>
+      <p class="lead">This is the single most common small mistake in Indian-English writing, and it's the fastest one to fix once you know the rules. The verb must always "agree" in number with its subject.</p>
+    </div>
+
+    <div class="card">
+      <h3>The core rules</h3>
+      <ul>
+        <li><b>Singular subject → singular verb.</b> "The <u>report</u> <u>needs</u> approval."</li>
+        <li><b>Plural subject → plural verb.</b> "The <u>reports</u> <u>need</u> approval."</li>
+        <li><b>Ignore words between subject and verb.</b> The verb agrees with the real subject, not the nearest noun. "The <u>list</u> of items <u>is</u> long." (not "are" — list is singular, "of items" is just extra description).</li>
+        <li><b>Two subjects joined by "and" → plural verb.</b> "Ravi and Priya <u>are</u> coming."</li>
+        <li><b>Two subjects joined by "or"/"nor" → verb agrees with the nearer subject.</b> "Neither the manager nor the employees <u>were</u> informed."</li>
+        <li><b>Collective nouns (team, family, government) are usually singular</b> in formal writing. "The committee <u>has</u> decided."</li>
+        <li><b>Indefinite pronouns</b> like <i>everyone, everybody, each, either, neither, nobody</i> are singular. "Everyone <u>is</u> welcome."</li>
+      </ul>
+    </div>
+
+    <table class="compare">
+      <tr><th>✗ Wrong</th><th>✓ Right</th></tr>
+      <tr><td class="wrong-ex">The list of candidates are ready.</td><td class="right-ex">The list of candidates is ready.</td></tr>
+      <tr><td class="wrong-ex">Each of the students have submitted the form.</td><td class="right-ex">Each of the students has submitted the form.</td></tr>
+      <tr><td class="wrong-ex">The data shows a clear pattern (informal use).</td><td class="right-ex">The data show a clear pattern. (formally, "data" is plural)</td></tr>
+    </table>
+
+    <div class="score-strip" id="score-sva">Score: 0 / 0</div>
+    <div id="practice-sva"></div>
+  </section>
+
+  <!-- ============ MODULE: FRAGMENTS & RUN-ONS ============ -->
+  <section class="panel" id="panel-fragments">
+    <div class="module-head">
+      <div class="module-kicker">Module 4</div>
+      <h2>Fixing Fragments &amp; Run-on Sentences</h2>
+      <p class="lead">These are the two opposite mistakes: a fragment gives you less than a full sentence; a run-on crams too many full sentences together with no proper joint.</p>
+    </div>
+
+    <div class="card">
+      <h3>Sentence fragment</h3>
+      <p>A fragment looks like a sentence (starts with a capital, ends with a period) but is <b>missing a subject, a verb, or a complete thought</b> — often it's really just a dependent clause left on its own.</p>
+      <table class="compare">
+        <tr><th>✗ Fragment</th><th>✓ Fixed</th></tr>
+        <tr><td class="wrong-ex">Because the market crashed.</td><td class="right-ex">Because the market crashed, investors panicked.</td></tr>
+        <tr><td class="wrong-ex">Running to catch the train.</td><td class="right-ex">She was running to catch the train.</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Run-on sentence (and the comma splice)</h3>
+      <p>A run-on jams two complete sentences together with no punctuation at all. A <b>comma splice</b> is the sneakier cousin — it joins two complete sentences with only a comma, which isn't strong enough to do that job alone.</p>
+      <table class="compare">
+        <tr><th>✗ Run-on / Comma splice</th><th>✓ Fixed (three valid ways)</th></tr>
+        <tr><td class="wrong-ex">The report was late the manager was upset.</td><td class="right-ex">The report was late, so the manager was upset.</td></tr>
+        <tr><td class="wrong-ex">It started raining, we stayed inside.</td><td class="right-ex">It started raining; we stayed inside. &nbsp;/&nbsp; It started raining, so we stayed inside. &nbsp;/&nbsp; It started raining. We stayed inside.</td></tr>
+      </table>
+      <div class="rule-box">To fix a run-on or comma splice, you have four honest options: <b>(1)</b> split it into two sentences with a period, <b>(2)</b> add a comma + a joining word (and, but, so...), <b>(3)</b> use a semicolon, or <b>(4)</b> turn one clause into a dependent clause (because, although...).</div>
+    </div>
+
+    <div class="score-strip" id="score-fragments">Score: 0 / 0</div>
+    <div id="practice-fragments"></div>
+  </section>
+
+  <!-- ============ MODULE: PUNCTUATION ============ -->
+  <section class="panel" id="panel-punctuation">
+    <div class="module-head">
+      <div class="module-kicker">Module 5</div>
+      <h2>Punctuation Essentials</h2>
+      <p class="lead">Punctuation isn't decoration — each mark tells the reader exactly how to read the sentence. Get these few marks right and your writing instantly looks more careful and professional.</p>
+    </div>
+
+    <div class="card">
+      <h3>The marks that matter most</h3>
+      <ul>
+        <li><b>Comma (,)</b> — separates items in a list, sets off an introductory phrase ("After the meeting, we left."), and joins two independent clauses <i>together with</i> a conjunction (and, but, so...).</li>
+        <li><b>Semicolon (;)</b> — joins two closely related independent clauses <i>without</i> a conjunction. "The report was late; the client was unhappy."</li>
+        <li><b>Colon (:)</b> — introduces a list, an explanation, or an example, after a complete sentence. "She had one goal: to finish on time."</li>
+        <li><b>Apostrophe (')</b> — shows possession (the manager's desk) or a contraction (it's = it is). <b>Never</b> use it just to make a word plural.</li>
+        <li><b>Quotation marks (" ")</b> — enclose someone's exact words.</li>
+      </ul>
+    </div>
+
+    <table class="compare">
+      <tr><th>✗ Wrong</th><th>✓ Right</th></tr>
+      <tr><td class="wrong-ex">The manager's are on leave. (plural, no apostrophe needed)</td><td class="right-ex">The managers are on leave.</td></tr>
+      <tr><td class="wrong-ex">Its a good report.</td><td class="right-ex">It's a good report. (it's = it is)</td></tr>
+      <tr><td class="wrong-ex">I need three things pen, paper, ink.</td><td class="right-ex">I need three things: pen, paper, ink.</td></tr>
+    </table>
+
+    <div class="score-strip" id="score-punctuation">Score: 0 / 0</div>
+    <div id="practice-punctuation"></div>
+  </section>
+
+  <!-- ============ MODULE: TENSES IN WRITING ============ -->
+  <section class="panel" id="panel-tenses">
+    <div class="module-head">
+      <div class="module-kicker">Module 6</div>
+      <h2>Choosing the Right Tense in Writing</h2>
+      <p class="lead">Knowing tense forms is one skill; picking the <i>right</i> one while writing a real paragraph is another. This module is about that second skill — and about staying consistent.</p>
+    </div>
+
+    <div class="card">
+      <h3>Two habits that fix most tense mistakes</h3>
+      <ul>
+        <li><b>Stay in one "time zone" unless you have a reason to switch.</b> If your paragraph is about the past, keep describing things in the past. Don't drift into present tense mid-story without a reason.</li>
+        <li><b>For descriptive and factual writing (essays, reports, definitions), Present Simple and Past Simple do almost all the work.</b> Present Simple states facts and general truths ("Inflation reduces purchasing power"); Past Simple narrates events that happened and finished ("The policy was introduced in 2016").</li>
+      </ul>
+      <div class="rule-box"><b>Quick check:</b> if you're describing something generally true or currently the case, use Present Simple. If you're narrating something that already happened and is over, use Past Simple. Don't overthink it beyond that for most writing.</div>
+    </div>
+
+    <div class="score-strip" id="score-tenses">Score: 0 / 0</div>
+    <div id="practice-tenses"></div>
+  </section>
+
+  <!-- ============ MODULE: ACTIVE / PASSIVE VOICE ============ -->
+  <section class="panel" id="panel-voice">
+    <div class="module-head">
+      <div class="module-kicker">Module 7</div>
+      <h2>Active vs. Passive Voice</h2>
+      <p class="lead">This one small choice changes how confident and direct your writing sounds. Both are correct English — but overusing passive voice is the #1 reason writing feels vague or weak.</p>
+    </div>
+
+    <div class="card">
+      <h3>The difference</h3>
+      <p><b>Active voice:</b> the subject <i>does</i> the action. <i>"The committee approved the budget."</i></p>
+      <p><b>Passive voice:</b> the subject <i>receives</i> the action; the doer is de-emphasized or dropped entirely. <i>"The budget was approved (by the committee)."</i></p>
+      <div class="rule-box"><b>Formula for passive:</b> object of the active sentence + <b>be</b> (is/was/has been...) + past participle + "by ..." (optional).</div>
+      <p><b>Prefer active voice</b> — it's shorter, clearer, and more confident. <b>Use passive on purpose</b> when the doer is unknown, unimportant, or you want to emphasize the receiver of the action ("The building was damaged in the storm" — we don't need to say "the storm damaged the building").</p>
+    </div>
+
+    <table class="compare">
+      <tr><th>Passive (weaker)</th><th>Active (stronger)</th></tr>
+      <tr><td class="wrong-ex">A decision was made by the board.</td><td class="right-ex">The board made a decision.</td></tr>
+      <tr><td class="wrong-ex">Mistakes were made.</td><td class="right-ex">We made mistakes.</td></tr>
+    </table>
+
+    <div class="score-strip" id="score-voice">Score: 0 / 0</div>
+    <div id="practice-voice"></div>
+  </section>
+
+  <!-- ============ MODULE: REPORTED SPEECH ============ -->
+  <section class="panel" id="panel-reported">
+    <div class="module-head">
+      <div class="module-kicker">Module 8</div>
+      <h2>Direct vs. Indirect (Reported) Speech</h2>
+      <p class="lead">Whenever you write what someone said — in a report, a summary, or a precis — you'll almost always convert it into reported speech. It follows one dependable pattern.</p>
+    </div>
+
+    <div class="card">
+      <h3>The core shift: tense moves one step back</h3>
+      <table class="compare">
+        <tr><th>Direct speech</th><th>→ Reported speech</th></tr>
+        <tr><td>"I <b>am</b> tired," she said.</td><td>She said (that) she <b>was</b> tired.</td></tr>
+        <tr><td>"I <b>will</b> come," he said.</td><td>He said (that) he <b>would</b> come.</td></tr>
+        <tr><td>"I <b>have finished</b>," they said.</td><td>They said (that) they <b>had finished</b>.</td></tr>
+        <tr><td>"I <b>went</b> home," she said.</td><td>She said (that) she <b>had gone</b> home.</td></tr>
+      </table>
+      <div class="rule-box">Present → Past. Past → Past Perfect. <b>will</b> → <b>would</b>. <b>can</b> → <b>could</b>. Pronouns and time words also shift: "today" → "that day", "tomorrow" → "the next day", "here" → "there".</div>
+    </div>
+
+    <div class="score-strip" id="score-reported">Score: 0 / 0</div>
+    <div id="practice-reported"></div>
+  </section>
+
+  <!-- ============ MODULE: LINKING WORDS ============ -->
+  <section class="panel" id="panel-linking">
+    <div class="module-head">
+      <div class="module-kicker">Module 9</div>
+      <h2>Linking Words &amp; Transitions</h2>
+      <p class="lead">This is the module that turns a pile of correct sentences into writing that actually flows — the glue that connects one idea to the next, essential for essays.</p>
+    </div>
+
+    <div class="card">
+      <h3>Linking words by job</h3>
+      <p><b>Adding an idea:</b></p>
+      <div class="chip-row"><span class="chip">and</span><span class="chip">also</span><span class="chip">moreover</span><span class="chip">furthermore</span><span class="chip">in addition</span></div>
+      <p style="margin-top:14px;"><b>Contrasting an idea:</b></p>
+      <div class="chip-row"><span class="chip">but</span><span class="chip">however</span><span class="chip">although</span><span class="chip">on the other hand</span><span class="chip">whereas</span><span class="chip">yet</span></div>
+      <p style="margin-top:14px;"><b>Showing cause and effect:</b></p>
+      <div class="chip-row"><span class="chip">because</span><span class="chip">since</span><span class="chip">therefore</span><span class="chip">as a result</span><span class="chip">consequently</span><span class="chip">so</span></div>
+      <p style="margin-top:14px;"><b>Giving an example:</b></p>
+      <div class="chip-row"><span class="chip">for example</span><span class="chip">for instance</span><span class="chip">such as</span><span class="chip">namely</span></div>
+      <p style="margin-top:14px;"><b>Concluding / summarizing:</b></p>
+      <div class="chip-row"><span class="chip">in conclusion</span><span class="chip">to sum up</span><span class="chip">overall</span><span class="chip">in short</span></div>
+      <div class="rule-box"><b>Careful:</b> "however" and "therefore" connect two ideas but need a semicolon or period before them, not just a comma — they're not the same grammatically as "but" and "so". <i>"Sales rose; however, profits fell."</i> not <i>"Sales rose, however, profits fell."</i></div>
+    </div>
+
+    <div class="score-strip" id="score-linking">Score: 0 / 0</div>
+    <div id="practice-linking"></div>
+  </section>
+
+  <!-- ============ MODULE: PARALLELISM ============ -->
+  <section class="panel" id="panel-parallelism">
+    <div class="module-head">
+      <div class="module-kicker">Module 10</div>
+      <h2>Parallel Structure</h2>
+      <p class="lead">When you list or compare things in a sentence, each item needs to be in the <i>same grammatical form</i>. This is a small rule that makes a huge difference to how polished writing sounds.</p>
+    </div>
+
+    <div class="card">
+      <h3>The rule</h3>
+      <p>If one item in a list is a verb+ing, every item should be. If one is a noun, every item should be. Mixing forms makes a sentence feel "off" even if the reader can't say exactly why.</p>
+    </div>
+
+    <table class="compare">
+      <tr><th>✗ Not parallel</th><th>✓ Parallel</th></tr>
+      <tr><td class="wrong-ex">She likes reading, to write, and painting.</td><td class="right-ex">She likes reading, writing, and painting.</td></tr>
+      <tr><td class="wrong-ex">The job requires patience, being organized, and to communicate well.</td><td class="right-ex">The job requires patience, organization, and good communication.</td></tr>
+      <tr><td class="wrong-ex">He not only finished the report but also the presentation was prepared by him.</td><td class="right-ex">He not only finished the report but also prepared the presentation.</td></tr>
+    </table>
+
+    <div class="score-strip" id="score-parallelism">Score: 0 / 0</div>
+    <div id="practice-parallelism"></div>
+  </section>
+
+  <!-- ============ MODULE: WORD CHOICE ============ -->
+  <section class="panel" id="panel-wordchoice">
+    <div class="module-head">
+      <div class="module-kicker">Module 11</div>
+      <h2>Word Choice &amp; Common Confusions</h2>
+      <p class="lead">A handful of word pairs get mixed up constantly — in speech it barely matters, but in writing, one wrong word can change your meaning or just look careless.</p>
+    </div>
+
+    <div class="card">
+      <h3>The usual suspects</h3>
+      <table class="compare">
+        <tr><th>Pair</th><th>How to tell them apart</th></tr>
+        <tr><td><b>their / there / they're</b></td><td>their = belongs to them; there = a place; they're = they are</td></tr>
+        <tr><td><b>affect / effect</b></td><td>affect = verb (to influence); effect = noun (a result)</td></tr>
+        <tr><td><b>your / you're</b></td><td>your = belongs to you; you're = you are</td></tr>
+        <tr><td><b>its / it's</b></td><td>its = belongs to it; it's = it is / it has</td></tr>
+        <tr><td><b>then / than</b></td><td>then = time/sequence; than = comparison</td></tr>
+        <tr><td><b>fewer / less</b></td><td>fewer = countable things (fewer books); less = uncountable (less time)</td></tr>
+        <tr><td><b>lay / lie</b></td><td>lay = to put something down (takes an object); lie = to recline (no object)</td></tr>
+      </table>
+    </div>
+
+    <div class="score-strip" id="score-wordchoice">Score: 0 / 0</div>
+    <div id="practice-wordchoice"></div>
+  </section>
+
+  <!-- ============ MODULE: PARAGRAPH COHERENCE ============ -->
+  <section class="panel" id="panel-paragraph">
+    <div class="module-head">
+      <div class="module-kicker">Module 12</div>
+      <h2>Paragraph Coherence</h2>
+      <p class="lead">Zoom out one level. A paragraph is really just sentences working as a team — and a team needs a captain (the topic sentence) and players who all stay on message.</p>
+    </div>
+
+    <div class="card">
+      <h3>What makes a paragraph hold together</h3>
+      <ul>
+        <li><b>One paragraph, one main idea.</b> If a sentence doesn't support the paragraph's main idea, it belongs in a different paragraph — or nowhere.</li>
+        <li><b>Topic sentence first (usually).</b> It states the paragraph's main idea, so the reader knows what to expect before the details arrive.</li>
+        <li><b>Supporting sentences give evidence, examples, or explanation</b> for the topic sentence — in a logical order (often: general → specific, or cause → effect, or chronological).</li>
+        <li><b>A concluding or transition sentence</b> often wraps up the idea or bridges to the next paragraph.</li>
+      </ul>
+      <div class="rule-box">This is exactly why Module 9 (Linking Words) matters so much here — the words that connect sentences <i>within</i> a paragraph are the same tools that make the whole paragraph feel like one connected thought instead of a list of facts.</div>
+    </div>
+
+    <div class="score-strip" id="score-paragraph">Score: 0 / 0</div>
+    <div id="practice-paragraph"></div>
+  </section>
+
+  <!-- ============ FULL PRACTICE TEST ============ -->
+  <section class="panel" id="panel-full-test">
+    <div class="module-head">
+      <div class="module-kicker">Final check</div>
+      <h2>🎯 Full Practice Test</h2>
+      <p class="lead">A shuffled set of 25 random questions pulled from all 12 modules — a real test of whether the rules have stuck, and a good way to find out what to revise. Click below for a fresh set any time.</p>
+    </div>
+    <div class="score-strip" id="score-full-test">Score: 0 / 0</div>
+    <button class="shuffle-btn" id="shuffleBtn">🔀 Generate a new test</button>
+    <div id="practice-full-test"></div>
+  </section>
+
+</main>
+</div>
+
+<footer>Everything on this page works offline — no internet connection needed, ever.</footer>
+
+
+<script>
+(function(){
+  "use strict";
+
+  var MODULES = [
+    { id:"overview", label:"Start Here", hasExercises:false },
+    { id:"sentence-basics", label:"1 · Sentence Basics" },
+    { id:"sentence-types", label:"2 · Sentence Types" },
+    { id:"sva", label:"3 · Subject-Verb Agreement" },
+    { id:"fragments", label:"4 · Fragments & Run-ons" },
+    { id:"punctuation", label:"5 · Punctuation" },
+    { id:"tenses", label:"6 · Tenses in Writing" },
+    { id:"voice", label:"7 · Active vs Passive" },
+    { id:"reported", label:"8 · Reported Speech" },
+    { id:"linking", label:"9 · Linking Words" },
+    { id:"parallelism", label:"10 · Parallelism" },
+    { id:"wordchoice", label:"11 · Word Choice" },
+    { id:"paragraph", label:"12 · Paragraph Coherence" },
+    { id:"full-test", label:"🎯 Full Practice Test", hasExercises:false }
+  ];
+
+  var EXERCISES = {};
+
+  EXERCISES["sentence-basics"] = [
+    { q:"Find the SUBJECT: \"The old bridge collapsed yesterday.\"", options:["old","bridge","collapsed","yesterday"], correct:1, explain:"The subject is who/what the sentence is about — 'the bridge' collapsed." },
+    { q:"Find the VERB: \"My sister studies medicine.\"", options:["sister","studies","medicine","My"], correct:1, explain:"'Studies' is the action word — the verb." },
+    { q:"Find the OBJECT: \"The chef prepared a delicious meal.\"", options:["chef","prepared","delicious","meal"], correct:3, explain:"'A delicious meal' is what receives the action — 'meal' is the core object." },
+    { q:"Which of these is a COMPLETE sentence?", options:["Running down the street.","Because it was raining.","She smiled.","The tall building near the river."], correct:2, explain:"'She smiled' has a subject (She) and a verb (smiled) and expresses a complete thought." },
+    { q:"Which sentence pattern is this? \"He is a teacher.\"", options:["Subject + Verb","Subject + Verb + Object","Subject + Verb + Complement","Subject only"], correct:2, explain:"'A teacher' describes/renames the subject — that's a complement, not an object." },
+    { q:"Which sentence pattern is this? \"She gave him a gift.\"", options:["S+V","S+V+O","S+V+Indirect Object+Direct Object","S+V+C"], correct:2, explain:"'him' (indirect object) receives 'a gift' (direct object) via the verb 'gave'." },
+    { q:"Find the SUBJECT: \"Loud music filled the entire hall.\"", options:["Loud","music","filled","hall"], correct:1, explain:"'Music' is what the sentence is about — 'loud' just describes it." },
+    { q:"What is missing from this sentence: \"the very old man\"?", options:["A subject","A verb","An object","Nothing — it's complete"], correct:1, explain:"There's no action or state of being — no verb — so it's just a phrase, not a sentence." },
+    { q:"Find the VERB: \"The children were playing in the park.\"", options:["children","were playing","park","in"], correct:1, explain:"'Were playing' is the complete verb phrase." },
+    { q:"Which sentence has a COMPLEMENT (not an object)?", options:["He kicked the ball.","She is happy.","They built a house.","We read the news."], correct:1, explain:"'Happy' describes the subject 'She' — that's a complement." },
+    { q:"Find the SUBJECT: \"Without a doubt, honesty matters.\"", options:["Without","doubt","honesty","matters"], correct:2, explain:"'Honesty' is what the sentence is about; 'without a doubt' is just an introductory phrase." },
+    { q:"Which word group is NOT a complete sentence?", options:["The dog barked.","When the dog barked.","It rained.","We left early."], correct:1, explain:"'When the dog barked' starts with 'when' and can't stand alone — it needs a main clause attached." },
+    { q:"Find the OBJECT: \"The teacher explained the lesson clearly.\"", options:["teacher","explained","lesson","clearly"], correct:2, explain:"'The lesson' is what receives the action of explaining." },
+    { q:"Which sentence pattern is this? \"The soup tastes delicious.\"", options:["S+V","S+V+O","S+V+C","S+V+Indirect+Direct Object"], correct:2, explain:"'Delicious' describes the subject 'soup' through the linking verb 'tastes' — a complement." },
+    { q:"Find the VERB: \"By evening, the storm had passed.\"", options:["evening","storm","had passed","By"], correct:2, explain:"'Had passed' is the complete verb phrase (past perfect)." }
+  ];
+
+  EXERCISES["sentence-types"] = [
+    { q:"\"The sun set, and the sky turned orange.\" — What type of sentence is this?", options:["Simple","Compound","Complex","Compound-Complex"], correct:1, explain:"Two independent clauses joined by 'and' = compound." },
+    { q:"\"Although it was raining, they went for a walk.\" — What type?", options:["Simple","Compound","Complex","Compound-Complex"], correct:2, explain:"One dependent clause ('Although it was raining') + one independent clause = complex." },
+    { q:"\"Birds sing.\" — What type?", options:["Simple","Compound","Complex","Compound-Complex"], correct:0, explain:"Just one independent clause, nothing else = simple." },
+    { q:"\"Because he was late, he missed the bus, and he had to walk.\" — What type?", options:["Simple","Compound","Complex","Compound-Complex"], correct:3, explain:"One dependent clause + two independent clauses joined by 'and' = compound-complex." },
+    { q:"Which word typically STARTS a dependent clause?", options:["and","but","although","so"], correct:2, explain:"'Although' signals a clause that can't stand alone — a dependent clause." },
+    { q:"\"She studied hard, so she passed the exam.\" — What type?", options:["Simple","Compound","Complex","Compound-Complex"], correct:1, explain:"Two independent clauses joined by 'so' = compound." },
+    { q:"Which of these is an INDEPENDENT clause?", options:["When she arrived","Because it was cold","She arrived early","Although he tried"], correct:2, explain:"'She arrived early' is a complete thought that can stand alone." },
+    { q:"\"The manager, who joined last year, approved the plan.\" — What type?", options:["Simple","Compound","Complex","Compound-Complex"], correct:2, explain:"'who joined last year' is a dependent clause inside the sentence — complex." },
+    { q:"Which conjunction correctly joins two independent clauses in a COMPOUND sentence?", options:["although","because","but","since"], correct:2, explain:"'But' is a coordinating conjunction, used for compound sentences; the others introduce dependent clauses." },
+    { q:"\"He left early since he felt unwell.\" — What type?", options:["Simple","Compound","Complex","Compound-Complex"], correct:2, explain:"'since he felt unwell' is a dependent clause explaining why = complex." },
+    { q:"\"I called her, but she didn't answer, so I left a message.\" — What type?", options:["Simple","Compound","Complex","Compound-Complex"], correct:1, explain:"Three independent clauses joined by 'but' and 'so', no dependent clause = compound." },
+    { q:"A sentence with only one subject and one verb, and nothing else joined to it, is called:", options:["Compound","Complex","Simple","Compound-Complex"], correct:2, explain:"One independent clause alone = simple sentence." },
+    { q:"\"Even though sales dropped, profits rose because costs fell sharply.\" — What type?", options:["Simple","Compound","Complex","Compound-Complex"], correct:2, explain:"One independent clause ('profits rose') with two dependent clauses attached = still complex (not compound, since there's only one independent clause)." },
+    { q:"Which is the best way to describe a compound sentence?", options:["One clause, no verb","Two independent clauses joined together","A clause starting with 'because'","A sentence with no subject"], correct:1, explain:"Compound = two (or more) independent clauses joined by a conjunction or semicolon." },
+    { q:"\"After the rain stopped, we went outside, and the children played.\" — What type?", options:["Simple","Compound","Complex","Compound-Complex"], correct:3, explain:"One dependent clause ('After the rain stopped') + two independent clauses joined by 'and' = compound-complex." }
+  ];
+
+  EXERCISES["sva"] = [
+    { q:"The list of items ___ on the table.", options:["is","are","were","have been"], correct:0, explain:"The real subject is 'list' (singular) — 'of items' is just extra description." },
+    { q:"Each of the students ___ submitted the form.", options:["have","has","having","are"], correct:1, explain:"'Each' is always singular, even when followed by a plural noun." },
+    { q:"Neither the manager nor the employees ___ informed.", options:["was","is","were","has been"], correct:2, explain:"With 'nor', the verb agrees with the nearer subject — 'employees' (plural)." },
+    { q:"The committee ___ decided to postpone the event.", options:["have","has","were","are"], correct:1, explain:"Collective nouns like 'committee' are usually treated as singular in formal writing." },
+    { q:"Everybody ___ welcome to attend.", options:["are","is","were","have been"], correct:1, explain:"'Everybody' is an indefinite pronoun and always takes a singular verb." },
+    { q:"Ravi and Priya ___ coming to the party.", options:["is","are","was","has been"], correct:1, explain:"Two subjects joined by 'and' take a plural verb." },
+    { q:"The number of applicants ___ increased this year.", options:["have","has","were","are"], correct:1, explain:"'The number of' is treated as singular ('a number of' is treated as plural)." },
+    { q:"A number of students ___ failed the test.", options:["has","have","is","was"], correct:1, explain:"'A number of' (meaning 'several') takes a plural verb." },
+    { q:"My family ___ planning a trip next month.", options:["is","are","have","were"], correct:0, explain:"'Family' as a single unit is singular in standard usage." },
+    { q:"None of the answers ___ correct.", options:["is","was","are","has been"], correct:2, explain:"'None' can be singular or plural depending on context — here, with 'answers' (plural), it takes a plural verb." },
+    { q:"The news ___ surprising.", options:["was","were","have been","are"], correct:0, explain:"'News' looks plural but is grammatically singular." },
+    { q:"Physics ___ my favourite subject.", options:["are","is","were","have been"], correct:1, explain:"Subjects ending in -ics (physics, economics, mathematics) are usually singular." },
+    { q:"Either the teacher or the students ___ mistaken.", options:["is","was","are","has been"], correct:2, explain:"With 'either...or', the verb agrees with the nearer subject — 'students' (plural)." },
+    { q:"The team ___ playing well this season.", options:["is","are","were","have been"], correct:0, explain:"'Team' as a single unit takes a singular verb." },
+    { q:"Ten kilometres ___ a long distance to walk.", options:["is","are","were","have been"], correct:0, explain:"When a distance/amount is treated as one unit, it takes a singular verb." },
+    { q:"The police ___ investigating the case.", options:["is","are","was","has been"], correct:1, explain:"'Police' is always treated as a plural noun in English." },
+    { q:"One of the reasons ___ obvious.", options:["are","were","is","have been"], correct:2, explain:"'One' is the real subject (singular) — 'of the reasons' just describes it." },
+    { q:"The scissors ___ on the table.", options:["is","are","was","has been"], correct:1, explain:"Tools with two parts (scissors, trousers, glasses) are treated as plural." },
+    { q:"Economics ___ a challenging subject for many students.", options:["are","is","were","have been"], correct:1, explain:"'Economics' as a field of study is singular." },
+    { q:"The jury ___ reached a unanimous verdict.", options:["have","has","were","are"], correct:1, explain:"'Jury' acting as one unit is treated as singular." }
+  ];
+
+  EXERCISES["fragments"] = [
+    { q:"Which of these is a FRAGMENT?", options:["The rain stopped.","Because the rain stopped.","The rain stopped early.","It rained."], correct:1, explain:"'Because the rain stopped' is a dependent clause left standing alone — it needs a main clause." },
+    { q:"How would you best fix: \"Running to catch the bus.\"?", options:["Running, to catch the bus.","She was running to catch the bus.","Running; to catch the bus.","Running to catch, the bus."], correct:1, explain:"Adding a subject and proper verb ('She was running') makes it a complete sentence." },
+    { q:"Which sentence is a RUN-ON?", options:["It was late, so we left.","It was late we left.","It was late; we left.","Because it was late, we left."], correct:1, explain:"Two complete sentences jammed together with no punctuation at all is a classic run-on." },
+    { q:"Which sentence is a COMMA SPLICE?", options:["She was tired, so she rested.","She was tired; she rested.","She was tired, she rested.","She was tired because she rested."], correct:2, explain:"Two independent clauses joined by only a comma, with no conjunction, is a comma splice." },
+    { q:"Best fix for: \"The report was late, the manager was upset.\"", options:["The report was late the manager was upset.","The report was late, so the manager was upset.","The report, was late the manager was upset.","The report was late; but the manager was upset."], correct:1, explain:"Adding 'so' after the comma correctly joins the two independent clauses." },
+    { q:"Which is a FRAGMENT?", options:["The tall building downtown.","The tall building collapsed.","A building collapsed downtown.","It collapsed."], correct:0, explain:"'The tall building downtown' has no verb — it's just a noun phrase." },
+    { q:"Which is a correctly punctuated fix for a run-on?", options:["It rained we stayed inside.","It rained, we stayed inside.","It rained; we stayed inside.","It rained: we stayed inside."], correct:2, explain:"A semicolon correctly joins two related independent clauses without a conjunction." },
+    { q:"Which of these is a COMPLETE sentence, not a fragment?", options:["Although she tried her best.","When the bell rang.","She tried her best.","Because she was tired."], correct:2, explain:"'She tried her best' has no dependent-clause starter and stands alone." },
+    { q:"Best fix for: \"Studying every night. She passed the exam.\"", options:["Studying every night she passed the exam.","She studied every night, and she passed the exam.","Studying, every night, she passed, the exam.","She studying every night passed the exam."], correct:1, explain:"Giving the fragment a proper subject and joining it correctly fixes both problems." },
+    { q:"Which sentence correctly uses a dependent clause to fix a run-on?", options:["It was cold we wore jackets.","Because it was cold, we wore jackets.","It was cold, we wore jackets.","It was cold: we wore jackets."], correct:1, explain:"Turning one clause into a dependent one ('Because...') is a valid fix for a run-on/comma splice." },
+    { q:"Which of these is a FRAGMENT?", options:["To finish the project on time.","She finished the project on time.","The project was finished on time.","They finish projects on time."], correct:0, explain:"'To finish the project on time' has no subject doing a real action — it's an incomplete thought on its own." },
+    { q:"Which sentence has a comma splice?", options:["He knocked, no one answered.","He knocked, but no one answered.","He knocked; no one answered.","He knocked. No one answered."], correct:0, explain:"Only a comma joins two full sentences — no conjunction — that's a comma splice." },
+    { q:"What are the two valid fixes for a comma splice, besides adding a conjunction?", options:["Add a comma, or delete a comma","Use a semicolon, or split into two sentences","Use a colon, or add 'because'","Add 'and' twice"], correct:1, explain:"A semicolon or splitting into two separate sentences are both correct fixes." },
+    { q:"Which is a FRAGMENT missing a verb?", options:["The old library on Main Street.","The library closed early.","The library is old.","Libraries close early."], correct:0, explain:"'The old library on Main Street' is a noun phrase with no verb at all." },
+    { q:"Best fix for: \"The plan failed. Because no one followed it.\"", options:["The plan failed because no one followed it.","The plan, failed because, no one followed it.","The plan failed. No one followed, it.","The plan failed; because no one followed it."], correct:0, explain:"Joining the fragment to the main sentence (removing the period before 'because') fixes it correctly." }
+  ];
+
+  EXERCISES["punctuation"] = [
+    { q:"Choose the correctly punctuated sentence.", options:["Its a good report.","It's a good report.","Its' a good report.","It is' a good report."], correct:1, explain:"'It's' is the contraction of 'it is' — correct here." },
+    { q:"Choose the correctly punctuated sentence.", options:["The managers desk is clean.","The manager's desk is clean.","The managers' desk is clean. (one manager)","The manager;s desk is clean."], correct:1, explain:"One manager owns the desk, so it's a singular possessive: manager's." },
+    { q:"Choose the correct sentence for MULTIPLE managers owning ONE shared desk.", options:["The manager's desk","The managers's desk","The managers' desk","The manager,s desk"], correct:2, explain:"For a plural noun already ending in -s, add just an apostrophe after the s: managers'." },
+    { q:"Which sentence correctly uses a semicolon?", options:["The report was late; the client was unhappy.","The report was late; because the client was unhappy.","The report; was late, the client was unhappy.","The report was late, the client; was unhappy."], correct:0, explain:"A semicolon correctly joins two related independent clauses." },
+    { q:"Which sentence correctly uses a colon?", options:["She had one goal to finish on time.","She had one goal: to finish on time.","She had: one goal to finish on time.","She had one goal, to finish: on time."], correct:1, explain:"A colon after a complete sentence introduces an explanation." },
+    { q:"Choose the correctly punctuated list.", options:["I need pen paper and ink.","I need pen, paper and ink.","I need pen, paper, and ink.","I need, pen, paper, and, ink."], correct:2, explain:"Items in a list are separated by commas (the last comma before 'and' is called the Oxford comma — good practice in formal writing)." },
+    { q:"Which uses an apostrophe correctly?", options:["The 1990's were a big decade.","The 1990s were a big decade.","The 1990,s were a big decade.","The 1990's's were a big decade."], correct:1, explain:"Decades don't need an apostrophe to be made plural: 1990s." },
+    { q:"Choose the sentence with correct comma use after an introductory phrase.", options:["After the meeting we left.","After the meeting, we left.","After, the meeting we left.","After the meeting we, left."], correct:1, explain:"A comma follows an introductory phrase before the main clause." },
+    { q:"Which sentence is punctuated correctly?", options:["\"I will come,\" she said.","\"I will come\", she said.","\"I will come.\" she said.","\"I will come\" she said,"], correct:0, explain:"The comma goes inside the closing quotation mark in American-style punctuation." },
+    { q:"Choose the correct use of 'its' vs 'it's'.", options:["The dog wagged it's tail.","The dog wagged its tail.","The dog wagged its' tail.","The dog wagged it,s tail."], correct:1, explain:"'Its' (no apostrophe) shows possession here — the tail belongs to the dog." },
+    { q:"Which sentence correctly separates two independent clauses without a conjunction?", options:["She left, he stayed.","She left; he stayed.","She left: he stayed.","She left he stayed."], correct:1, explain:"A semicolon is the correct mark to join two related independent clauses with no conjunction." },
+    { q:"Choose the sentence with the apostrophe in the right place.", options:["The childrens' toys were everywhere.","The childrens toys were everywhere.","The children's toys were everywhere.","The childrens's toys were everywhere."], correct:2, explain:"'Children' is already plural (doesn't end in -s), so add 's: children's." },
+    { q:"Which is correctly punctuated?", options:["Well, I suppose so.","Well I suppose, so.","Well I suppose so,","Well, I, suppose so."], correct:0, explain:"A comma follows a mild interjection like 'Well' at the start of a sentence." },
+    { q:"Choose the sentence that correctly uses quotation marks.", options:["She said that she was 'tired.'","She said, \"I am tired.\"","She said \"I am tired\".","She said, I am tired."], correct:1, explain:"Quotation marks enclose someone's exact spoken words, introduced by a comma." },
+    { q:"Which sentence has correct comma placement in a compound sentence?", options:["I called her but she was busy.","I called her, but she was busy.","I called, her but she was busy.","I called her but, she was busy."], correct:1, explain:"A comma goes before the coordinating conjunction ('but') joining two independent clauses." },
+    { q:"Choose the correct plural, not possessive, form.", options:["I have two dog's.","I have two dogs'.","I have two dogs.","I have two dog,s."], correct:2, explain:"Simple plural needs no apostrophe at all: dogs." },
+    { q:"Which sentence correctly punctuates a non-essential clause?", options:["My brother who lives in Delhi is visiting.","My brother, who lives in Delhi, is visiting.","My brother who lives, in Delhi is visiting.","My brother, who lives in Delhi is visiting."], correct:1, explain:"Extra (non-essential) information is set off with a comma on both sides." },
+    { q:"Choose the sentence with the correct colon usage.", options:["My favourite colours are: blue and green.","My favourite colours are blue and green.","My favourite colours: are blue and green.","My favourite colours are blue, and: green."], correct:1, explain:"A colon shouldn't directly follow a verb like 'are' — no colon needed here at all." },
+    { q:"Which uses hyphenation correctly?", options:["a well known author","a well-known author","a well, known author","a well;known author"], correct:1, explain:"Compound adjectives before a noun are usually hyphenated: well-known." },
+    { q:"Choose the correctly punctuated sentence.", options:["Although tired, she kept working.","Although tired she kept working.","Although, tired she kept working.","Although tired she, kept working."], correct:0, explain:"A comma follows an introductory dependent clause/phrase before the main clause." }
+  ];
+
+  EXERCISES["tenses"] = [
+    { q:"Choose the best tense: \"Water ___ at 100 degrees Celsius.\" (a permanent fact)", options:["boiled","boils","was boiling","had boiled"], correct:1, explain:"Permanent facts use Present Simple." },
+    { q:"Choose the best tense: \"The company ___ its first office in 1998.\" (a finished historical event)", options:["opens","is opening","opened","has opened"], correct:2, explain:"A specific, finished past event uses Past Simple." },
+    { q:"Fix the inconsistent tense: \"She walked into the room and sees her friend.\"", options:["walks... sees","walked... saw","walked... has seen","walks... saw"], correct:1, explain:"Both actions happened in the same past scene, so both verbs should stay in Past Simple." },
+    { q:"Choose the best tense for a general definition: \"Inflation ___ purchasing power.\"", options:["reduced","is reducing","reduces","had reduced"], correct:2, explain:"A general, always-true statement uses Present Simple." },
+    { q:"Choose the best tense: \"By the time the report was submitted, the deadline ___ already passed.\"", options:["has","had","was","have"], correct:1, explain:"The deadline passing happened before another past event (submission) — Past Perfect." },
+    { q:"Fix the tense: \"Yesterday, she goes to the market and buys vegetables.\"", options:["went... bought","went... buys","goes... bought","has gone... bought"], correct:0, explain:"'Yesterday' signals Past Simple throughout — keep both verbs consistent." },
+    { q:"Choose the best tense: \"The policy ___ in 2016 and is still in effect today.\"", options:["introduces","was introduced","has been introduced","is introducing"], correct:1, explain:"A specific past date (2016) calls for Past Simple, even though its effect continues." },
+    { q:"Which sentence correctly narrates a finished past event?", options:["The meeting starts at 10 AM yesterday.","The meeting started at 10 AM yesterday.","The meeting has started at 10 AM yesterday.","The meeting was starting at 10 AM yesterday."], correct:1, explain:"A specific finished time in the past ('yesterday') needs Past Simple." },
+    { q:"Choose the best tense: \"Currently, the government ___ new regulations.\"", options:["reviews","is reviewing","reviewed","has reviewed"], correct:1, explain:"'Currently' signals an ongoing action happening now — Present Continuous." },
+    { q:"Which sentence stays in one consistent time-zone?", options:["She finished her work and goes home.","She finishes her work and went home.","She finished her work and went home.","She finish her work and went home."], correct:2, explain:"Both actions are in the same past sequence, so both verbs should be Past Simple." },
+    { q:"Choose the best tense: \"The Earth ___ around the Sun.\" (scientific fact)", options:["revolved","is revolving","revolves","has revolved"], correct:2, explain:"Scientific facts are always Present Simple." },
+    { q:"Choose the best tense: \"He explained that he ___ finished the assignment already.\" (reported speech, past context)", options:["has","had","have","was"], correct:1, explain:"In reported speech set in the past, an earlier completed action uses Past Perfect." },
+    { q:"Which describes a habitual action correctly?", options:["She is exercising every morning.","She exercised every morning.","She exercises every morning.","She has exercised every morning."], correct:2, explain:"Habits and routines are described using Present Simple." },
+    { q:"Choose the best tense: \"Since the reforms began, unemployment ___ steadily.\"", options:["fell","has fallen","falls","was falling"], correct:1, explain:"'Since' + a past starting point, with an effect continuing to now = Present Perfect." },
+    { q:"Which sentence correctly narrates a sequence of past events?", options:["She wakes up, ate breakfast, and left.","She woke up, eats breakfast, and left.","She woke up, ate breakfast, and left.","She wake up, ate breakfast, and leave."], correct:2, explain:"All three actions happened in the past in sequence — keep them all in Past Simple." },
+    { q:"Choose the best tense: \"Two years ago, the firm ___ a new strategy.\" (a specific past point)", options:["adopts","has adopted","adopted","was adopting"], correct:2, explain:"A specific time marker ('two years ago') calls for Past Simple." },
+    { q:"Choose the best tense for a definition in an essay: \"Democracy ___ a system of government by the people.\"", options:["was","is","has been","will be"], correct:1, explain:"Definitions and general truths are stated in Present Simple." },
+    { q:"Which correctly uses Past Perfect to show an earlier action?", options:["When I arrived, she left.","When I arrived, she had left.","When I arrive, she had left.","When I arrived, she has left."], correct:1, explain:"Her leaving happened before my arrival — the earlier action needs Past Perfect." },
+    { q:"Choose the best tense: \"Right now, prices ___ rapidly.\"", options:["rise","are rising","rose","have risen"], correct:1, explain:"'Right now' signals an action in progress at this moment — Present Continuous." },
+    { q:"Which sentence is tense-consistent throughout?", options:["The team worked hard and wins the match.","The team works hard and won the match.","The team worked hard and won the match.","The team working hard, won the match."], correct:2, explain:"Both verbs describing the same past event should both be Past Simple." }
+  ];
+
+  EXERCISES["voice"] = [
+    { q:"Convert to passive: \"The board approved the budget.\"", options:["The budget approved the board.","The budget was approved by the board.","The budget is approving the board.","The board was approved by the budget."], correct:1, explain:"Object becomes subject + 'was' + past participle + 'by' + original subject." },
+    { q:"Convert to active: \"The cake was baked by my mother.\"", options:["My mother baked the cake.","The cake baked my mother.","My mother was baking the cake.","The cake bakes my mother."], correct:0, explain:"Move the doer ('my mother') to the front as the subject, using the plain past-tense verb." },
+    { q:"Which sentence is in ACTIVE voice?", options:["The letter was written by Raj.","Raj wrote the letter.","The letter is being written.","The letter has been written."], correct:1, explain:"'Raj' (the doer) is the subject performing the action directly." },
+    { q:"Which sentence is in PASSIVE voice?", options:["The chef cooked dinner.","Dinner was cooked by the chef.","The chef is cooking dinner.","The chef cooks dinner."], correct:1, explain:"'Dinner' (the receiver of the action) is the subject — passive." },
+    { q:"Convert to passive: \"They will announce the results tomorrow.\"", options:["The results will be announced tomorrow.","The results announced them tomorrow.","Tomorrow will announce the results.","The results are announcing tomorrow."], correct:0, explain:"Future passive: will be + past participle." },
+    { q:"Which is the stronger, more direct choice for formal writing?", options:["Mistakes were made by the team.","The team made mistakes.","Mistakes have been made.","It was decided that mistakes occurred."], correct:1, explain:"Active voice is shorter, clearer, and takes direct responsibility." },
+    { q:"When is passive voice the BETTER choice?", options:["When the doer is unknown or unimportant","In every formal sentence","Never — always use active","Only in questions"], correct:0, explain:"Passive is genuinely useful when who did it doesn't matter, e.g. 'The window was broken.'" },
+    { q:"Convert to active: \"The proposal was rejected by the committee.\"", options:["The committee rejected the proposal.","The proposal rejected the committee.","The committee was rejecting the proposal.","The proposal rejects the committee."], correct:0, explain:"Move 'the committee' to the front as the active subject." },
+    { q:"Which sentence correctly uses passive voice for an unknown doer?", options:["Someone stole my bicycle yesterday.","My bicycle was stolen yesterday.","My bicycle steals yesterday.","Yesterday stole my bicycle."], correct:1, explain:"When we don't know who did it, passive lets us drop the unknown doer naturally." },
+    { q:"Convert to passive: \"The company launched a new product.\"", options:["A new product was launched by the company.","A new product launched the company.","The company was launched by a new product.","A new product is launching the company."], correct:0, explain:"Object 'a new product' becomes the subject: was launched by the company." },
+    { q:"Which sentence sounds vague because of overused passive voice?", options:["We fixed the error immediately.","The error was fixed immediately.","Errors were made, and corrective steps were taken.","I found and fixed the error."], correct:2, explain:"This hides who made the errors and who took action — classic vague passive overuse." },
+    { q:"Convert to active: \"The award was given to her by the principal.\"", options:["The principal gave her the award.","She gave the principal the award.","The award gave the principal to her.","Her award was given the principal."], correct:0, explain:"Move 'the principal' (the doer) to the front, keep 'her' as the receiver." },
+    { q:"Which is the correct passive form of \"They are building a new bridge\"?", options:["A new bridge is being built.","A new bridge was being built.","A new bridge builds them.","A new bridge is build."], correct:0, explain:"Present continuous passive: is/are being + past participle." },
+    { q:"Which sentence uses passive voice correctly to emphasize the RESULT?", options:["The storm damaged the building.","The building was damaged in the storm.","The building damages storms.","Storms was damaging the building."], correct:1, explain:"When the building (result) matters more than the storm (cause), passive is the natural, correct choice." },
+    { q:"Convert to passive: \"Doctors recommend regular exercise.\"", options:["Regular exercise is recommended by doctors.","Regular exercise recommends doctors.","Doctors are recommended regular exercise.","Regular exercise recommended doctors."], correct:0, explain:"Present simple passive: is/are + past participle." }
+  ];
+
+  EXERCISES["reported"] = [
+    { q:"Convert to reported speech: \"I am tired,\" she said.", options:["She said that she is tired.","She said that she was tired.","She said that she has been tired.","She says that she was tired."], correct:1, explain:"Present Simple in direct speech becomes Past Simple in reported speech." },
+    { q:"Convert to reported speech: \"I will call you,\" he said.", options:["He said he will call me.","He said he would call me.","He said he calls me.","He said he is calling me."], correct:1, explain:"'Will' becomes 'would' in reported speech." },
+    { q:"Convert to reported speech: \"I have finished my homework,\" they said.", options:["They said they have finished their homework.","They said they finished their homework.","They said they had finished their homework.","They said they finish their homework."], correct:2, explain:"Present Perfect becomes Past Perfect in reported speech." },
+    { q:"Convert to reported speech: \"I went to the market,\" she said.", options:["She said she went to the market.","She said she had gone to the market.","She said she goes to the market.","She said she has gone to the market."], correct:1, explain:"Past Simple becomes Past Perfect in reported speech." },
+    { q:"Convert to reported speech: \"I can swim,\" he said.", options:["He said he can swim.","He said he could swim.","He said he cans swim.","He said he swims."], correct:1, explain:"'Can' becomes 'could' in reported speech." },
+    { q:"Convert the time word: \"I will see you tomorrow,\" she said.", options:["She said she would see me tomorrow.","She said she would see me the next day.","She said she will see me the day before.","She said she would see me today."], correct:1, explain:"'Tomorrow' shifts to 'the next day' when reporting from a later point in time." },
+    { q:"Convert to reported speech: \"I am working on the report,\" he said.", options:["He said he was working on the report.","He said he is working on the report.","He said he has worked on the report.","He said he works on the report."], correct:0, explain:"Present Continuous becomes Past Continuous in reported speech." },
+    { q:"Convert the place word: \"I will meet you here,\" she said.", options:["She said she would meet me here.","She said she would meet me there.","She said she meets me here.","She said she will meet me there."], correct:1, explain:"'Here' shifts to 'there' in reported speech." },
+    { q:"Convert to reported speech: \"Do you like tea?\" she asked.", options:["She asked if I like tea.","She asked whether I liked tea.","She asked do I like tea.","She asked that I liked tea."], correct:1, explain:"Yes/No questions are reported using 'if' or 'whether', with the tense shifted back." },
+    { q:"Convert to reported speech: \"Where do you live?\" he asked.", options:["He asked where I live.","He asked where did I live.","He asked where I lived.","He asked where I have lived."], correct:2, explain:"Wh-questions keep the question word, drop the question order, and shift the tense back." },
+    { q:"Convert to reported speech: \"Close the door,\" she said.", options:["She said to close the door.","She said close the door.","She said that close the door.","She told closing the door."], correct:0, explain:"Commands in reported speech use 'told/asked (someone) + to + verb'." },
+    { q:"Convert to reported speech: \"I must leave now,\" he said.", options:["He said he must leave then.","He said he had to leave then.","He said he must leave now.","He said he must have left."], correct:1, explain:"'Must' (obligation) often shifts to 'had to', and 'now' shifts to 'then'." },
+    { q:"Which pronoun shift is correct? Direct: \"I like your work,\" she told him.", options:["She told him that she liked his work.","She told him that I liked your work.","She told him that she likes his work.","She told him she liked her work."], correct:0, explain:"'I' → 'she' and 'your' → 'his', matching who's speaking about whom." },
+    { q:"Convert to reported speech: \"We saw the movie yesterday,\" they said.", options:["They said they saw the movie yesterday.","They said they had seen the movie the day before.","They said they see the movie yesterday.","They said they have seen the movie yesterday."], correct:1, explain:"Past Simple → Past Perfect, and 'yesterday' → 'the day before'." },
+    { q:"Convert to reported speech: \"May I use your pen?\" she asked.", options:["She asked if she might use my pen.","She asked may she use my pen.","She asked if she can use my pen.","She asked that she may use my pen."], correct:0, explain:"'May' shifts to 'might' in reported speech, and it's phrased as an indirect yes/no question." }
+  ];
+
+  EXERCISES["linking"] = [
+    { q:"Choose the best linking word: \"The report was accurate, ___ it was submitted late.\"", options:["and","but","because","so"], correct:1, explain:"'But' correctly signals the contrast between accuracy and lateness." },
+    { q:"Choose the best linking word: \"Sales fell sharply; ___, the company cut costs.\"", options:["however","as a result","for example","although"], correct:1, explain:"The cost-cutting is a direct effect of falling sales — 'as a result' fits cause-and-effect." },
+    { q:"Choose the best linking word: \"He studied hard; ___, he failed the exam.\"", options:["therefore","however","for instance","moreover"], correct:1, explain:"There's a contrast (studied hard but still failed) — 'however' is correct." },
+    { q:"Which linking word introduces an EXAMPLE?", options:["therefore","for instance","however","furthermore"], correct:1, explain:"'For instance' signals that a specific example is coming." },
+    { q:"Choose the best linking word: \"The plan was risky. ___, the board approved it.\"", options:["Nevertheless","For example","Similarly","Because"], correct:0, explain:"'Nevertheless' shows approval happened despite the risk — a contrast." },
+    { q:"Which punctuation is correct with 'however' joining two clauses?", options:["Sales rose, however, profits fell.","Sales rose; however, profits fell.","Sales rose however profits fell.","Sales rose: however, profits fell."], correct:1, explain:"'However' needs a semicolon (or period) before it when joining two independent clauses, not just a comma." },
+    { q:"Choose the best linking word: \"She was tired; ___, she finished the project.\"", options:["moreover","nonetheless","for example","because"], correct:1, explain:"'Nonetheless' shows she finished despite being tired — a contrast/concession." },
+    { q:"Which linking word signals ADDING an idea?", options:["furthermore","however","therefore","although"], correct:0, explain:"'Furthermore' adds another supporting point to what was just said." },
+    { q:"Choose the best linking word: \"The budget was cut ___ revenue had declined.\"", options:["although","because","but","for example"], correct:1, explain:"'Because' correctly introduces the reason/cause for the budget cut." },
+    { q:"Which sentence correctly uses 'although'?", options:["Although it rained, and we still went out.","Although it rained, we still went out.","It rained, although we still went out heavily.","Although, it rained we still went out."], correct:1, explain:"'Although' introduces the dependent clause, followed by a comma and the main clause." },
+    { q:"Choose the best linking word: \"___ the delay, the client remained satisfied.\"", options:["Despite","Because of","As a result of","So that"], correct:0, explain:"'Despite' correctly signals a contrast — satisfaction happened even though there was a delay." },
+    { q:"Which linking word best CONCLUDES a paragraph?", options:["For example","In conclusion","Moreover","Whereas"], correct:1, explain:"'In conclusion' is the standard way to signal a wrap-up." },
+    { q:"Choose the best linking word: \"Costs rose; ___, profits still grew.\"", options:["consequently","nevertheless","for instance","since"], correct:1, explain:"There's a contrast (costs rose, but profits still grew) — 'nevertheless' fits." },
+    { q:"Which linking word shows CAUSE, not contrast?", options:["whereas","although","since","however"], correct:2, explain:"'Since' (meaning 'because') introduces a cause/reason." },
+    { q:"Choose the best linking word: \"The team lacked experience; ___, they won the tournament.\"", options:["therefore","surprisingly","in addition","for example"], correct:1, explain:"Winning despite lacking experience is unexpected — 'surprisingly' captures that contrast." },
+    { q:"Which linking word pair correctly shows contrast between two ideas in one sentence?", options:["Both...and","Not only...but also","Whereas...on the other hand","While...however"], correct:2, explain:"'Whereas' already signals contrast on its own — pairing it again with 'on the other hand' is the intended contrast use here (used once, correctly, per clause)." },
+    { q:"Choose the best linking word: \"The policy succeeded ___ it was implemented gradually.\"", options:["because","although","despite","whereas"], correct:0, explain:"Gradual implementation is the reason for success — 'because' fits." },
+    { q:"Which word correctly introduces a list of examples after a full sentence?", options:["This has many benefits, however, lower costs.","This has many benefits: lower costs, faster delivery, and happier customers.","This has many benefits so lower costs.","This has many benefits, since lower costs."], correct:1, explain:"A colon after a complete sentence correctly introduces the list of examples." },
+    { q:"Choose the best linking word: \"He apologized. ___, he offered a refund.\"", options:["In addition","Whereas","Although","Because"], correct:0, explain:"He did two positive things in sequence — 'in addition' adds the second one." },
+    { q:"Which linking word is used to SUMMARIZE at the end?", options:["For instance","Overall","Furthermore","Since"], correct:1, explain:"'Overall' is a standard way to introduce a final summary of what's been said." }
+  ];
+
+  EXERCISES["parallelism"] = [
+    { q:"Which sentence is PARALLEL (correct)?", options:["She likes reading, to write, and painting.","She likes reading, writing, and painting.","She likes to read, writing, and paint.","She likes read, write, and paint."], correct:1, explain:"All three items match the same -ing form: reading, writing, painting." },
+    { q:"Which sentence is PARALLEL (correct)?", options:["The job requires patience, being organized, and communication.","The job requires patience, organization, and communication.","The job requires being patient, organization, and to communicate.","The job requires patience, organize, and communicating."], correct:1, explain:"All three items are nouns: patience, organization, communication." },
+    { q:"Fix the parallelism error: \"He likes swimming, hiking, and to cook.\"", options:["He likes swimming, hiking, and cooking.","He likes to swim, hiking, and to cook.","He likes swimming, to hike, and cooking.","He likes swim, hike, and cook."], correct:0, explain:"Match all items to the -ing form: swimming, hiking, cooking." },
+    { q:"Which sentence is PARALLEL (correct)?", options:["Not only did she finish early, but also she helped others.","Not only she finished early, but also helping others.","Not only finishing early, but also she helped others.","Not only did she finish early but also to help others."], correct:0, explain:"Both halves after 'not only' / 'but also' use the same clause structure (subject + verb)." },
+    { q:"Fix the parallelism error: \"The manager was efficient, friendly, and worked hard.\"", options:["The manager was efficient, friendly, and hardworking.","The manager was efficient, friendly, and works hard.","The manager efficient, friendly, and worked hard.","The manager was efficient, friend, and hardworking."], correct:0, explain:"All three descriptions should be adjectives: efficient, friendly, hardworking." },
+    { q:"Which sentence is PARALLEL (correct)?", options:["She wanted to travel, to learn, and meeting new people.","She wanted to travel, learn, and meet new people.","She wanted traveling, to learn, and meet new people.","She wanted to travel, learning, and to meet new people."], correct:1, explain:"All three verbs share the same 'to' (implied after the first 'to'): to travel, (to) learn, (to) meet." },
+    { q:"Fix the parallelism error: \"The course covers grammar, how to write essays, and vocabulary.\"", options:["The course covers grammar, essay writing, and vocabulary.","The course covers grammar, to write essays, and vocabulary.","The course covers grammar, writing of essays, and vocabulary is covered.","The course covers grammar and how essays are written and vocabulary."], correct:0, explain:"Match all three items as nouns: grammar, essay writing, vocabulary." },
+    { q:"Which sentence is PARALLEL (correct)?", options:["Either you apologize, or leaving is your only option.","Either you apologize, or you leave.","Either apologizing, or you leave.","Either you apologize, or to leave."], correct:1, explain:"Both halves of 'either...or' match: subject + verb in both." },
+    { q:"Fix the parallelism error: \"Good writing is clear, concise, and it engages the reader.\"", options:["Good writing is clear, concise, and engaging.","Good writing is clear, concise, and it is engaging.","Good writing clear, concise, and engaging.","Good writing is clear, concisely, and engaging."], correct:0, explain:"All three should be adjectives describing 'writing': clear, concise, engaging." },
+    { q:"Which sentence is PARALLEL (correct)?", options:["The report should be accurate, brief, and it should be well-organized.","The report should be accurate, brief, and well-organized.","The report accurate, brief, and organized well.","The report should accurate, brief, and organized."], correct:1, explain:"Three adjectives in a matching list: accurate, brief, well-organized." },
+    { q:"Fix the parallelism error: \"She not only manages the team but also the budget is handled by her.\"", options:["She not only manages the team but also handles the budget.","She not only manages the team, and also handling budget.","Not only she manages team but budget too.","She manages not only the team but also budget handled."], correct:0, explain:"Both halves after 'not only...but also' should use the same active verb structure." },
+    { q:"Which sentence is PARALLEL (correct)?", options:["To win, you need skill, practice, and being determined.","To win, you need skill, practice, and determination.","To win, you need skilled, practice, and determined.","To win, you need skill, practicing, and determination."], correct:1, explain:"All three items are nouns: skill, practice, determination." },
+    { q:"Fix the parallelism error: \"The book was informative, well-written, and it kept me interested.\"", options:["The book was informative, well-written, and engaging.","The book informative, well-written, and it engaged me.","The book was informative, well written, and interesting me.","The book was informative, well-write, and engaging."], correct:0, explain:"Match all three as adjectives: informative, well-written, engaging." },
+    { q:"Which sentence is PARALLEL (correct)?", options:["I enjoy cooking, gardening, and to read.","I enjoy cooking, gardening, and reading.","I enjoy to cook, gardening, and reading.","I enjoy cook, garden, and read."], correct:1, explain:"All three activities match the -ing form: cooking, gardening, reading." },
+    { q:"Fix the parallelism error: \"The plan is to save money, reducing waste, and to improve quality.\"", options:["The plan is to save money, reduce waste, and improve quality.","The plan is saving money, reducing waste, and improving quality.","The plan to save money, reduce waste, improving quality.","The plan is save money, reduce waste, and improve quality."], correct:0, explain:"All three actions share the same 'to' form: to save, (to) reduce, (to) improve." }
+  ];
+
+  EXERCISES["wordchoice"] = [
+    { q:"Choose the correct word: \"___ going to the market.\"", options:["Their","There","They're","Theyre"], correct:2, explain:"'They're' = they are." },
+    { q:"Choose the correct word: \"The new policy will ___ everyone.\"", options:["affect","effect","affects","effected"], correct:0, explain:"'Affect' is the verb meaning 'to influence'." },
+    { q:"Choose the correct word: \"The medicine had a positive ___ .\"", options:["affect","effect","affecting","affects"], correct:1, explain:"'Effect' is the noun meaning 'a result'." },
+    { q:"Choose the correct word: \"Is this ___ book?\"", options:["your","you're","yours'","your's"], correct:0, explain:"'Your' shows possession — 'your book'." },
+    { q:"Choose the correct word: \"___ going to be late.\"", options:["Your","You're","Yore","Yours"], correct:1, explain:"'You're' = you are." },
+    { q:"Choose the correct word: \"The cat licked ___ paw.\"", options:["it's","its","its'","it,s"], correct:1, explain:"'Its' (no apostrophe) shows possession — the paw belongs to the cat." },
+    { q:"Choose the correct word: \"___ time to leave.\"", options:["Its","It's","Its'","Ites"], correct:1, explain:"'It's' = it is." },
+    { q:"Choose the correct word: \"We arrived earlier ___ expected.\"", options:["then","than","then,","that"], correct:1, explain:"'Than' is used for comparisons." },
+    { q:"Choose the correct word: \"First we ate, ___ we left.\"", options:["than","then","that","then,"], correct:1, explain:"'Then' shows sequence in time." },
+    { q:"Choose the correct word: \"There were ___ people at the event this year.\"", options:["less","fewer","lesser","few"], correct:1, explain:"'Fewer' is used for countable things (people)." },
+    { q:"Choose the correct word: \"I have ___ time than before.\"", options:["fewer","less","few","little's"], correct:1, explain:"'Less' is used for uncountable things (time)." },
+    { q:"Choose the correct word: \"Please ___ the book on the table.\"", options:["lay","lie","lied","laying"], correct:0, explain:"'Lay' takes an object (the book) — to put something down." },
+    { q:"Choose the correct word: \"I need to ___ down; I'm exhausted.\"", options:["lay","lie","layed","lain down myself"], correct:1, explain:"'Lie' has no object — it means to recline yourself." },
+    { q:"Choose the correct word: \"She gave advice to ___ who asked.\"", options:["whoever","whomever","who's","whos"], correct:0, explain:"'Whoever' is the subject of 'asked' — subject pronoun needed." },
+    { q:"Choose the correct word: \"To ___ it may concern.\"", options:["who","whom","whose","who's"], correct:1, explain:"'Whom' is the object of the preposition 'to' — object pronoun needed." },
+    { q:"Choose the correct word: \"He is ___ than his brother.\"", options:["taller","more taller","tallest","most tall"], correct:0, explain:"Comparative adjectives for two things use '-er', not 'more' + '-er' together." },
+    { q:"Choose the correct word: \"This is the ___ book I've ever read.\"", options:["better","best","goodest","more good"], correct:1, explain:"Superlative (comparing three or more) uses 'best', not 'better'." },
+    { q:"Choose the correct word: \"I am not ___ interested in the offer.\"", options:["much","many","a lot","few"], correct:0, explain:"'Much' is used with uncountable nouns like 'interest' (used here adverbially)." },
+    { q:"Choose the correct word: \"She has ___ experience in this field.\"", options:["many","much","a number of","few"], correct:1, explain:"'Experience' is uncountable, so 'much' is correct." },
+    { q:"Choose the correct preposition: \"The decision depends ___ the results.\"", options:["of","on","at","for"], correct:1, explain:"'Depend on' is the correct fixed preposition pairing." }
+  ];
+
+  EXERCISES["paragraph"] = [
+    { q:"Where does a topic sentence usually go in a standard paragraph?", options:["Last","In the middle","First","It's not needed"], correct:2, explain:"The topic sentence usually opens the paragraph, stating its main idea." },
+    { q:"Which sentence does NOT belong in this paragraph? \"Regular exercise improves health. It strengthens the heart. It also boosts mood. My favourite colour is blue.\"", options:["It strengthens the heart.","It also boosts mood.","My favourite colour is blue.","Regular exercise improves health."], correct:2, explain:"This sentence is unrelated to the paragraph's main idea (exercise and health)." },
+    { q:"Which sentence works best as a TOPIC SENTENCE for a paragraph about renewable energy's benefits?", options:["Solar panels are made of silicon.","Renewable energy offers several key advantages.","The sun rises in the east.","My uncle installed solar panels last year."], correct:1, explain:"This sentence states a clear main idea the rest of the paragraph can support." },
+    { q:"What should supporting sentences in a paragraph do?", options:["Introduce a completely new topic","Provide evidence or examples for the topic sentence","Repeat the topic sentence word for word","Contradict the topic sentence"], correct:1, explain:"Supporting sentences back up and develop the paragraph's main idea." },
+    { q:"Which transition best connects these two sentences? \"The company invested heavily in training. ___, employee performance improved significantly.\"", options:["However","As a result","For example","Meanwhile"], correct:1, explain:"Improved performance is the direct result of the investment — cause and effect." },
+    { q:"A paragraph that jumps between unrelated ideas lacks:", options:["Length","Coherence","Vocabulary","Punctuation"], correct:1, explain:"Coherence means the ideas connect logically — without it, a paragraph feels disjointed." },
+    { q:"Which order makes the most logical sense for a paragraph about making tea?", options:["Drink the tea. Boil water. Add tea leaves.","Boil water. Add tea leaves. Drink the tea.","Add tea leaves. Drink the tea. Boil water.","Drink the tea. Add tea leaves. Boil water."], correct:1, explain:"This follows the correct chronological order of the process." },
+    { q:"Which sentence best CONCLUDES a paragraph about the benefits of reading?", options:["For example, novels build vocabulary.","In short, reading offers lasting benefits for the mind.","Reading requires a quiet space.","Libraries are often free to join."], correct:1, explain:"This wraps up the paragraph's overall point — a fitting concluding sentence." },
+    { q:"What is the main purpose of a topic sentence?", options:["To end the paragraph","To state the paragraph's main idea","To list every detail in the paragraph","To ask a question"], correct:1, explain:"A topic sentence tells the reader what the whole paragraph is going to be about." },
+    { q:"Which sentence does NOT belong? \"The internet has transformed communication. People can now message instantly. Video calls connect distant families. Bananas are rich in potassium.\"", options:["People can now message instantly.","Video calls connect distant families.","Bananas are rich in potassium.","The internet has transformed communication."], correct:2, explain:"This sentence is completely unrelated to the paragraph's topic (the internet and communication)." },
+    { q:"Which linking word helps show a paragraph is building toward a conclusion?", options:["For instance","Overall","Meanwhile","Similarly"], correct:1, explain:"'Overall' signals a summarizing, concluding thought." },
+    { q:"A paragraph about the causes of a problem, followed by its effects, is organized by:", options:["Order of importance","Cause and effect","Alphabetical order","Random order"], correct:1, explain:"This is a classic cause-and-effect paragraph structure." },
+    { q:"Which sentence best fits as a topic sentence for a paragraph listing steps to reduce stress?", options:["Stress can be reduced through several simple habits.","Yoga originated in ancient India.","My friend does yoga every morning.","Deep breathing takes only a few minutes."], correct:0, explain:"This introduces the paragraph's main idea — several habits to reduce stress — that the rest can develop." },
+    { q:"Why is it important for all sentences in a paragraph to relate to one main idea?", options:["It makes the paragraph longer","It keeps the writing focused and easy to follow","It uses more vocabulary","It satisfies grammar rules only"], correct:1, explain:"Unity around one idea is exactly what makes a paragraph clear and easy to read." },
+    { q:"Which is the best way to transition into a paragraph that contrasts the previous one?", options:["Similarly, ...","On the other hand, ...","For example, ...","In addition, ..."], correct:1, explain:"'On the other hand' clearly signals an upcoming contrast with what came before." }
+  ];
+
+  // ---------- global progress tracking ----------
+  var totalCorrect = 0;
+  var totalAnswered = 0;
+  var totalQuestions = 0;
+  Object.keys(EXERCISES).forEach(function(k){ totalQuestions += EXERCISES[k].length; });
+
+  var answeredKeys = {}; // prevents double-counting when the same question is answered again via full-test
+
+  function updateGlobalProgress(){
+    var pct = totalAnswered ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
+    document.getElementById('progressPill').textContent = totalAnswered + ' / ' + totalQuestions + ' exercises done · ' + pct + '% correct';
+    var fillPct = totalQuestions ? Math.min(100, Math.round((totalAnswered / totalQuestions) * 100)) : 0;
+    document.getElementById('progressFill').style.width = fillPct + '%';
+    updateSideCounts();
+  }
+
+  function moduleScore(moduleId){
+    var items = EXERCISES[moduleId] || [];
+    var done = 0, correct = 0;
+    items.forEach(function(item, idx){
+      var key = moduleId + '-' + idx;
+      if (answeredKeys[key] !== undefined){ done++; if (answeredKeys[key]) correct++; }
+    });
+    return { done: done, correct: correct, total: items.length };
+  }
+
+  function updateSideCounts(){
+    Array.prototype.forEach.call(document.querySelectorAll('.side-btn'), function(btn){
+      var id = btn.dataset.panel;
+      if (!EXERCISES[id]) return;
+      var s = moduleScore(id);
+      var checkEl = btn.querySelector('.sb-check');
+      var countEl = btn.querySelector('.sb-count');
+      if (countEl) countEl.textContent = s.done + '/' + s.total;
+      if (checkEl) checkEl.textContent = (s.done === s.total && s.total > 0) ? '✅' : '○';
+    });
+  }
+
+  // Renders a list of {q, options, correct, explain} into a container with click-to-answer feedback.
+  // uidPrefix lets the same question (e.g. reused in the Full Test) be scored independently there.
+  function renderExercises(containerId, scoreId, items, moduleIdForScoring, uidPrefix){
+    var container = document.getElementById(containerId);
+    var scoreEl = document.getElementById(scoreId);
+    container.innerHTML = '';
+    var correctCount = 0;
+
+    function refreshScore(){
+      scoreEl.textContent = 'Score: ' + correctCount + ' / ' + items.length;
+    }
+    refreshScore();
+
+    items.forEach(function(item, idx){
+      var card = document.createElement('div');
+      card.className = 'practice-card';
+
+      var qNum = document.createElement('div');
+      qNum.className = 'q-number';
+      qNum.textContent = 'Question ' + (idx + 1) + (item._label ? '  ·  ' + item._label : '');
+      card.appendChild(qNum);
+
+      var qText = document.createElement('div');
+      qText.className = 'q-text';
+      qText.textContent = item.q;
+      card.appendChild(qText);
+
+      var optGrid = document.createElement('div');
+      optGrid.className = 'opt-grid';
+      var feedback = document.createElement('div');
+      feedback.className = 'q-feedback';
+
+      var locked = false;
+      item.options.forEach(function(optText, optIdx){
+        var btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        btn.textContent = optText;
+        btn.addEventListener('click', function(){
+          if (locked) return;
+          locked = true;
+          var isCorrect = optIdx === item.correct;
+          if (isCorrect){ correctCount++; btn.classList.add('correct'); }
+          else { btn.classList.add('wrong'); }
+          Array.prototype.forEach.call(optGrid.children, function(b, i){
+            b.classList.add('locked');
+            if (i === item.correct) b.classList.add('correct');
+            else if (b !== btn) b.classList.add('dim');
+          });
+          feedback.className = 'q-feedback show ' + (isCorrect ? 'correct' : 'wrong');
+          feedback.innerHTML = (isCorrect ? '✅ <b>Correct.</b> ' : '✗ <b>Not quite.</b> The correct answer is "<b>' + item.options[item.correct] + '</b>". ') + item.explain;
+          refreshScore();
+
+          // global + per-module progress (only counted once per underlying question)
+          var scoringKey = moduleIdForScoring + '-' + (item._origIdx !== undefined ? item._origIdx : idx);
+          if (answeredKeys[scoringKey] === undefined){
+            totalAnswered++;
+            if (isCorrect) totalCorrect++;
+            answeredKeys[scoringKey] = isCorrect;
+          } else {
+            // question re-answered (e.g. via Full Test) — update its recorded correctness without double-counting the total
+            if (answeredKeys[scoringKey] !== isCorrect){
+              totalCorrect += isCorrect ? 1 : -1;
+              answeredKeys[scoringKey] = isCorrect;
+            }
+          }
+          updateGlobalProgress();
+        });
+        optGrid.appendChild(btn);
+      });
+
+      card.appendChild(optGrid);
+      card.appendChild(feedback);
+      container.appendChild(card);
+    });
+  }
+
+  // render each module's own practice zone
+  Object.keys(EXERCISES).forEach(function(moduleId){
+    renderExercises('practice-' + moduleId, 'score-' + moduleId, EXERCISES[moduleId], moduleId);
+  });
+
+  // ---------- Full Practice Test ----------
+  function shuffleArray(arr){
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  var MODULE_LABELS = {
+    "sentence-basics":"Sentence Basics", "sentence-types":"Sentence Types", "sva":"Subject-Verb Agreement",
+    "fragments":"Fragments & Run-ons", "punctuation":"Punctuation", "tenses":"Tenses in Writing",
+    "voice":"Active/Passive", "reported":"Reported Speech", "linking":"Linking Words",
+    "parallelism":"Parallelism", "wordchoice":"Word Choice", "paragraph":"Paragraph Coherence"
+  };
+  function buildFullPool(){
+    var pool = [];
+    Object.keys(EXERCISES).forEach(function(moduleId){
+      EXERCISES[moduleId].forEach(function(item, idx){
+        pool.push({ q:item.q, options:item.options, correct:item.correct, explain:item.explain, _label: MODULE_LABELS[moduleId], _origIdx: idx, _moduleId: moduleId });
+      });
+    });
+    return pool;
+  }
+  function newFullTest(){
+    var picked = shuffleArray(buildFullPool()).slice(0, 25);
+    // group scoring key must reference each item's OWN module + index (handled by _moduleId/_origIdx below)
+    renderMixedExercises(picked);
+  }
+  function renderMixedExercises(items){
+    var container = document.getElementById('practice-full-test');
+    var scoreEl = document.getElementById('score-full-test');
+    container.innerHTML = '';
+    var correctCount = 0;
+    function refreshScore(){ scoreEl.textContent = 'Score: ' + correctCount + ' / ' + items.length; }
+    refreshScore();
+
+    items.forEach(function(item, idx){
+      var card = document.createElement('div');
+      card.className = 'practice-card';
+      var qNum = document.createElement('div');
+      qNum.className = 'q-number';
+      qNum.textContent = 'Question ' + (idx + 1) + '  ·  ' + item._label;
+      card.appendChild(qNum);
+      var qText = document.createElement('div');
+      qText.className = 'q-text';
+      qText.textContent = item.q;
+      card.appendChild(qText);
+      var optGrid = document.createElement('div');
+      optGrid.className = 'opt-grid';
+      var feedback = document.createElement('div');
+      feedback.className = 'q-feedback';
+      var locked = false;
+      item.options.forEach(function(optText, optIdx){
+        var btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        btn.textContent = optText;
+        btn.addEventListener('click', function(){
+          if (locked) return;
+          locked = true;
+          var isCorrect = optIdx === item.correct;
+          if (isCorrect){ correctCount++; btn.classList.add('correct'); } else { btn.classList.add('wrong'); }
+          Array.prototype.forEach.call(optGrid.children, function(b, i){
+            b.classList.add('locked');
+            if (i === item.correct) b.classList.add('correct');
+            else if (b !== btn) b.classList.add('dim');
+          });
+          feedback.className = 'q-feedback show ' + (isCorrect ? 'correct' : 'wrong');
+          feedback.innerHTML = (isCorrect ? '✅ <b>Correct.</b> ' : '✗ <b>Not quite.</b> The correct answer is "<b>' + item.options[item.correct] + '</b>". ') + item.explain;
+          refreshScore();
+
+          var scoringKey = item._moduleId + '-' + item._origIdx;
+          if (answeredKeys[scoringKey] === undefined){
+            totalAnswered++;
+            if (isCorrect) totalCorrect++;
+            answeredKeys[scoringKey] = isCorrect;
+          } else if (answeredKeys[scoringKey] !== isCorrect){
+            totalCorrect += isCorrect ? 1 : -1;
+            answeredKeys[scoringKey] = isCorrect;
+          }
+          updateGlobalProgress();
+        });
+        optGrid.appendChild(btn);
+      });
+      card.appendChild(optGrid);
+      card.appendChild(feedback);
+      container.appendChild(card);
+    });
+  }
+  document.getElementById('shuffleBtn').addEventListener('click', newFullTest);
+  newFullTest();
+
+  // ---------- sidebar navigation ----------
+  var sideNav = document.getElementById('sideNav');
+  var title = document.createElement('p');
+  title.className = 'side-title';
+  title.textContent = 'Course Modules';
+  sideNav.appendChild(title);
+
+  MODULES.forEach(function(m){
+    var btn = document.createElement('button');
+    btn.className = 'side-btn';
+    btn.dataset.panel = m.id;
+    if (m.id === 'overview') btn.classList.add('active');
+    var showsExercises = EXERCISES[m.id] !== undefined;
+    btn.innerHTML =
+      '<span class="sb-check">' + (m.hasExercises === false ? '' : '○') + '</span>' +
+      '<span class="sb-label">' + m.label + '</span>' +
+      (showsExercises ? '<span class="sb-count">0/' + EXERCISES[m.id].length + '</span>' : '');
+    btn.addEventListener('click', function(){ showPanel(m.id); });
+    sideNav.appendChild(btn);
+  });
+
+  function showPanel(id){
+    Array.prototype.forEach.call(document.querySelectorAll('.panel'), function(p){
+      p.classList.toggle('active', p.id === 'panel-' + id);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.side-btn'), function(btn){
+      btn.classList.toggle('active', btn.dataset.panel === id);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  updateGlobalProgress();
+})();
+</script>
+</body>
+</html>
